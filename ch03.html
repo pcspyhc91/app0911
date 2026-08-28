@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch03｜第三章 研究方法</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
+  --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
+  --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
+  --shadow:0 8px 28px rgba(31,41,55,.08)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans TC",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#111827;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.13)}
+.brand{font-weight:800;letter-spacing:.4px}.top-actions a{padding:7px 12px;border-radius:8px;background:#253044;color:#fff;font-size:14px}.top-actions a:hover{background:#34425b}
+.layout{display:flex;min-height:calc(100vh - 58px)}
+.sidebar{width:280px;flex:0 0 280px;background:#fff;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto}
+.sidebar h3{margin:0 10px 16px;font-size:18px}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:4px 0;border-radius:9px;color:#344054;font-size:14px;transition:.18s ease}
+.nav a:hover{background:var(--blue-soft);color:var(--blue-dark);transform:translateX(2px)}.nav i{width:18px;text-align:center}
+.nav .active{background:var(--blue);color:#fff;font-weight:700}
+.ch03-section-menu{display:block}.ch03-section-menu.is-collapsed{display:none}
+#ch03Toggle{cursor:pointer;user-select:none}#ch03Toggle .toggle-icon{margin-left:auto;transition:transform .18s ease}#ch03Toggle.menu-open .toggle-icon{transform:rotate(180deg)}
+.main{flex:1;min-width:0;padding:30px}.wrapper{max-width:1180px;margin:0 auto}
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:38px 40px;background:linear-gradient(135deg,#136fae 0%,#2596e8 58%,#76c3f2 100%);color:#fff;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;right:-90px;top:-120px;width:330px;height:330px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}.hero p{margin:0;max-width:880px;font-size:17px;opacity:.96}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
+.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0}.kpi .note{font-size:13px;color:#475467}
+.section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}
+.section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}
+.section h3{font-size:18px;margin:20px 0 8px}.section p{margin:8px 0;color:#344054}
+.callout{border-left:5px solid var(--blue);background:var(--blue-soft);border-radius:10px;padding:14px 16px;margin:14px 0}.callout strong{color:var(--blue-dark)}
+.warning{border-left-color:var(--orange);background:var(--orange-soft)}.warning strong{color:#8a5900}.danger{border-left-color:var(--red);background:var(--red-soft)}.danger strong{color:#9d3030}.success{border-left-color:var(--green);background:var(--green-soft)}.success strong{color:#197046}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}.mini-card .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+.icon.blue{background:var(--blue-soft);color:var(--blue-dark)}.icon.green{background:var(--green-soft);color:var(--green)}.icon.orange{background:var(--orange-soft);color:#a96600}.icon.purple{background:var(--purple-soft);color:var(--purple)}.icon.red{background:var(--red-soft);color:var(--red)}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.flow .step{padding:9px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px;font-weight:600}.flow .arrow{color:#98a2b3}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f8fafc;color:#475467}td:first-child{font-weight:700;color:#344054}
+.feature-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.tag{padding:6px 10px;border-radius:999px;background:#eef5fb;border:1px solid #d9e9f7;font-size:13px}
+.audit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.audit{padding:10px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px}.audit i{color:var(--green);margin-right:7px}
+.footer{color:#98a2b3;text-align:center;font-size:13px;padding:24px 0 10px}
+body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.embed-mode .layout{display:block!important;min-height:100vh!important}body.embed-mode .main{padding:16px 22px 30px!important;width:100%!important}body.embed-mode .wrapper{max-width:1180px!important;margin:0 auto!important}body.embed-mode{background:#f4f7fb!important}
+@media(max-width:980px){.sidebar{display:none}.main{padding:20px}.kpis{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr}.audit-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.kpis,.grid-2{grid-template-columns:1fr}.hero{padding:28px 22px}.hero h1{font-size:29px}}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="brand"><i class="fa fa-line-chart"></i>&nbsp; Google Play App AI Project</div>
+  <div class="top-actions"><a href="index.html"><i class="fa fa-home"></i>&nbsp; Dashboard</a></div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <h3>第三章｜研究方法</h3>
+  <nav class="nav">
+    <a class="active menu-open" href="#top" id="ch03Toggle"><i class="fa fa-book"></i><span>Chapter 03</span><i class="fa fa-chevron-up toggle-icon"></i></a>
+    <div id="ch03SectionMenu" class="ch03-section-menu">
+      <a href="#s31"><i class="fa fa-sitemap"></i>3.1 研究流程與架構</a>
+      <a href="#s32"><i class="fa fa-database"></i>3.2 資料來源與 Target</a>
+      <a href="#s33"><i class="fa fa-server"></i>3.3 SQL 與研究治理</a>
+      <a href="#s34"><i class="fa fa-cogs"></i>3.4 前處理與特徵工程</a>
+      <a href="#s35"><i class="fa fa-plug"></i>3.5 Python 載入與稽核</a>
+      <a href="#s36"><i class="fa fa-random"></i>3.6 Train / Test Split</a>
+      <a href="#s37"><i class="fa fa-filter"></i>3.7 Python Preprocessing</a>
+      <a href="#s38"><i class="fa fa-check-circle"></i>3.8 本章小結</a>
+    </div>
+  </nav>
+</aside>
+
+<main class="main"><div class="wrapper" id="top">
+<section class="hero">
+  <div class="eyebrow">CHAPTER 03 · RESEARCH METHODOLOGY</div>
+  <h1>第三章｜研究方法</h1>
+  <p>以 Data Governance（資料治理）為核心，依序完成 SQL 清理、Feature Engineering（特徵工程）、Leakage / Proxy Audit（資料洩漏／代理變數稽核）、Python 一致性驗證、Train/Test Split（訓練集／測試集切分）與 Train-only Preprocessing（僅訓練集擬合前處理），建立可重現且可追溯的模型資料基準。</p>
+</section>
+
+<div class="kpis">
+  <div class="kpi"><div class="label">Working Data</div><div class="value">11,500 × 29</div><div class="note">google_playstore_work</div></div>
+  <div class="kpi"><div class="label">Baseline X</div><div class="value">13</div><div class="note">正式 feature representations</div></div>
+  <div class="kpi"><div class="label">Processed Features</div><div class="value">63</div><div class="note">53 Categorical + 4 Numeric + 6 Binary</div></div>
+  <div class="kpi"><div class="label">Modeling Readiness</div><div class="value">READY</div><div class="note">Preprocessing Final Audit 全部 PASS</div></div>
+</div>
+
+<section class="section" id="s31">
+<h2><span class="num">3.1</span>研究流程與整體架構</h2>
+<p>本研究採 Supervised Learning（監督式學習）的 Binary Classification（二元分類）架構，先定義研究問題與 Target，再進行 Data Understanding、Data Cleaning、Feature Engineering、Feature Governance 與 Preprocessing Specification；資料規格鎖定後，才進入 Python、資料切分、正式前處理與後續 Modeling。</p>
+<div class="flow">
+<span class="step">Research Problem</span><span class="arrow">→</span>
+<span class="step">Data Understanding</span><span class="arrow">→</span>
+<span class="step">SQL Cleaning</span><span class="arrow">→</span>
+<span class="step">Feature Engineering</span><span class="arrow">→</span>
+<span class="step">Governance / Audit</span><span class="arrow">→</span>
+<span class="step">Python Validation</span><span class="arrow">→</span>
+<span class="step">Train/Test Split</span><span class="arrow">→</span>
+<span class="step">Preprocessing</span><span class="arrow">→</span>
+<span class="step">Modeling</span>
+</div>
+<div class="callout"><strong>研究原則：</strong>研究設計與數據正確性優先於模型分數；任何可能直接或間接反映結果的欄位，都必須先經 Prediction-Time、Target Leakage、Outcome Proxy 與 Market Maturity Proxy Audit。</div>
+</section>
+
+<section class="section" id="s32">
+<h2><span class="num">3.2</span>資料來源、研究資料庫與目標變數</h2>
+<div class="grid-2">
+<div class="mini-card"><div class="icon blue"><i class="fa fa-file-text-o"></i></div><b>Raw Source</b><p><code>google_playstore_2026.csv</code>：11,500 筆、15 個原始欄位。</p></div>
+<div class="mini-card"><div class="icon green"><i class="fa fa-database"></i></div><b>Research Table</b><p><code>google_play_project.google_playstore_work</code>：完成 3.4 後為 11,500 × 29。</p></div>
+</div>
+<div class="callout"><strong>Target：</strong>Success = 1 當 Installs ≥ 10,000；否則 Success = 0。Class 0 = 9,553（83.07%）、Class 1 = 1,947（16.93%），Imbalance Ratio ≈ 4.91 : 1。</div>
+<p>本研究定位為 Cross-sectional Snapshot（單一資料快照）分類，因此 Success 表示觀察快照時點的累積安裝狀態，不宣稱固定未來時間窗的成功結果。</p>
+</section>
+
+<section class="section" id="s33">
+<h2><span class="num">3.3</span>SQL 資料處理與研究治理原則</h2>
+<p>SQL 的角色不是訓練模型，而是建立可追溯、可驗證的研究工作表。原始 15 欄加入 Success 與多個衍生特徵後形成 29 欄，全部欄位都必須被指定正式 Governance Role。</p>
+<div class="grid-3">
+<div class="mini-card"><div class="icon blue"><i class="fa fa-check-square-o"></i></div><b>29 / 29 Governance</b><p>Feature Governance Coverage = 100%，沒有任何欄位在未經判定下進入模型。</p></div>
+<div class="mini-card"><div class="icon red"><i class="fa fa-ban"></i></div><b>Leakage / Proxy Exclusion</b><p>Installs、Reviews、Rating 依研究證據分別排除為 Target Leakage、Outcome Proxy、Market Maturity Proxy。</p></div>
+<div class="mini-card"><div class="icon purple"><i class="fa fa-compress"></i></div><b>Representation Consolidation</b><p>衍生欄位取代原始字串或冗餘欄位，保留可解釋且不重複的模型表示。</p></div>
+</div>
+</section>
+
+<section class="section" id="s34">
+<h2><span class="num">3.4</span>資料前處理與 Feature Engineering（特徵工程）</h2>
+
+<h3>3.4.1～3.4.7：主要轉換規則</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>原始資訊</th><th>正式轉換／決策</th><th>關鍵治理結果</th></tr></thead>
+<tbody>
+<tr><td>Installs</td><td>建立 Success</td><td>建立 y 後不得進入 X，也不得衍生任何 X 特徵。</td></tr>
+<tr><td>Size</td><td>Size_MB + Size_Varies</td><td>1,778 筆 Size_MB NULL 為 Structural Missingness；Mapping Accuracy = 100%。</td></tr>
+<tr><td>Type / Price</td><td>Is_Paid + Price</td><td>11,500 筆 mapping 全部正確。</td></tr>
+<tr><td>Genres</td><td>Genre_Primary / Genre_Secondary</td><td>Genre_Primary 與 Category 100% 一對一，因此排除；Genre_Secondary NULL → NO_SECONDARY_GENRE。</td></tr>
+<tr><td>Last Updated</td><td>Updated_Date + Days_Since_Update</td><td>Baseline 使用 Days_Since_Update，避免日期資訊重複表示。</td></tr>
+<tr><td>Current / Android Ver</td><td>Varies indicators + Min_Android_Ver</td><td>Min_Android_Ver 1,091 筆 NULL 為 Structural Missingness，Mapping Error = 0。</td></tr>
+<tr><td>Monetization</td><td>Has_In_App_Purchases / Has_Ad_Support</td><td>二元映射 Accuracy = 100%。</td></tr>
+</tbody></table></div>
+
+<h3>3.4.8：Leakage / Proxy Audit</h3>
+<div class="danger callout"><strong>Reviews：</strong>與 Installs_numeric 的 Pearson correlation = 0.9793；可被門檻完美分離的資料達 10,440 筆（90.78%），因此正式標記 OUTCOME_PROXY_EXCLUDE。</div>
+<div class="warning callout"><strong>Rating：</strong>有效 6,123 筆、缺失 5,377 筆（46.76%）；真正高度反映 Success 的是 Rating 是否形成，而非評分高低，因此正式標記 MARKET_MATURITY_PROXY_EXCLUDE，並禁止建立任何 Has_Rating / Rating availability indicator。</div>
+
+<h3>3.4.9～3.4.12：Final Governance 與 Baseline X</h3>
+<p>Governance-approved Candidates 為 14 個；經 modeling representation consolidation 後，Updated_Date 不直接進入 baseline X，正式鎖定為 13 個 feature representations：</p>
+<div class="feature-tags">
+<span class="tag">Category</span><span class="tag">Price</span><span class="tag">Content Rating</span><span class="tag">Size_MB</span><span class="tag">Size_Varies</span><span class="tag">Is_Paid</span><span class="tag">Genre_Secondary</span><span class="tag">Days_Since_Update</span><span class="tag">Current_Ver_Varies</span><span class="tag">Android_Ver_Varies</span><span class="tag">Min_Android_Ver</span><span class="tag">Has_In_App_Purchases</span><span class="tag">Has_Ad_Support</span>
+</div>
+<div class="callout"><strong>Preprocessing Boundary：</strong>任何需要從資料學習參數的 Imputation、Scaling、One-Hot category learning、Feature Selection 或 SMOTE，都不得在完整 11,500 筆資料上先 fit 再切分。</div>
+</section>
+
+<section class="section" id="s35">
+<h2><span class="num">3.5</span>Python 載入 SQL 清洗結果與 Pre-Split Final Audit</h2>
+<p>3.5 不重新執行 3.4，而是以 MariaDB 的 <code>google_playstore_work</code> 作為唯一正式來源，驗證 SQL 清洗結果在 Python DataFrame 中是否保持一致。</p>
+<div class="grid-3">
+<div class="mini-card"><div class="icon blue"><i class="fa fa-python"></i></div><b>Environment</b><p>Python 3.12.10、pandas 3.0.5、PyMySQL；MariaDB 11.8.8。</p></div>
+<div class="mini-card"><div class="icon green"><i class="fa fa-table"></i></div><b>DataFrame</b><p>11,500 × 29；Column Order Match = True；Governance Coverage = 29 / 29。</p></div>
+<div class="mini-card"><div class="icon purple"><i class="fa fa-shield"></i></div><b>Leakage Guard</b><p>13-feature Baseline X 無禁止欄位，X / y Length 與 Index 完整對齊。</p></div>
+</div>
+<div class="success callout"><strong>Pre-Split Final Audit：</strong>Structural Missingness、Binary / Numeric Integrity、Leakage / Proxy Guard 全部 PASS，3.5 = COMPLETE。</div>
+</section>
+
+<section class="section" id="s36">
+<h2><span class="num">3.6</span>Train / Test Split（訓練集／測試集切分）</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>設定</th><th>正式規格／結果</th></tr></thead>
+<tbody>
+<tr><td>test_size</td><td>0.20</td></tr>
+<tr><td>random_state</td><td>42</td></tr>
+<tr><td>stratify</td><td>y</td></tr>
+<tr><td>X_train</td><td>9,200 × 13</td></tr>
+<tr><td>X_test</td><td>2,300 × 13</td></tr>
+<tr><td>Train Success</td><td>0 = 7,642（83.07%）；1 = 1,558（16.93%）</td></tr>
+<tr><td>Test Success</td><td>0 = 1,911（83.09%）；1 = 389（16.91%）</td></tr>
+<tr><td>Index Overlap</td><td>0</td></tr>
+</tbody></table></div>
+<div class="success callout"><strong>Final Audit：</strong>Train + Test = 11,500、X/y Index Alignment = PASS、13 Feature Columns = PASS、Leakage / Proxy Guard = PASS、Stratified Split = PASS；3.6 = COMPLETE。</div>
+<div class="callout"><strong>核心原則：</strong>Split First → Fit on X_train Only → Transform X_train / X_test。</div>
+</section>
+
+<section class="section" id="s37">
+<h2><span class="num">3.7</span>Python Preprocessing（Python 前處理）</h2>
+<p>所有會學習資料分布的前處理器只能以 X_train 擬合；X_test 僅允許 transform。13 個 Baseline Features 分成 3 個 Categorical、4 個 Numeric 與 6 個 Binary。</p>
+
+<div class="grid-3">
+<div class="mini-card"><div class="icon blue"><i class="fa fa-tags"></i></div><b>Categorical Pipeline</b><p>Genre_Secondary NULL → NO_SECONDARY_GENRE；OneHotEncoder 只由 X_train 學習。36 + 6 + 11 = 53 個 One-Hot Features。</p></div>
+<div class="mini-card"><div class="icon orange"><i class="fa fa-sliders"></i></div><b>Numeric Pipeline</b><p>Median Imputer + StandardScaler；X_train medians：Price 0.0、Size_MB 90.2、Days_Since_Update 302.0、Min_Android_Ver 10.0。</p></div>
+<div class="mini-card"><div class="icon green"><i class="fa fa-toggle-on"></i></div><b>Binary Passthrough</b><p>6 個 Binary Features 維持原始 0/1，不做 One-Hot Encoding 或 Scaling。</p></div>
+</div>
+
+<h3>ColumnTransformer 整合結果</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Feature Set</th><th>Shape / Count</th></tr></thead>
+<tbody>
+<tr><td>Original SQL Data</td><td>11,500 × 29</td></tr>
+<tr><td>Baseline X</td><td>11,500 × 13</td></tr>
+<tr><td>Raw X_train / X_test</td><td>9,200 × 13 / 2,300 × 13</td></tr>
+<tr><td>Processed X_train / X_test</td><td>9,200 × 63 / 2,300 × 63</td></tr>
+<tr><td>Processed Features</td><td>63 = 53 Categorical + 4 Numeric + 6 Binary</td></tr>
+</tbody></table></div>
+
+<h3>Preprocessing Final Audit：14 項全部 PASS</h3>
+<div class="audit-grid">
+<div class="audit"><i class="fa fa-check-circle"></i>Dataset Shape</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Train / Test Split Integrity</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Target Integrity</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Feature Group Coverage</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Structural Missingness</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Categorical Train-only Fit</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Numeric Train-only Fit</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Binary Passthrough</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Processed Data Integrity</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Processed Feature Alignment</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Processed Index Integrity</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Raw Leakage / Proxy Guard</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Processed Feature Lineage Guard</div>
+<div class="audit"><i class="fa fa-check-circle"></i>Train-only Fit Scope</div>
+</div>
+<div class="success callout"><strong>正式判定：</strong>3.7 Python Preprocessing = COMPLETE；Modeling Readiness = READY。</div>
+</section>
+
+<section class="section" id="s38">
+<h2><span class="num">3.8</span>本章小結</h2>
+<p>第三章完成從 SQL Data Governance（資料治理）到正式 Python Preprocessing（Python 前處理）的完整方法流程。工作資料表鎖定為 11,500 × 29，經 Feature Governance 與 representation consolidation 後，Baseline X 固定為 13 個特徵。</p>
+<p>3.5 驗證 SQL 與 Python DataFrame 一致；3.6 依 test_size = 0.20、random_state = 42、stratify = y 完成 9,200 / 2,300 的正式切分；3.7 嚴格遵守 Train-only Fit，將 13 個 Baseline Feature Representations 轉換為 63 個 Processed Features。</p>
+<div class="flow"><span class="step">11,500 × 29 SQL Data</span><span class="arrow">→</span><span class="step">13 Baseline X</span><span class="arrow">→</span><span class="step">9,200 / 2,300 Split</span><span class="arrow">→</span><span class="step">63 Processed Features</span><span class="arrow">→</span><span class="step">14/14 Audit PASS</span><span class="arrow">→</span><span class="step">Modeling READY</span></div>
+<div class="success callout"><strong>第三章正式完成：</strong>X_train_processed = (9,200, 63)、X_test_processed = (2,300, 63)、y_train = (9,200,)、y_test = (2,300,)；下一章進入 Machine Learning Modeling（機器學習模型建立）。</div>
+</section>
+
+<div class="footer">Ch03｜Google Play App AI Success Prediction Project</div>
+</div></main>
+</div>
+
+<script>
+(function(){
+  const toggle=document.getElementById("ch03Toggle");
+  const menu=document.getElementById("ch03SectionMenu");
+  if(toggle&&menu){
+    toggle.addEventListener("click",function(e){
+      e.preventDefault();
+      const collapsed=menu.classList.contains("is-collapsed");
+      if(collapsed){menu.classList.remove("is-collapsed");toggle.classList.add("menu-open");}
+      else{menu.classList.add("is-collapsed");toggle.classList.remove("menu-open");}
+    });
+  }
+  const params=new URLSearchParams(window.location.search);
+  if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+})();
+</script>
+</body>
+</html>

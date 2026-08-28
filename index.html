@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Python與AI應用實務(新竹)第1期</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+/* Ch01 ~ Ch07 sidebar menu hover colors */
+#mySidebar .menu-ch {
+  transition: background-color 0.20s ease, color 0.20s ease;
+}
+
+#mySidebar .menu-ch01:hover { background-color: #E36DFF !important; color: #000000 !important; }
+#mySidebar .menu-ch02:hover { background-color: #D5F5E3 !important; color: #000000 !important; }
+#mySidebar .menu-ch03:hover { background-color: #FCF3CF !important; color: #000000 !important; }
+#mySidebar .menu-ch04:hover { background-color: #FADBD8 !important; color: #000000 !important; }
+#mySidebar .menu-ch05:hover { background-color: #28A028 !important; color: #000000 !important; }
+#mySidebar .menu-ch06:hover { background-color: #FDEBD0 !important; color: #000000 !important; }
+#mySidebar .menu-ch07:hover { background-color: #D6DBDF !important; color: #000000 !important; }
+
+
+/* ===== Chapter embedded navigation ===== */
+#mySidebar .chapter-submenu {
+  display: none;
+  background: #ffffff;
+  border-left: 4px solid #E36DFF;
+  padding: 4px 0 8px 18px;
+}
+#mySidebar .chapter-submenu.is-open { display: block; }
+#mySidebar .chapter-submenu a {
+  display: block;
+  padding: 9px 12px;
+  color: #24364b;
+  font-size: 15px;
+  border-radius: 6px 0 0 6px;
+  transition: background-color .18s ease, color .18s ease, padding-left .18s ease;
+}
+#mySidebar .chapter-submenu a:hover {
+  background: #F4D7FF !important;
+  color: #6B1A80 !important;
+  padding-left: 16px;
+}
+#mySidebar .menu-ch01.chapter-open {
+  background-color: #E36DFF !important;
+  color: #000000 !important;
+}
+#chapterFrameWrap {
+  display: none;
+  width: 100%;
+  min-height: calc(100vh - 43px);
+  background: #f4f7fb;
+}
+#chapterFrame {
+  width: 100%;
+  min-height: calc(100vh - 43px);
+  height: 1600px;
+  border: 0;
+  display: block;
+  background: #f4f7fb;
+}
+#dashboardContent.is-hidden { display: none !important; }
+
+
+/* ===== Permanent top-left project brand ===== */
+.project-brand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+.project-brand i { font-size: 23px; }
+
+@media (max-width: 600px) {
+  .project-brand {
+    font-size: 15px;
+    padding: 0 10px;
+    gap: 7px;
+  }
+  .project-brand i { font-size: 18px; }
+}
+
+
+/* ===== Resizable Sidebar（可拖曳調整左側寬度）===== */
+:root {
+  --sidebar-width: 300px;
+}
+
+#mySidebar {
+  width: var(--sidebar-width) !important;
+  min-width: 220px;
+  max-width: 620px;
+}
+
+.w3-main {
+  margin-left: var(--sidebar-width) !important;
+  transition: none !important;
+}
+
+#sidebarResizer {
+  position: fixed;
+  top: 43px;
+  left: calc(var(--sidebar-width) - 5px);
+  width: 10px;
+  height: calc(100vh - 43px);
+  z-index: 9997;
+  cursor: ew-resize;
+  background: transparent;
+  touch-action: none;
+}
+
+#sidebarResizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 2px;
+  background: #c7cbd1;
+  transition: width .15s ease, left .15s ease, background-color .15s ease;
+}
+
+#sidebarResizer:hover::after,
+body.sidebar-resizing #sidebarResizer::after {
+  left: 3px;
+  width: 4px;
+  background: #2196F3;
+}
+
+body.sidebar-resizing {
+  cursor: ew-resize !important;
+  user-select: none !important;
+}
+
+body.sidebar-resizing iframe {
+  pointer-events: none !important;
+}
+
+@media (max-width: 992px) {
+  #sidebarResizer {
+    display: none;
+  }
+  .w3-main {
+    margin-left: 0 !important;
+  }
+}
+
+</style>
+</head>
+<body class="w3-light-grey">
+
+<div class="project-brand">
+  <i class="fa fa-line-chart" aria-hidden="true"></i>
+  <span>Google Play App AI Project</span>
+</div>
+
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:9998;width:100%;height:43px;left:0;right:0;">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container" style="padding:8px 10px 10px;">
+    <a href="https://thmr.wda.gov.tw/Default.aspx" target="_blank" rel="noopener noreferrer" title="勞動部勞動力發展署桃竹苗分署"><img src="./w3images/THMRB.jpg" alt="勞動部勞動力發展署桃竹苗分署" style="display:block;width:100%;height:auto;object-fit:contain;"></a>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5><span style="color:blue; white-space:nowrap;">Python與AI應用實務(新竹)第1期</span></h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="index.html" id="overviewLink" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>&nbsp; Overview</a>
+    <a href="ch01.html" id="ch01MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch01">
+      <i class="fa fa-eye fa-fw"></i>&nbsp; 第一章｜前言
+    </a>
+    <div id="ch01Submenu" class="chapter-submenu">
+      <a href="ch01.html?embed=1#s11"><i class="fa fa-globe fa-fw"></i>&nbsp; 1.1 研究背景</a>
+      <a href="ch01.html?embed=1#s12"><i class="fa fa-lightbulb-o fa-fw"></i>&nbsp; 1.2 研究動機</a>
+      <a href="ch01.html?embed=1#s13"><i class="fa fa-bullseye fa-fw"></i>&nbsp; 1.3 問題定義</a>
+      <a href="ch01.html?embed=1#s14"><i class="fa fa-list-ol fa-fw"></i>&nbsp; 1.4 研究目的</a>
+      <a href="ch01.html?embed=1#s15"><i class="fa fa-users fa-fw"></i>&nbsp; 1.5 目標使用者</a>
+      <a href="ch01.html?embed=1#s16"><i class="fa fa-cogs fa-fw"></i>&nbsp; 1.6 系統功能</a>
+      <a href="ch01.html?embed=1#s17"><i class="fa fa-diamond fa-fw"></i>&nbsp; 1.7 決策價值</a>
+      <a href="ch01.html?embed=1#s18"><i class="fa fa-sitemap fa-fw"></i>&nbsp; 1.8 分析邏輯</a>
+      <a href="ch01.html?embed=1#s19"><i class="fa fa-check-circle fa-fw"></i>&nbsp; 1.9 本章重點</a>
+    </div>
+    <a href="ch02.html" id="ch02MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch02">
+      <i class="fa fa-users fa-fw"></i>&nbsp; 第二章｜資料理解與探索式資料分析
+    </a>
+    <div id="ch02Submenu" class="chapter-submenu">
+      <a href="ch02.html?embed=1#s21" data-ch02-section="s21"><i class="fa fa-search fa-fw"></i>&nbsp; 2.1 資料理解目的</a>
+      <a href="ch02.html?embed=1#s22" data-ch02-section="s22"><i class="fa fa-database fa-fw"></i>&nbsp; 2.2 資料集概況</a>
+      <a href="ch02.html?embed=1#s23" data-ch02-section="s23"><i class="fa fa-table fa-fw"></i>&nbsp; 2.3 欄位與屬性</a>
+      <a href="ch02.html?embed=1#s24" data-ch02-section="s24"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 2.4 關鍵欄位觀察</a>
+      <a href="ch02.html?embed=1#s25" data-ch02-section="s25"><i class="fa fa-exclamation-circle fa-fw"></i>&nbsp; 2.5 缺失值與品質</a>
+      <a href="ch02.html?embed=1#s26" data-ch02-section="s26"><i class="fa fa-clone fa-fw"></i>&nbsp; 2.6 重複與同名 App</a>
+      <a href="ch02.html?embed=1#s27" data-ch02-section="s27"><i class="fa fa-pie-chart fa-fw"></i>&nbsp; 2.7 Success EDA</a>
+      <a href="ch02.html?embed=1#s28" data-ch02-section="s28"><i class="fa fa-balance-scale fa-fw"></i>&nbsp; 2.8 Accuracy 限制</a>
+      <a href="ch02.html?embed=1#s29" data-ch02-section="s29"><i class="fa fa-shield fa-fw"></i>&nbsp; 2.9 Target Leakage</a>
+      <a href="ch02.html?embed=1#s210" data-ch02-section="s210"><i class="fa fa-tags fa-fw"></i>&nbsp; 2.10 欄位初步分類</a>
+      <a href="ch02.html?embed=1#s211" data-ch02-section="s211"><i class="fa fa-check-circle fa-fw"></i>&nbsp; 2.11 本章小結</a>
+    </div>
+    <a href="ch03.html" id="ch03MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch03">
+      <i class="fa fa-bullseye fa-fw"></i>&nbsp; 第三章｜研究方法
+    </a>
+    <div id="ch03Submenu" class="chapter-submenu">
+      <a href="ch03.html?embed=1#s31"><i class="fa fa-sitemap fa-fw"></i>&nbsp; 3.1 研究流程與架構</a>
+      <a href="ch03.html?embed=1#s32"><i class="fa fa-database fa-fw"></i>&nbsp; 3.2 資料來源與 Target</a>
+      <a href="ch03.html?embed=1#s33"><i class="fa fa-server fa-fw"></i>&nbsp; 3.3 SQL 與研究治理</a>
+      <a href="ch03.html?embed=1#s34"><i class="fa fa-cogs fa-fw"></i>&nbsp; 3.4 前處理與特徵工程</a>
+      <a href="ch03.html?embed=1#s35"><i class="fa fa-plug fa-fw"></i>&nbsp; 3.5 Python 載入與稽核</a>
+      <a href="ch03.html?embed=1#s36"><i class="fa fa-random fa-fw"></i>&nbsp; 3.6 Train / Test Split</a>
+      <a href="ch03.html?embed=1#s37"><i class="fa fa-filter fa-fw"></i>&nbsp; 3.7 Python Preprocessing</a>
+      <a href="ch03.html?embed=1#s38"><i class="fa fa-check-circle fa-fw"></i>&nbsp; 3.8 本章小結</a>
+    </div>
+    <a href="ch04.html" id="ch04MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch04">
+      <i class="fa fa-diamond fa-fw"></i>&nbsp; 第四章｜機器學習模型建立與評估
+    </a>
+    <div id="ch04Submenu" class="chapter-submenu">
+      <a href="ch04.html?embed=1#s41"><i class="fa fa-check-square-o fa-fw"></i>&nbsp; 4.1 建模前最終確認</a>
+      <a href="ch04.html?embed=1#s42"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 4.2 基準模型比較</a>
+      <a href="ch04.html?embed=1#s43"><i class="fa fa-balance-scale fa-fw"></i>&nbsp; 4.3 類別不平衡改善</a>
+      <a href="ch04.html?embed=1#s44"><i class="fa fa-sliders fa-fw"></i>&nbsp; 4.4 超參數調整</a>
+      <a href="ch04.html?embed=1#s45"><i class="fa fa-trophy fa-fw"></i>&nbsp; 4.5 候選模型與選模</a>
+      <a href="ch04.html?embed=1#s46"><i class="fa fa-flask fa-fw"></i>&nbsp; 4.6 最終 Test 評估</a>
+    </div>
+    <a href="ch05.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch05"><i class="fa fa-bell fa-fw"></i>&nbsp; Ch05</a>
+    <a href="ch06.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch06"><i class="fa fa-bank fa-fw"></i>&nbsp; Ch06</a>
+    <a href="ch07.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch07"><i class="fa fa-history fa-fw"></i>&nbsp; Ch07</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
+  </div>
+</nav>
+<div id="sidebarResizer" title="拖曳調整左側選單寬度" aria-label="拖曳調整左側選單寬度"></div>
+
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+  <div id="dashboardContent">
+
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+  </header>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>52</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Messages</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16">
+        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>99</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Views</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-teal w3-padding-16">
+        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>23</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Shares</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-orange w3-text-white w3-padding-16">
+        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>50</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Users</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- amCharts 5：取代原本 Regions + Feeds 區塊 -->
+  <div class="w3-panel">
+    <div class="w3-container w3-white w3-padding-16">
+      <div id="chartdiv"></div>
+    </div>
+  </div>
+
+  <style>
+  #chartdiv {
+    width: 100%;
+    height: 500px;
+  }
+  </style>
+
+  <!-- Resources -->
+  <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/themes/Responsive.js"></script>
+
+  <!-- Chart code -->
+  <script>
+  am5.ready(function() {
+
+  // Create root element
+  var root = am5.Root.new("chartdiv");
+
+  const myTheme = am5.Theme.new(root);
+
+  myTheme.rule("AxisLabel", ["minor"]).setAll({
+    dy: 1
+  });
+
+  myTheme.rule("AxisLabel").setAll({
+    fontSize: "0.9em"
+  });
+
+  // Set themes
+  root.setThemes([
+    am5themes_Animated.new(root),
+    myTheme,
+    am5themes_Responsive.new(root)
+  ]);
+
+  // Create chart
+  var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    wheelX: "panX",
+    wheelY: "zoomX",
+    paddingLeft: 0
+  }));
+
+  // Add cursor
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
+    behavior: "none"
+  }));
+  cursor.lineY.set("visible", false);
+
+  // Generate random data
+  var date = new Date();
+  date.setHours(0, 0, 0, 0);
+  var value = 100;
+
+  function generateData() {
+    value = Math.round((Math.random() * 10 - 5) + value);
+    am5.time.add(date, "day", 1);
+    return {
+      date: date.getTime(),
+      value: value
+    };
+  }
+
+  function generateDatas(count) {
+    var data = [];
+    for (var i = 0; i < count; ++i) {
+      data.push(generateData());
+    }
+    return data;
+  }
+
+  // Create axes
+  var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
+    maxDeviation: 0.2,
+    baseInterval: {
+      timeUnit: "day",
+      count: 1
+    },
+    renderer: am5xy.AxisRendererX.new(root, {
+      minorGridEnabled: true,
+      minorLabelsEnabled: true
+    }),
+    tooltip: am5.Tooltip.new(root, {})
+  }));
+
+  xAxis.set("minorDateFormats", {
+    "day":"dd",
+    "month":"MM"
+  });
+
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+    renderer: am5xy.AxisRendererY.new(root, {
+      pan: "zoom"
+    })
+  }));
+
+  // Add series
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    name: "Series",
+    xAxis: xAxis,
+    yAxis: yAxis,
+    valueYField: "value",
+    valueXField: "date",
+    tooltip: am5.Tooltip.new(root, {
+      labelText: "{valueY}"
+    })
+  }));
+
+  series.columns.template.setAll({
+    cornerRadiusTL: 5,
+    cornerRadiusTR: 5,
+    strokeOpacity: 0
+  });
+
+  series.columns.template.adapters.add("fill", function (fill, target) {
+    return chart.get("colors").getIndex(series.columns.indexOf(target));
+  });
+
+  series.columns.template.adapters.add("stroke", function (stroke, target) {
+    return chart.get("colors").getIndex(series.columns.indexOf(target));
+  });
+
+  // manipulating with mouse code
+  var isDown = false;
+
+  // register down
+  chart.plotContainer.events.on("pointerdown", function () {
+    isDown = true;
+  });
+
+  // register up
+  chart.plotContainer.events.on("globalpointerup", function () {
+    isDown = false;
+  });
+
+  chart.plotContainer.events.on("globalpointermove", function (e) {
+    if (isDown) {
+      var tooltipDataItem = series.get("tooltipDataItem");
+      if (tooltipDataItem) {
+        if (e.originalEvent) {
+          var position = yAxis.coordinateToPosition(
+            chart.plotContainer.toLocal(e.point).y
+          );
+          var value = yAxis.positionToValue(position);
+          tooltipDataItem.set("valueY", value);
+          tooltipDataItem.set("valueYWorking", value);
+        }
+      }
+    }
+  });
+
+  chart.plotContainer.children.push(am5.Label.new(root, {
+    text: "Click and move mouse anywhere on plot area to change the graph"
+  }));
+
+  // Set data
+  var data = generateDatas(20);
+  series.data.setAll(data);
+
+  // Make stuff animate on load
+  series.appear(1000);
+  chart.appear(1000, 100);
+
+  }); // end am5.ready()
+  </script>
+
+  <hr>
+  <div class="w3-container">
+    <h5>General Stats</h5>
+    <p>New Visitors</p>
+    <div class="w3-grey">
+      <div class="w3-container w3-center w3-padding w3-green" style="width:25%">+25%</div>
+    </div>
+
+    <p>New Users</p>
+    <div class="w3-grey">
+      <div class="w3-container w3-center w3-padding w3-orange" style="width:50%">50%</div>
+    </div>
+
+    <p>Bounce Rate</p>
+    <div class="w3-grey">
+      <div class="w3-container w3-center w3-padding w3-red" style="width:75%">75%</div>
+    </div>
+  </div>
+  <hr>
+
+  <div class="w3-container">
+    <h5>Countries</h5>
+    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+      <tr>
+        <td>United States</td>
+        <td>65%</td>
+      </tr>
+      <tr>
+        <td>UK</td>
+        <td>15.7%</td>
+      </tr>
+      <tr>
+        <td>Russia</td>
+        <td>5.6%</td>
+      </tr>
+      <tr>
+        <td>Spain</td>
+        <td>2.1%</td>
+      </tr>
+      <tr>
+        <td>India</td>
+        <td>1.9%</td>
+      </tr>
+      <tr>
+        <td>France</td>
+        <td>1.5%</td>
+      </tr>
+    </table><br>
+    <button class="w3-button w3-dark-grey">More Countries  <i class="fa fa-arrow-right"></i></button>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Recent Users</h5>
+    <ul class="w3-ul w3-card-4 w3-white">
+      <li class="w3-padding-16">
+        <img src="./w3images/avatar2.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
+        <span class="w3-xlarge">Mike</span><br>
+      </li>
+      <li class="w3-padding-16">
+        <img src="./w3images/avatar5.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
+        <span class="w3-xlarge">Jill</span><br>
+      </li>
+      <li class="w3-padding-16">
+        <img src="./w3images/avatar6.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
+        <span class="w3-xlarge">Jane</span><br>
+      </li>
+    </ul>
+  </div>
+  <hr>
+
+  <div class="w3-container">
+    <h5>Recent Comments</h5>
+    <div class="w3-row">
+      <div class="w3-col m2 text-center">
+        <img class="w3-circle" src="./w3images/avatar3.png" style="width:96px;height:96px">
+      </div>
+      <div class="w3-col m10 w3-container">
+        <h4>John <span class="w3-opacity w3-medium">Sep 29, 2014, 9:12 PM</span></h4>
+        <p>Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
+      </div>
+    </div>
+
+    <div class="w3-row">
+      <div class="w3-col m2 text-center">
+        <img class="w3-circle" src="./w3images/avatar1.png" style="width:96px;height:96px">
+      </div>
+      <div class="w3-col m10 w3-container">
+        <h4>Bo <span class="w3-opacity w3-medium">Sep 28, 2014, 10:15 PM</span></h4>
+        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="w3-container w3-dark-grey w3-padding-32">
+    <div class="w3-row">
+      <div class="w3-container w3-third">
+        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
+        <p>Language</p>
+        <p>Country</p>
+        <p>City</p>
+      </div>
+      <div class="w3-container w3-third">
+        <h5 class="w3-bottombar w3-border-red">System</h5>
+        <p>Browser</p>
+        <p>OS</p>
+        <p>More</p>
+      </div>
+      <div class="w3-container w3-third">
+        <h5 class="w3-bottombar w3-border-orange">Target</h5>
+        <p>Users</p>
+        <p>Active</p>
+        <p>Geo</p>
+        <p>Interests</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-light-grey">
+    <h4>FOOTER</h4>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  </footer>
+
+  </div>
+
+  <div id="chapterFrameWrap">
+    <iframe id="chapterFrame" name="chapterFrame" src="about:blank" title="Chapter 01 Content"></iframe>
+  </div>
+
+  <!-- End page content -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+
+<script>
+(function () {
+  const ch01Link = document.getElementById("ch01MainLink");
+  const submenu = document.getElementById("ch01Submenu");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+
+  function showCh01(url) {
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url || "ch01.html?embed=1";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function closeOtherMenusForCh01() {
+    document.querySelectorAll(".chapter-submenu").forEach(function(menu) {
+      if (menu !== submenu) menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function(item) {
+      if (item !== ch01Link) item.classList.remove("chapter-open");
+    });
+  }
+
+  function openCh01Menu() {
+    closeOtherMenusForCh01();
+    submenu.classList.add("is-open");
+    ch01Link.classList.add("chapter-open");
+  }
+
+  function closeCh01Menu() {
+    submenu.classList.remove("is-open");
+    ch01Link.classList.remove("chapter-open");
+  }
+
+  ch01Link.addEventListener("click", function (event) {
+    event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+
+    if (isOpen) {
+      // 已展開 → 收合子選單；右側內容維持目前畫面
+      closeCh01Menu();
+    } else {
+      // 已收合 → 展開子選單，並在右側顯示 Ch01
+      openCh01Menu();
+      showCh01("ch01.html?embed=1");
+    }
+  });
+
+  submenu.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      openCh01Menu();
+      showCh01(link.getAttribute("href"));
+    });
+  });
+
+  frame.addEventListener("load", function () {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 900);
+      frame.style.height = h + "px";
+    } catch (e) {
+      frame.style.height = "1600px";
+    }
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  const overviewLink = document.getElementById("overviewLink");
+  if (!overviewLink) return;
+
+  overviewLink.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    // 收合所有章節子選單
+    document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
+      menu.classList.remove("is-open");
+    });
+
+    // 移除所有章節展開/選取狀態
+    document.querySelectorAll(".menu-ch").forEach(function (item) {
+      item.classList.remove("chapter-open");
+    });
+
+    // 若右側目前顯示章節 iframe，切回 Dashboard 內容
+    const dashboardContent = document.getElementById("dashboardContent");
+    const frameWrap = document.getElementById("chapterFrameWrap");
+    const frame = document.getElementById("chapterFrame");
+
+    if (dashboardContent) {
+      dashboardContent.classList.remove("is-hidden");
+    }
+
+    if (frameWrap) {
+      frameWrap.style.display = "none";
+    }
+
+    if (frame) {
+      frame.src = "about:blank";
+    }
+
+    // 回到 index.html 頂端並恢復 Overview
+    window.history.replaceState(null, "", "index.html");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  const ch02Link = document.getElementById("ch02MainLink");
+  const submenu = document.getElementById("ch02Submenu");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!ch02Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+
+  function closeOtherChapterMenus() {
+    document.querySelectorAll(".chapter-submenu").forEach(function(menu){
+      if(menu !== submenu) menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function(item){
+      if(item !== ch02Link) item.classList.remove("chapter-open");
+    });
+  }
+
+  function showCh02(url) {
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url || "ch02.html?embed=1";
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  ch02Link.addEventListener("click", function(event){
+    event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+    if(isOpen){
+      submenu.classList.remove("is-open");
+      ch02Link.classList.remove("chapter-open");
+    }else{
+      closeOtherChapterMenus();
+      submenu.classList.add("is-open");
+      ch02Link.classList.add("chapter-open");
+      showCh02("ch02.html?embed=1");
+    }
+  });
+
+  submenu.querySelectorAll("a").forEach(function(link){
+    link.addEventListener("click",function(event){
+      event.preventDefault();
+      closeOtherChapterMenus();
+      submenu.classList.add("is-open");
+      ch02Link.classList.add("chapter-open");
+      showCh02(link.getAttribute("href"));
+    });
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  const ch03Link = document.getElementById("ch03MainLink");
+  const submenu = document.getElementById("ch03Submenu");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!ch03Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+
+  function closeOtherChapterMenus() {
+    document.querySelectorAll(".chapter-submenu").forEach(function(menu){
+      if(menu !== submenu) menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function(item){
+      if(item !== ch03Link) item.classList.remove("chapter-open");
+    });
+  }
+
+  function showCh03(url) {
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url || "ch03.html?embed=1";
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  ch03Link.addEventListener("click", function(event){
+    event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+    if(isOpen){
+      submenu.classList.remove("is-open");
+      ch03Link.classList.remove("chapter-open");
+    }else{
+      closeOtherChapterMenus();
+      submenu.classList.add("is-open");
+      ch03Link.classList.add("chapter-open");
+      showCh03("ch03.html?embed=1");
+    }
+  });
+
+  submenu.querySelectorAll("a").forEach(function(link){
+    link.addEventListener("click",function(event){
+      event.preventDefault();
+      closeOtherChapterMenus();
+      submenu.classList.add("is-open");
+      ch03Link.classList.add("chapter-open");
+      showCh03(link.getAttribute("href"));
+    });
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  const ch04Link = document.getElementById("ch04MainLink");
+  const submenu = document.getElementById("ch04Submenu");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!ch04Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+
+  function closeOtherChapterMenus() {
+    document.querySelectorAll(".chapter-submenu").forEach(function(menu){
+      if(menu !== submenu) menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function(item){
+      if(item !== ch04Link) item.classList.remove("chapter-open");
+    });
+  }
+
+  function showCh04(url) {
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url || "ch04.html?embed=1";
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  ch04Link.addEventListener("click", function(event){
+    event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+    if(isOpen){
+      submenu.classList.remove("is-open");
+      ch04Link.classList.remove("chapter-open");
+    }else{
+      closeOtherChapterMenus();
+      submenu.classList.add("is-open");
+      ch04Link.classList.add("chapter-open");
+      showCh04("ch04.html?embed=1");
+    }
+  });
+
+  submenu.querySelectorAll("a").forEach(function(link){
+    link.addEventListener("click",function(event){
+      event.preventDefault();
+      closeOtherChapterMenus();
+      submenu.classList.add("is-open");
+      ch04Link.classList.add("chapter-open");
+      showCh04(link.getAttribute("href"));
+    });
+  });
+})();
+</script>
+
+
+<script>
+/* ===== Resizable Sidebar Controller ===== */
+(function () {
+  const root = document.documentElement;
+  const resizer = document.getElementById("sidebarResizer");
+  const sidebar = document.getElementById("mySidebar");
+  if (!resizer || !sidebar) return;
+
+  const MIN_WIDTH = 220;
+  const MAX_WIDTH = 620;
+  const STORAGE_KEY = "googlePlayProjectSidebarWidth";
+
+  function clampWidth(value) {
+    return Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, value));
+  }
+
+  function setSidebarWidth(width) {
+    const finalWidth = clampWidth(width);
+    root.style.setProperty("--sidebar-width", finalWidth + "px");
+    return finalWidth;
+  }
+
+  const savedWidth = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+  if (!Number.isNaN(savedWidth)) {
+    setSidebarWidth(savedWidth);
+  }
+
+  let dragging = false;
+
+  function startDrag(event) {
+    if (window.innerWidth <= 992) return;
+    dragging = true;
+    document.body.classList.add("sidebar-resizing");
+    if (event.pointerId !== undefined && resizer.setPointerCapture) {
+      try { resizer.setPointerCapture(event.pointerId); } catch (e) {}
+    }
+    event.preventDefault();
+  }
+
+  function moveDrag(event) {
+    if (!dragging) return;
+    setSidebarWidth(event.clientX);
+  }
+
+  function endDrag(event) {
+    if (!dragging) return;
+    dragging = false;
+    document.body.classList.remove("sidebar-resizing");
+    const width = parseInt(
+      getComputedStyle(root).getPropertyValue("--sidebar-width"),
+      10
+    );
+    if (!Number.isNaN(width)) {
+      localStorage.setItem(STORAGE_KEY, width);
+    }
+  }
+
+  resizer.addEventListener("pointerdown", startDrag);
+  window.addEventListener("pointermove", moveDrag);
+  window.addEventListener("pointerup", endDrag);
+  window.addEventListener("pointercancel", endDrag);
+
+  resizer.addEventListener("dblclick", function () {
+    setSidebarWidth(300);
+    localStorage.setItem(STORAGE_KEY, "300");
+  });
+})();
+</script>
+
+</body>
+</html>

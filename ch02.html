@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch02｜第二章 資料理解與探索式資料分析</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
+  --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
+  --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
+  --shadow:0 8px 28px rgba(31,41,55,.08)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans TC",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#111827;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.13)}
+.brand{font-weight:800;letter-spacing:.4px}.top-actions{display:flex;gap:10px}
+.top-actions a{padding:7px 12px;border-radius:8px;background:#253044;color:#fff;font-size:14px}.top-actions a:hover{background:#34425b}
+.layout{display:flex;min-height:calc(100vh - 58px)}
+.sidebar{width:270px;flex:0 0 270px;background:#fff;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto}
+.sidebar h3{margin:0 10px 16px;font-size:18px}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:4px 0;border-radius:9px;color:#344054;font-size:14px;transition:.18s ease}
+.nav a:hover{background:var(--blue-soft);color:var(--blue-dark);transform:translateX(2px)}.nav i{width:18px;text-align:center}
+.nav .active{background:var(--blue);color:#fff;font-weight:700}
+.ch02-section-menu{display:block}.ch02-section-menu.is-collapsed{display:none}
+#ch02Toggle{cursor:pointer;user-select:none}#ch02Toggle .toggle-icon{margin-left:auto;transition:transform .18s ease}
+#ch02Toggle.menu-open .toggle-icon{transform:rotate(180deg)}
+.main{flex:1;min-width:0;padding:30px}.wrapper{max-width:1180px;margin:0 auto}
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:38px 40px;background:linear-gradient(135deg,#177fc5 0%,#2596e8 58%,#68baf0 100%);color:#fff;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;right:-100px;top:-120px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}
+.hero p{margin:0;max-width:850px;font-size:17px;opacity:.96}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
+.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0}.kpi .note{font-size:13px;color:#475467}
+.section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}
+.section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}
+.section h3{margin:18px 0 8px;font-size:18px}.section p{margin:8px 0;color:#344054}
+.callout{border-left:5px solid var(--blue);background:var(--blue-soft);border-radius:10px;padding:14px 16px;margin:14px 0}.callout strong{color:var(--blue-dark)}
+.warning{border-left-color:var(--orange);background:var(--orange-soft)}.warning strong{color:#9a6200}
+.danger{border-left-color:var(--red);background:var(--red-soft)}.danger strong{color:#9d3030}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}.mini-card .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+.icon.blue{background:var(--blue-soft);color:var(--blue-dark)}.icon.green{background:var(--green-soft);color:var(--green)}.icon.orange{background:var(--orange-soft);color:#a96600}.icon.purple{background:var(--purple-soft);color:var(--purple)}.icon.red{background:var(--red-soft);color:var(--red)}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.flow .step{padding:9px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px;font-weight:600}.flow .arrow{color:#98a2b3}
+.bar-list{display:grid;gap:10px;margin-top:15px}.bar-row{display:grid;grid-template-columns:190px 1fr 90px;align-items:center;gap:10px;font-size:14px}.bar-track{height:14px;background:#edf1f5;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,#2596e8,#69baf0);border-radius:999px}
+.class-viz{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:center}.donut-wrap{display:flex;justify-content:center}.donut{width:210px;height:210px;border-radius:50%;background:conic-gradient(var(--blue) 0 16.93%,#d8dee8 16.93% 100%);position:relative}.donut:after{content:"";position:absolute;inset:34px;border-radius:50%;background:#fff}.donut-center{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center}.donut-center b{font-size:30px}.donut-center span{font-size:13px;color:var(--muted)}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f8fafc;color:#475467}td:first-child{font-weight:700;color:#344054}
+.footer{color:#98a2b3;text-align:center;font-size:13px;padding:24px 0 10px}
+body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.embed-mode .layout{display:block!important;min-height:100vh!important}body.embed-mode .main{padding:16px 22px 30px!important;width:100%!important}body.embed-mode .wrapper{max-width:1180px!important;margin:0 auto!important}body.embed-mode{background:#f4f7fb!important}
+@media(max-width:980px){.sidebar{display:none}.main{padding:20px}.kpis{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr}.class-viz{grid-template-columns:1fr}}
+@media(max-width:680px){.kpis,.grid-2{grid-template-columns:1fr}.hero{padding:28px 22px}.hero h1{font-size:29px}.bar-row{grid-template-columns:130px 1fr 70px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><i class="fa fa-line-chart"></i>&nbsp; Google Play App AI Project</div>
+  <div class="top-actions"><a href="index.html"><i class="fa fa-home"></i>&nbsp; Dashboard</a></div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+  <h3>第二章｜資料理解與探索式資料分析</h3>
+  <nav class="nav">
+    <a class="active menu-open" href="#top" id="ch02Toggle"><i class="fa fa-book"></i><span>Chapter 02</span><i class="fa fa-chevron-up toggle-icon"></i></a>
+    <div id="ch02SectionMenu" class="ch02-section-menu">
+      <a href="#s21"><i class="fa fa-search"></i>2.1 資料理解目的</a>
+      <a href="#s22"><i class="fa fa-database"></i>2.2 資料集概況</a>
+      <a href="#s23"><i class="fa fa-table"></i>2.3 欄位與屬性</a>
+      <a href="#s24"><i class="fa fa-bar-chart"></i>2.4 關鍵欄位觀察</a>
+      <a href="#s25"><i class="fa fa-exclamation-circle"></i>2.5 缺失值與品質</a>
+      <a href="#s26"><i class="fa fa-clone"></i>2.6 重複與同名 App</a>
+      <a href="#s27"><i class="fa fa-pie-chart"></i>2.7 Success EDA</a>
+      <a href="#s28"><i class="fa fa-balance-scale"></i>2.8 Accuracy 限制</a>
+      <a href="#s29"><i class="fa fa-shield"></i>2.9 Target Leakage</a>
+      <a href="#s210"><i class="fa fa-tags"></i>2.10 欄位初步分類</a>
+      <a href="#s211"><i class="fa fa-check-circle"></i>2.11 本章小結</a>
+    </div>
+  </nav>
+</aside>
+
+<main class="main"><div class="wrapper" id="top">
+<section class="hero">
+  <div class="eyebrow">CHAPTER 02 · DATA UNDERSTANDING & EXPLORATORY DATA ANALYSIS</div>
+  <h1>第二章｜資料理解與探索式資料分析</h1>
+  <p>先理解資料，再建立模型。從 11,500 筆 Google Play App 原始資料檢查欄位結構、缺失值、重複紀錄、分布、Class Imbalance（類別不平衡）與 Target Leakage（目標洩漏）風險，作為第三章資料清理與 Feature Engineering（特徵工程）的依據。</p>
+</section>
+
+<div class="kpis">
+  <div class="kpi"><div class="label">Raw Dataset（原始資料）</div><div class="value">11,500</div><div class="note">筆 App 紀錄</div></div>
+  <div class="kpi"><div class="label">Raw Features（原始欄位）</div><div class="value">15</div><div class="note">Success 為後續衍生 Target</div></div>
+  <div class="kpi"><div class="label">Exact Duplicate Rows</div><div class="value">0</div><div class="note">無完全相同重複列</div></div>
+  <div class="kpi"><div class="label">Rating Missing</div><div class="value">46.76%</div><div class="note">5,377 筆缺失</div></div>
+</div>
+
+<section class="section" id="s21">
+<h2><span class="num">2.1</span>資料理解的目的</h2>
+<p>模型訓練前必須先確認每個欄位的意義、資料型態、缺失情況，以及是否可能造成 Target Leakage（目標洩漏）或 Data Leakage（資料洩漏）。高分模型若使用了不應取得的資訊，並不代表真正具有辨識能力。</p>
+<div class="flow"><span class="step">資料規模</span><span class="arrow">→</span><span class="step">欄位定義</span><span class="arrow">→</span><span class="step">資料品質</span><span class="arrow">→</span><span class="step">分布與異常</span><span class="arrow">→</span><span class="step">Success 比例</span><span class="arrow">→</span><span class="step">第三章處理策略</span></div>
+<div class="callout"><strong>本章核心問題：</strong>11,500 筆 Google Play App 資料包含哪些資訊？哪些欄位可繼續使用，哪些欄位必須先轉換、排除或進一步稽核？</div>
+</section>
+
+<section class="section" id="s22">
+<h2><span class="num">2.2</span>原始資料集概況</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>項目</th><th>正式內容</th></tr></thead>
+<tbody>
+<tr><td>資料來源</td><td><code>google_playstore_2026.csv</code></td></tr>
+<tr><td>原始資料筆數</td><td>11,500 筆</td></tr>
+<tr><td>原始欄位數</td><td>15 欄</td></tr>
+<tr><td>完全重複資料列</td><td>0 筆</td></tr>
+<tr><td>Problem Type（問題類型）</td><td>Supervised Learning（監督式學習）－ Binary Classification（二元分類）</td></tr>
+<tr><td>Target 建立依據</td><td>Installs</td></tr>
+<tr><td>Derived Target（衍生目標）</td><td>Y = Success；Installs ≥ 10,000 → 1，否則 → 0</td></tr>
+</tbody></table></div>
+<div class="callout"><strong>結構區分：</strong>Success 並不是原始 CSV 的第 16 欄，而是依 Installs 建立的衍生 Target（目標變數），因此原始資料結構仍為 15 欄。</div>
+</section>
+
+<section class="section" id="s23">
+<h2><span class="num">2.3</span>原始欄位與屬性描述</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>欄位</th><th>型態／角色</th><th>資料理解與後續注意事項</th></tr></thead>
+<tbody>
+<tr><td>App</td><td>String／識別資訊</td><td>2,377 個不同名稱；高基數，不宜直接 One-Hot Encoding（獨熱編碼）。</td></tr>
+<tr><td>Category</td><td>Categorical（類別型）</td><td>36 類，具有研究意義的候選特徵。</td></tr>
+<tr><td>Rating</td><td>Float64</td><td>缺失 5,377 筆（46.76%）；亦須考量預測時點是否可取得。</td></tr>
+<tr><td>Reviews</td><td>Int64</td><td>高度右偏，且屬上架後累積市場資訊，需做 Leakage 判斷。</td></tr>
+<tr><td>Size</td><td>String</td><td>包含數值與 Varies with device，需轉換。</td></tr>
+<tr><td>Installs</td><td>String／Target Source</td><td>用於建立 Success；建立 Y 後不得進入 X。</td></tr>
+<tr><td>Type / Price</td><td>Binary / Float</td><td>Free 高度占優勢；Price 多數為 0，兩者可能資訊重疊。</td></tr>
+<tr><td>Content Rating</td><td>Categorical</td><td>共 6 類。</td></tr>
+<tr><td>Genres</td><td>Categorical</td><td>79 種不同值，部分紀錄含多重 Genre。</td></tr>
+<tr><td>Last Updated</td><td>Date String</td><td>需轉 datetime 並建立衍生特徵。</td></tr>
+<tr><td>Current Ver</td><td>String</td><td>高基數版本字串，缺乏跨 App 的共同數值尺度。</td></tr>
+<tr><td>Android Ver</td><td>Categorical</td><td>可轉換為最低支援版本等衍生特徵。</td></tr>
+<tr><td>In-App Purchases</td><td>Binary</td><td>Yes 占 66.90%。</td></tr>
+<tr><td>Ad Supported</td><td>Binary</td><td>Yes 占 77.10%。</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="section" id="s24">
+<h2><span class="num">2.4</span>關鍵欄位的進一步觀察</h2>
+<div class="grid-2">
+<div class="mini-card"><div class="icon blue"><i class="fa fa-th-large"></i></div><b>App 與 Category</b><p>App 僅 2,377 個唯一名稱，不能把同名紀錄直接視為完全重複；Category 共 36 類，分布不均。</p></div>
+<div class="mini-card"><div class="icon orange"><i class="fa fa-star"></i></div><b>Rating</b><p>僅 6,123 筆有評分，缺失率 46.76%；平均約 4.06、中位數 4.10，且屬上架後形成資訊。</p></div>
+<div class="mini-card"><div class="icon red"><i class="fa fa-comments"></i></div><b>Reviews</b><p>Q1=2、中位數=5、Q3=45，但平均約 8,551、最大 12,460,594，呈極端右偏長尾。</p></div>
+<div class="mini-card"><div class="icon green"><i class="fa fa-money"></i></div><b>Type / Price</b><p>Free 11,027 筆（95.89%），Paid 473 筆（4.11%）；Price 的 Q1、中位數、Q3 均為 0。</p></div>
+</div>
+<h3>主要 Category 資料量</h3>
+<div class="bar-list">
+<div class="bar-row"><span>GAME</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><b>2,061</b></div>
+<div class="bar-row"><span>FAMILY</span><div class="bar-track"><div class="bar-fill" style="width:85.5%"></div></div><b>1,763</b></div>
+<div class="bar-row"><span>TOOLS</span><div class="bar-track"><div class="bar-fill" style="width:56.4%"></div></div><b>1,162</b></div>
+<div class="bar-row"><span>PRODUCTIVITY</span><div class="bar-track"><div class="bar-fill" style="width:46.1%"></div></div><b>951</b></div>
+<div class="bar-row"><span>ARTIFICIAL_INTELLIGENCE</span><div class="bar-track"><div class="bar-fill" style="width:39.9%"></div></div><b>823</b></div>
+<div class="bar-row"><span>FINANCE</span><div class="bar-track"><div class="bar-fill" style="width:35.0%"></div></div><b>721</b></div>
+<div class="bar-row"><span>SOCIAL</span><div class="bar-track"><div class="bar-fill" style="width:29.5%"></div></div><b>607</b></div>
+</div>
+<div class="callout"><strong>商業模式：</strong>In-App Purchases（內購）Yes = 66.90%；Ad Supported（廣告支援）Yes = 77.10%。</div>
+</section>
+
+<section class="section" id="s25">
+<h2><span class="num">2.5</span>缺失值與資料品質</h2>
+<p>15 個原始欄位中，只有 Rating 存在 NaN：5,377 筆，占 46.76%；其餘 14 欄 NaN 為 0。</p>
+<div class="warning callout"><strong>NaN = 0 不代表可直接建模：</strong>Size、Current Ver、Android Ver 等欄位仍可能含有 <code>Varies with device</code> 等特殊內容，需要格式轉換或特別處理。</div>
+</section>
+
+<section class="section" id="s26">
+<h2><span class="num">2.6</span>重複資料與同名 App</h2>
+<div class="grid-2">
+<div class="mini-card"><div class="icon green"><i class="fa fa-check"></i></div><b>Duplicate Row（完全重複列）</b><p>0 筆。原始資料沒有整列完全相同的重複紀錄。</p></div>
+<div class="mini-card"><div class="icon purple"><i class="fa fa-copy"></i></div><b>Duplicate App Name（同名 App）</b><p>App 僅 2,377 個唯一名稱；同名紀錄其他欄位仍可能不同，不能直接刪除。</p></div>
+</div>
+<div class="danger callout"><strong>切分風險：</strong>若同一 App 的相似紀錄同時落入 Train / Test，可能形成 Group Leakage 或 Entity Leakage，造成測試結果被高估；此問題需在第三章繼續稽核。</div>
+</section>
+
+<section class="section" id="s27">
+<h2><span class="num">2.7</span>Target Success 的 Exploratory Data Analysis（探索式資料分析）</h2>
+<div class="class-viz">
+<div class="donut-wrap"><div class="donut"><div class="donut-center"><b>16.93%</b><span>Success = 1</span></div></div></div>
+<div>
+<p><b>Success = 1：</b>Installs ≥ 10,000，共 1,947 筆（16.93%）。</p>
+<p><b>Success = 0：</b>Installs &lt; 10,000，共 9,553 筆（83.07%）。</p>
+<div class="callout"><strong>Imbalance Ratio（不平衡比例）：</strong>Class 0 : Class 1 ≈ <b>4.91 : 1</b>，後續模型評估必須特別關注少數類別。</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="s28">
+<h2><span class="num">2.8</span>為什麼 Accuracy（準確率）不足以代表模型好壞</h2>
+<p>Class 0 已占 83.07%。若模型把所有 App 都預測為 Class 0，即使完全無法辨識 Success = 1，Accuracy（準確率）仍可達 83.07%。</p>
+<div class="grid-3">
+<div class="mini-card"><div class="icon blue"><i class="fa fa-crosshairs"></i></div><b>Precision / Recall</b><p>觀察少數類別預測品質與找回能力。</p></div>
+<div class="mini-card"><div class="icon green"><i class="fa fa-line-chart"></i></div><b>F1 / ROC-AUC</b><p>補充分類平衡與整體排序能力。</p></div>
+<div class="mini-card"><div class="icon purple"><i class="fa fa-area-chart"></i></div><b>PR-AUC / Confusion Matrix</b><p>在類別不平衡情境中特別重要，並直接檢視 TP、FP、FN、TN。</p></div>
+</div>
+<div class="callout"><strong>評估重點：</strong>後續尤其關注 Class 1 的 Recall（召回率）與 F1-score（F1 分數），而不是只看 Accuracy。</div>
+</section>
+
+<section class="section" id="s29">
+<h2><span class="num">2.9</span>Target Leakage（目標洩漏）的初步判斷</h2>
+<div class="danger callout"><strong>Installs 必須排除：</strong>Success 本身由 Installs 是否達 10,000 建立；建立 Y 後若仍把 Installs 放入 X，模型等於直接取得答案。</div>
+<p>Rating 與 Reviews 則必須依 Prediction Time（預測時點）與系統用途進一步判斷，不得只因可能提高模型分數就直接保留。</p>
+</section>
+
+<section class="section" id="s210">
+<h2><span class="num">2.10</span>EDA 後的欄位初步分類</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>欄位角色</th><th>欄位</th><th>後續方向</th></tr></thead>
+<tbody>
+<tr><td>Target Source</td><td>Installs</td><td>建立 Success 後不得進入 X。</td></tr>
+<tr><td>主要候選特徵</td><td>Category、Size、Type、Price、Content Rating、Genres、Last Updated、Android Ver、In-App Purchases、Ad Supported</td><td>進入第三章清理與 Feature Engineering（特徵工程）。</td></tr>
+<tr><td>Leakage 判斷</td><td>Rating、Reviews</td><td>依 Prediction Time 與用途決定是否納入。</td></tr>
+<tr><td>識別／高基數</td><td>App、Current Ver</td><td>不直接投入模型，先做資料結構判斷。</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="section" id="s211">
+<h2><span class="num">2.11</span>本章小結</h2>
+<p>EDA 確認原始資料為 11,500 筆、15 欄，且沒有完全重複列。Rating 是唯一存在 NaN 的欄位，缺失率 46.76%；Reviews 呈現明顯右偏長尾；Size、Last Updated、Android Ver 等欄位雖無 NaN，仍需轉換後才能建模。</p>
+<p>Success 的 Class 0 / Class 1 分別為 83.07% / 16.93%，Imbalance Ratio 約 4.91 : 1，因此後續不能只使用 Accuracy（準確率）評估。Installs 必須排除，Rating 與 Reviews 則留待第三章完成 Leakage / Proxy Audit（資料洩漏／代理變數稽核）。</p>
+<div class="flow"><span class="step">Data Understanding</span><span class="arrow">→</span><span class="step">Data Quality</span><span class="arrow">→</span><span class="step">Leakage Risk</span><span class="arrow">→</span><span class="step">Class Imbalance</span><span class="arrow">→</span><span class="step">Chapter 03 Cleaning & Feature Engineering</span></div>
+</section>
+
+<div class="footer">Ch02｜Google Play App AI Success Prediction Project</div>
+</div></main>
+</div>
+
+<script>
+(function(){
+  const toggle=document.getElementById("ch02Toggle");
+  const menu=document.getElementById("ch02SectionMenu");
+  if(toggle&&menu){
+    toggle.addEventListener("click",function(e){
+      e.preventDefault();
+      const collapsed=menu.classList.contains("is-collapsed");
+      menu.classList.toggle("is-collapsed",!collapsed);
+      toggle.classList.toggle("menu-open",collapsed);
+    });
+  }
+  const params=new URLSearchParams(window.location.search);
+  if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+})();
+</script>
+</body>
+</html>

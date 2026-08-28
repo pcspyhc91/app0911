@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch04｜第四章 機器學習模型建立與評估</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
+  --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
+  --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
+  --shadow:0 8px 28px rgba(31,41,55,.08)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans TC",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#111827;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.13)}
+.brand{font-weight:800;letter-spacing:.4px}.top-actions a{padding:7px 12px;border-radius:8px;background:#253044;color:#fff;font-size:14px}.top-actions a:hover{background:#34425b}
+.layout{display:flex;min-height:calc(100vh - 58px)}
+.sidebar{width:290px;flex:0 0 290px;background:#fff;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto}
+.sidebar h3{margin:0 10px 16px;font-size:18px}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:4px 0;border-radius:9px;color:#344054;font-size:14px;transition:.18s ease}
+.nav a:hover{background:var(--blue-soft);color:var(--blue-dark);transform:translateX(2px)}.nav i{width:18px;text-align:center}
+.nav .active{background:var(--blue);color:#fff;font-weight:700}
+.ch04-section-menu{display:block}.ch04-section-menu.is-collapsed{display:none}
+#ch04Toggle{cursor:pointer;user-select:none}#ch04Toggle .toggle-icon{margin-left:auto;transition:transform .18s ease}#ch04Toggle.menu-open .toggle-icon{transform:rotate(180deg)}
+.main{flex:1;min-width:0;padding:30px}.wrapper{max-width:1180px;margin:0 auto}
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:38px 40px;background:linear-gradient(135deg,#145b8e 0%,#258fd8 55%,#70bced 100%);color:#fff;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;right:-100px;top:-120px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}.hero p{margin:0;max-width:900px;font-size:17px;opacity:.96}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
+.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-weight:800;font-size:24px;margin:4px 0}.kpi .note{font-size:13px;color:#475467}
+.section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}
+.section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}
+.section h3{font-size:18px;margin:20px 0 8px}.section p{margin:8px 0;color:#344054}
+.callout{border-left:5px solid var(--blue);background:var(--blue-soft);border-radius:10px;padding:14px 16px;margin:14px 0}.callout strong{color:var(--blue-dark)}
+.warning{border-left-color:var(--orange);background:var(--orange-soft)}.warning strong{color:#8a5900}
+.danger{border-left-color:var(--red);background:var(--red-soft)}.danger strong{color:#9d3030}
+.success{border-left-color:var(--green);background:var(--green-soft)}.success strong{color:#197046}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}.mini-card .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+.icon.blue{background:var(--blue-soft);color:var(--blue-dark)}.icon.green{background:var(--green-soft);color:var(--green)}.icon.orange{background:var(--orange-soft);color:#a96600}.icon.purple{background:var(--purple-soft);color:var(--purple)}.icon.red{background:var(--red-soft);color:var(--red)}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.flow .step{padding:9px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px;font-weight:600}.flow .arrow{color:#98a2b3}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f8fafc;color:#475467}td:first-child{font-weight:700;color:#344054}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.metric{padding:15px;border:1px solid var(--line);border-radius:12px;background:#f8fafc}.metric .m-label{font-size:12px;color:var(--muted)}.metric .m-value{font-size:22px;font-weight:800;margin-top:3px}
+.audit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.audit{padding:10px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px}.audit i{color:var(--green);margin-right:7px}
+.footer{color:#98a2b3;text-align:center;font-size:13px;padding:24px 0 10px}
+body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.embed-mode .layout{display:block!important;min-height:100vh!important}body.embed-mode .main{padding:16px 22px 30px!important;width:100%!important}body.embed-mode .wrapper{max-width:1180px!important;margin:0 auto!important}body.embed-mode{background:#f4f7fb!important}
+@media(max-width:980px){.sidebar{display:none}.main{padding:20px}.kpis,.metric-grid{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr}.audit-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.kpis,.grid-2,.metric-grid{grid-template-columns:1fr}.hero{padding:28px 22px}.hero h1{font-size:29px}}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="brand"><i class="fa fa-line-chart"></i>&nbsp; Google Play App AI Project</div>
+  <div class="top-actions"><a href="index.html"><i class="fa fa-home"></i>&nbsp; Dashboard</a></div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <h3>第四章｜機器學習模型建立與評估</h3>
+  <nav class="nav">
+    <a class="active menu-open" href="#top" id="ch04Toggle"><i class="fa fa-book"></i><span>Chapter 04</span><i class="fa fa-chevron-up toggle-icon"></i></a>
+    <div id="ch04SectionMenu" class="ch04-section-menu">
+      <a href="#s41"><i class="fa fa-check-square-o"></i>4.1 建模前最終確認</a>
+      <a href="#s42"><i class="fa fa-bar-chart"></i>4.2 基準模型比較</a>
+      <a href="#s43"><i class="fa fa-balance-scale"></i>4.3 類別不平衡改善</a>
+      <a href="#s44"><i class="fa fa-sliders"></i>4.4 超參數調整</a>
+      <a href="#s45"><i class="fa fa-trophy"></i>4.5 候選模型與選模</a>
+      <a href="#s46"><i class="fa fa-flask"></i>4.6 最終 Test 評估</a>
+    </div>
+  </nav>
+</aside>
+
+<main class="main"><div class="wrapper" id="top">
+
+<section class="hero">
+  <div class="eyebrow">CHAPTER 04 · MACHINE LEARNING MODELING & EVALUATION</div>
+  <h1>第四章｜機器學習模型建立與評估</h1>
+  <p>在固定 Target、13 個 Baseline Features、Train/Test Split 與 Leakage Governance 下，依序完成 Pre-Modeling Audit、Baseline Comparison、Class-Imbalance Treatment、Nested-CV Hyperparameter Tuning、Candidate Selection 與 One-time Final Test，將「研究流程成功」與「模型泛化能力不足」分開、如實呈現。</p>
+</section>
+
+<div class="kpis">
+  <div class="kpi"><div class="label">Training / Test</div><div class="value">9,200 / 2,300</div><div class="note">固定 Stratified Split</div></div>
+  <div class="kpi"><div class="label">Baseline Features</div><div class="value">13 → 63</div><div class="note">Raw representations → processed</div></div>
+  <div class="kpi"><div class="label">Selected Model</div><div class="value">LR | Tuned</div><div class="note">Relative Best Candidate</div></div>
+  <div class="kpi"><div class="label">Final Test PR-AUC</div><div class="value">0.162386</div><div class="note">低於 No-skill 0.169130</div></div>
+</div>
+
+<section class="section" id="s41">
+<h2><span class="num">4.1</span>Pre-Modeling Final Check（模型建立前最終確認）</h2>
+<p>第四章不重新定義 Success、不變更 13 個 Baseline Features，也不變更第三章鎖定的 Train/Test Split 與前處理方法。正式建模前先重建資料、稽核完整性與確認 Modeling Readiness。</p>
+
+<div class="grid-3">
+  <div class="mini-card"><div class="icon blue"><i class="fa fa-database"></i></div><b>Step 1｜Rebuild</b><p>SQL 工作資料 11,500 × 29；Baseline X = 11,500 × 13；X_train / X_test = 9,200 / 2,300；Processed = 63 欄。</p></div>
+  <div class="mini-card"><div class="icon green"><i class="fa fa-shield"></i></div><b>Step 2｜Integrity Audit</b><p>15 項模型資料完整性稽核全部 PASS，涵蓋 Missingness、Structural Missingness、Encoding、Numeric Processing 與 Index Alignment。</p></div>
+  <div class="mini-card"><div class="icon purple"><i class="fa fa-check-circle"></i></div><b>Step 3｜Readiness</b><p>18 項 Modeling Readiness 稽核 PASS，包含 5-Fold Stratified CV、Required Metrics 與 Test Set Isolation。</p></div>
+</div>
+
+<div class="callout"><strong>CV 防洩漏原則：</strong>正式 Cross-Validation 不直接對整份 X_train_processed 做 Fold 切分；Preprocessor 與 Classifier 必須放入同一 Pipeline，以 raw X_train 進入 StratifiedKFold，使每個 Fold 維持 Fold-level Train-only Fit。</div>
+<div class="success callout"><strong>4.1 正式判定：</strong>Pre-Modeling Final Check = COMPLETE；Modeling Readiness = READY；Test Set = Final Evaluation Only。</div>
+</section>
+
+<section class="section" id="s42">
+<h2><span class="num">4.2</span>Baseline Model Development and Comparison（基準模型建立與比較）</h2>
+<p>建立 1 個 Dummy Classifier（參考模型）與 6 個候選基準模型，以 Raw X_train / y_train 進行 Training-only 5-Fold Stratified Cross-Validation。基準階段不使用 class_weight、SMOTE、Hyperparameter Tuning 或 Threshold Tuning。</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>模型</th><th>角色</th><th>關鍵 Baseline 結果</th></tr></thead>
+<tbody>
+<tr><td>Dummy Classifier</td><td>No-skill Reference</td><td>Accuracy 0.830652；PR-AUC 0.169348；TP=0</td></tr>
+<tr><td>Logistic Regression</td><td>Linear Baseline</td><td>TP=0；PR-AUC 0.167495</td></tr>
+<tr><td>K-Nearest Neighbors</td><td>Distance Baseline</td><td>Precision 1=0.188235；PR-AUC=0.173420；TP=64</td></tr>
+<tr><td>Support Vector Classifier</td><td>Kernel Baseline</td><td>TP=0；PR-AUC=0.165098</td></tr>
+<tr><td>Decision Tree</td><td>Single Tree</td><td>Recall 1=0.157253；F1 1=0.155605；TP=245；FP=1,346</td></tr>
+<tr><td>Random Forest</td><td>Bagging</td><td>TP=19；PR-AUC=0.162487</td></tr>
+<tr><td>Gradient Boosting</td><td>Boosting</td><td>預測 10 筆 Class 1，但 TP=0</td></tr>
+</tbody>
+</table></div>
+
+<div class="metric-grid">
+  <div class="metric"><div class="m-label">Model-Fold Executions</div><div class="m-value">35 / 35</div></div>
+  <div class="metric"><div class="m-label">No-skill PR-AUC</div><div class="m-value">0.169348</div></div>
+  <div class="metric"><div class="m-label">Above No-skill</div><div class="m-value">1</div></div>
+  <div class="metric"><div class="m-label">Strong Baseline</div><div class="m-value">False</div></div>
+</div>
+
+<div class="warning callout"><strong>正式判讀：</strong>KNN 在部分排序指標相對領先，Decision Tree 在 Recall / F1 Class 1 領先，但沒有任何模型同時具備足夠的 Precision、Recall、F1、ROC-AUC 與 PR-AUC。4.2 執行成功，但尚未找到可直接作為最終模型的強模型。</div>
+</section>
+
+<section class="section" id="s43">
+<h2><span class="num">4.3</span>Class-Imbalance Treatment and Model Improvement（類別不平衡處理與模型改善）</h2>
+<p>面對約 4.91 : 1 的 Class Imbalance（類別不平衡），第一階段採單一變因實驗：對原生支援類別權重的模型使用 <code>class_weight="balanced"</code>，其餘資料、前處理、CV Fold 與 Threshold 均不變。</p>
+
+<div class="grid-2">
+  <div class="mini-card"><div class="icon green"><i class="fa fa-exchange"></i></div><b>Class Weight 有效改變分類行為</b><p>Balanced 版本能提高部分模型的 Class 1 預測數量與 Recall / F1，但往往伴隨明顯增加的 False Positive。</p></div>
+  <div class="mini-card"><div class="icon red"><i class="fa fa-line-chart"></i></div><b>排序能力未實質突破</b><p>4 個 Balanced Models 的 PR-AUC 均未高於 No-skill 0.169348，表示改善主要來自分類邊界移動，而非少數類別排序能力提升。</p></div>
+</div>
+
+<div class="callout"><strong>相對角色：</strong>Random Forest 為 Relative Class-Weight Treatment Candidate；Logistic Regression 作為 Minority Recall / F1 Reference。</div>
+<div class="warning callout"><strong>4.3 正式判定：</strong>Strong Class-Imbalance Treatment Identified = False；Strong Minority-Class Model Identified = False；Final Best Model Selected = False；Test Set Used = False。</div>
+</section>
+
+<section class="section" id="s44">
+<h2><span class="num">4.4</span>Hyperparameter Tuning（超參數調整）</h2>
+<p>針對 Logistic Regression、SVC、Decision Tree 與 Random Forest 使用 Training-only Nested Cross-Validation。Inner CV 負責參數搜尋，Outer CV 產生未參與該次搜尋的 OOF 預測，Test Set 全程保持隔離。</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Tuned Model</th><th>PR-AUC</th><th>Δ vs No-skill</th><th>正式觀察</th></tr></thead>
+<tbody>
+<tr><td>Decision Tree</td><td>0.171887</td><td>+0.002539</td><td>最高 Tuned PR-AUC，但穩定性／過度擬合風險較高</td></tr>
+<tr><td>Logistic Regression</td><td>0.169784</td><td>+0.000436</td><td>略高於 No-skill；相對最低過度擬合風險</td></tr>
+<tr><td>Support Vector Classifier</td><td>0.166699</td><td>−0.002649</td><td>仍低於 No-skill，參數不穩定</td></tr>
+<tr><td>Random Forest</td><td>0.165224</td><td>−0.004124</td><td>Recall / F1 改善較大，但 FP 明顯增加</td></tr>
+</tbody></table></div>
+
+<div class="metric-grid">
+  <div class="metric"><div class="m-label">Outer Search</div><div class="m-value">20 / 20</div></div>
+  <div class="metric"><div class="m-label">Above No-skill</div><div class="m-value">2 / 4</div></div>
+  <div class="metric"><div class="m-label">Test Isolation Audit</div><div class="m-value">41 / 41</div></div>
+  <div class="metric"><div class="m-label">Strong Tuned Model</div><div class="m-value">False</div></div>
+</div>
+
+<div class="warning callout"><strong>正式結論：</strong>超參數調整確實改變分類行為，也改善部分指標，但改善幅度有限。SVC、Decision Tree、Random Forest 出現較高 Train / Validation Gap；尚未找到兼具排序能力、少數類別辨識、錯誤代價與穩定性的強模型。</div>
+</section>
+
+<section class="section" id="s45">
+<h2><span class="num">4.5</span>Candidate Model Comparison and Final Model Selection（候選模型比較與最佳模型選擇）</h2>
+<p>整合 7 組 Baseline、4 組 Balanced 與 4 組 Tuned 結果，共 15 組正式證據；扣除 Dummy Classifier 後，Selection-eligible Candidates = 14。所有選模證據均只來自 Training-only OOF / Nested-CV Outer OOF。</p>
+
+<div class="grid-3">
+  <div class="mini-card"><div class="icon blue"><i class="fa fa-list-ol"></i></div><b>Multi-Metric Rank</b><p>Logistic Regression | Tuned 共同排名第 1；Decision Tree | Tuned 第 2。</p></div>
+  <div class="mini-card"><div class="icon purple"><i class="fa fa-random"></i></div><b>Sensitivity Analysis</b><p>Formal Balanced、PR-AUC Priority、Minority Recall Priority、Overall Balance Priority 四種情境中，Tuned LR 均排名第 1。</p></div>
+  <div class="mini-card"><div class="icon green"><i class="fa fa-shield"></i></div><b>Stability Evidence</b><p>Tuned Logistic Regression 在 4 個 Tuned Models 的穩定性比較中排名第 1，但仍屬 Moderate Overfitting / Partially Stable。</p></div>
+</div>
+
+<div class="table-wrap"><table>
+<thead><tr><th>正式選模證據</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>Selected Model</td><td><b>Logistic Regression | Tuned</b></td></tr>
+<tr><td>Selection Type</td><td>Relative Best Candidate</td></tr>
+<tr><td>Common Multi-Metric Rank</td><td>1</td></tr>
+<tr><td>Sensitivity Summary Rank</td><td>1；Top-1 = 4/4；Top-3 = 4/4</td></tr>
+<tr><td>Stability Comparison Rank</td><td>1</td></tr>
+<tr><td>Strong Model Identified</td><td>False</td></tr>
+</tbody></table></div>
+
+<div class="danger callout"><strong>Strong Model Guardrail：</strong>5 項門檻僅 Recall Class 1 通過；PR-AUC Lift、ROC-AUC、F1 Class 1 與 Stability 均未達標。因此選定的是 Relative Best Candidate（相對最佳候選），不是 Strong Model（強模型）。</div>
+<div class="success callout"><strong>4.5 正式決策：</strong>鎖定 Logistic Regression | Tuned，交由 4.6 進行一次性獨立 Test Set 評估；Test Set 在正式模型完全固定前不得開啟。</div>
+</section>
+
+<section class="section" id="s46">
+<h2><span class="num">4.6</span>Final Test-set Evaluation（最終測試集評估）</h2>
+<p>4.6 依 One-time Test-set Governance 執行模型鎖定、正式資料重建、Full Training Set GridSearch、模型 SHA-256 指紋鎖定，以及唯一一次 Test Set 評估。測試結果不得回饋修改模型、參數、特徵或 Threshold。</p>
+
+<h3>4.6.1～4.6.3：模型與資料鎖定</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>鎖定項目</th><th>正式結果</th></tr></thead>
+<tbody>
+<tr><td>Selected Estimator</td><td>LogisticRegression</td></tr>
+<tr><td>Best C</td><td>0.1</td></tr>
+<tr><td>class_weight</td><td>balanced</td></tr>
+<tr><td>l1_ratio</td><td>1.0</td></tr>
+<tr><td>Threshold</td><td>0.5（default；no tuning）</td></tr>
+<tr><td>Resampling</td><td>None</td></tr>
+<tr><td>Maximum Test Evaluation Count</td><td>1</td></tr>
+<tr><td>Locked Model SHA-256</td><td style="word-break:break-all">792c77ccfbd89bd67dff9e7c9c155d661faff50869bce24e8a14dca67fc20882</td></tr>
+</tbody></table></div>
+
+<h3>4.6.4：唯一一次 Final Test</h3>
+<div class="metric-grid">
+  <div class="metric"><div class="m-label">Accuracy</div><div class="m-value">0.528696</div></div>
+  <div class="metric"><div class="m-label">Precision Class 1</div><div class="m-value">0.153539</div></div>
+  <div class="metric"><div class="m-label">Recall Class 1</div><div class="m-value">0.395887</div></div>
+  <div class="metric"><div class="m-label">F1 Class 1</div><div class="m-value">0.221264</div></div>
+  <div class="metric"><div class="m-label">F1 Macro</div><div class="m-value">0.441680</div></div>
+  <div class="metric"><div class="m-label">ROC-AUC</div><div class="m-value">0.477585</div></div>
+  <div class="metric"><div class="m-label">PR-AUC</div><div class="m-value">0.162386</div></div>
+  <div class="metric"><div class="m-label">PR-AUC Lift</div><div class="m-value">0.960125</div></div>
+</div>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Actual Class</th><th>Predicted 0</th><th>Predicted 1</th></tr></thead>
+<tbody>
+<tr><td>Actual 0</td><td>TN = 1,062</td><td>FP = 849</td></tr>
+<tr><td>Actual 1</td><td>FN = 235</td><td>TP = 154</td></tr>
+</tbody></table></div>
+
+<div class="warning callout"><strong>Error Cost：</strong>FP per TP = 5.512987，代表每辨識 1 個真正 Success App，約伴隨 5.51 個 False Positive。</div>
+
+<h3>4.6.5～4.6.7：泛化判讀與研究限制</h3>
+<div class="grid-2">
+  <div class="mini-card"><div class="icon red"><i class="fa fa-arrow-down"></i></div><b>Systematic Deterioration</b><p>Final Test 相較 OOF 為 7/7 指標下降；相較 Full CV 亦為 7/7 下降。Test PR-AUC 0.162386 低於 No-skill 0.169130，ROC-AUC 0.477585 低於 0.5。</p></div>
+  <div class="mini-card"><div class="icon orange"><i class="fa fa-exclamation-triangle"></i></div><b>Weak Independent Generalization</b><p>Training 階段的相對領先沒有轉化為足夠的 Independent Test 泛化證據；模型不可宣稱為 Strong Model，也不可直接部署作自動決策。</p></div>
+</div>
+
+<div class="audit-grid">
+  <div class="audit"><i class="fa fa-check-circle"></i>4.6.1 Audit：31 / 31 PASS</div>
+  <div class="audit"><i class="fa fa-check-circle"></i>4.6.2 Audit：32 / 32 PASS</div>
+  <div class="audit"><i class="fa fa-check-circle"></i>4.6.3 Audit：42 / 42 PASS</div>
+  <div class="audit"><i class="fa fa-check-circle"></i>4.6.4 Audit：50 / 50 PASS</div>
+  <div class="audit"><i class="fa fa-check-circle"></i>4.6.5 Audit：40 / 40 PASS</div>
+  <div class="audit"><i class="fa fa-check-circle"></i>4.6.6 Audit：48 / 48 PASS</div>
+</div>
+
+<div class="danger callout"><strong>第四章最終結論：</strong>研究已建立可重現、可稽核且維持 Test Set 隔離的完整 Machine Learning（機器學習）流程，並選出 Logistic Regression | Tuned 作為 Relative Best Candidate。然而，獨立 Test 結果不支持良好泛化能力，也未識別出 Strong Model。流程成功與模型效能不足必須同時、如實呈現。</div>
+</section>
+
+<div class="footer">Ch04｜Google Play App AI Success Prediction Project</div>
+</div></main>
+</div>
+
+<script>
+(function(){
+  const toggle=document.getElementById("ch04Toggle");
+  const menu=document.getElementById("ch04SectionMenu");
+  if(toggle&&menu){
+    toggle.addEventListener("click",function(e){
+      e.preventDefault();
+      const collapsed=menu.classList.contains("is-collapsed");
+      if(collapsed){menu.classList.remove("is-collapsed");toggle.classList.add("menu-open");}
+      else{menu.classList.add("is-collapsed");toggle.classList.remove("menu-open");}
+    });
+  }
+  const params=new URLSearchParams(window.location.search);
+  if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch01｜第一章 前言</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --ink:#1f2937;
+  --muted:#667085;
+  --line:#e6eaf0;
+  --blue:#2596e8;
+  --blue-dark:#136fb0;
+  --blue-soft:#eaf5fd;
+  --green:#2ea66f;
+  --green-soft:#eaf8f1;
+  --orange:#f5a623;
+  --orange-soft:#fff5df;
+  --red:#dc5a5a;
+  --red-soft:#fff0f0;
+  --purple:#7b61c9;
+  --purple-soft:#f1edfb;
+  --shadow:0 8px 28px rgba(31,41,55,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Noto Sans TC",sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.75;
+}
+a{text-decoration:none;color:inherit}
+
+.topbar{
+  position:sticky; top:0; z-index:20;
+  height:58px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 26px;
+  background:#111827;
+  color:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.13);
+}
+.brand{font-weight:800;letter-spacing:.4px}
+.top-actions{display:flex;gap:10px}
+.top-actions a{
+  padding:7px 12px;border-radius:8px;background:#253044;color:#fff;font-size:14px
+}
+.top-actions a:hover{background:#34425b}
+
+.layout{display:flex;min-height:calc(100vh - 58px)}
+.sidebar{
+  width:260px; flex:0 0 260px;
+  background:#fff;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:sticky; top:58px;
+  height:calc(100vh - 58px);
+  overflow:auto;
+}
+.sidebar h3{margin:0 10px 16px;font-size:18px}
+.nav a{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 12px;margin:4px 0;border-radius:9px;
+  color:#344054;font-size:15px;
+  transition:.18s ease;
+}
+.nav a:hover{background:var(--blue-soft);color:var(--blue-dark);transform:translateX(2px)}
+.nav i{width:18px;text-align:center}
+.nav .active{background:var(--blue);color:#fff;font-weight:700}
+
+.main{flex:1;min-width:0;padding:30px}
+.wrapper{max-width:1180px;margin:0 auto}
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:20px;
+  padding:38px 40px;
+  background:linear-gradient(135deg,#177fc5 0%,#2596e8 58%,#68baf0 100%);
+  color:#fff;
+  box-shadow:var(--shadow);
+}
+.hero:after{
+  content:"";
+  position:absolute;right:-100px;top:-120px;width:340px;height:340px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+}
+.hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}
+.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}
+.hero p{margin:0;max-width:800px;font-size:17px;opacity:.96}
+
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;margin:20px 0;
+}
+.kpi{
+  background:var(--card);border:1px solid var(--line);border-radius:15px;
+  padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04);
+}
+.kpi .label{color:var(--muted);font-size:13px}
+.kpi .value{font-weight:800;font-size:25px;margin:4px 0}
+.kpi .note{font-size:13px;color:#475467}
+
+.section{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:26px 28px;
+  margin:18px 0;
+  box-shadow:0 5px 18px rgba(31,41,55,.04);
+}
+.section h2{
+  margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px
+}
+.section h2 .num{
+  background:var(--blue-soft);color:var(--blue-dark);
+  font-size:14px;padding:4px 9px;border-radius:999px
+}
+.section p{margin:8px 0;color:#344054}
+
+.callout{
+  border-left:5px solid var(--blue);
+  background:var(--blue-soft);
+  border-radius:10px;
+  padding:14px 16px;
+  margin:14px 0;
+}
+.callout strong{color:var(--blue-dark)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+.mini-card{
+  border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff
+}
+.mini-card .icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;font-size:18px
+}
+.icon.blue{background:var(--blue-soft);color:var(--blue-dark)}
+.icon.green{background:var(--green-soft);color:var(--green)}
+.icon.orange{background:var(--orange-soft);color:#a96600}
+.icon.purple{background:var(--purple-soft);color:var(--purple)}
+.icon.red{background:var(--red-soft);color:var(--red)}
+
+.success-box{
+  display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center
+}
+.donut-wrap{display:flex;justify-content:center;align-items:center}
+.donut{
+  width:210px;height:210px;border-radius:50%;
+  background:conic-gradient(var(--blue) 0 16.93%, #d8dee8 16.93% 100%);
+  position:relative;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.03)
+}
+.donut:after{
+  content:"";
+  position:absolute;inset:34px;border-radius:50%;background:#fff
+}
+.donut-center{
+  position:absolute;inset:0;z-index:2;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center
+}
+.donut-center b{font-size:30px}
+.donut-center span{font-size:13px;color:var(--muted)}
+.legend{margin-top:16px}
+.legend div{display:flex;align-items:center;gap:9px;margin:7px 0;font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%}
+
+.formula{
+  font-size:18px;font-weight:700;
+  padding:13px 16px;border-radius:10px;background:#f8fafc;
+  border:1px dashed #cdd5df;margin:14px 0
+}
+
+.objectives{
+  counter-reset:item;
+  display:grid;grid-template-columns:1fr 1fr;gap:12px
+}
+.objective{
+  position:relative;padding:14px 15px 14px 48px;
+  background:#f8fafc;border:1px solid var(--line);border-radius:11px
+}
+.objective:before{
+  counter-increment:item;content:counter(item);
+  position:absolute;left:14px;top:14px;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--blue);color:#fff;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center
+}
+
+.flow{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px
+}
+.flow .step{
+  padding:9px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);
+  font-size:14px;font-weight:600
+}
+.flow .arrow{color:#98a2b3}
+
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left}
+th{background:#f8fafc;color:#475467}
+td:first-child{font-weight:700;color:#344054;width:220px}
+
+.footer{
+  color:#98a2b3;text-align:center;font-size:13px;padding:24px 0 10px
+}
+
+@media(max-width:980px){
+  .sidebar{display:none}
+  .main{padding:20px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:1fr}
+  .success-box{grid-template-columns:1fr}
+}
+@media(max-width:680px){
+  .kpis,.grid-2,.objectives{grid-template-columns:1fr}
+  .hero{padding:28px 22px}
+  .hero h1{font-size:29px}
+}
+
+/* ===== Embedded mode for index.html ===== */
+body.embed-mode .topbar,
+body.embed-mode .sidebar {
+  display: none !important;
+}
+body.embed-mode .layout {
+  display: block !important;
+  min-height: 100vh !important;
+}
+body.embed-mode .main {
+  padding: 16px 22px 30px !important;
+  width: 100% !important;
+}
+body.embed-mode .wrapper {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+}
+body.embed-mode {
+  background: #f4f7fb !important;
+}
+.section { scroll-margin-top: 18px; }
+
+
+/* ===== Ch01 standalone collapsible submenu ===== */
+.ch01-section-menu { display: block; }
+.ch01-section-menu.is-collapsed { display: none; }
+#ch01Toggle { cursor: pointer; user-select: none; }
+#ch01Toggle .toggle-icon { margin-left: auto; transition: transform .18s ease; }
+#ch01Toggle.menu-open .toggle-icon { transform: rotate(180deg); }
+
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="brand"><i class="fa fa-line-chart"></i>&nbsp; Google Play App AI Project</div>
+  <div class="top-actions">
+    <a href="index.html"><i class="fa fa-home"></i>&nbsp; Dashboard</a>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h3>第一章｜前言</h3>
+    <nav class="nav">
+      <a class="active menu-open" href="#top" id="ch01Toggle">
+        <i class="fa fa-book"></i>
+        <span>Chapter 01</span>
+        <i class="fa fa-chevron-up toggle-icon"></i>
+      </a>
+      <div id="ch01SectionMenu" class="ch01-section-menu">
+<a href="#s11"><i class="fa fa-globe"></i> 1.1 研究背景</a>
+      <a href="#s12"><i class="fa fa-lightbulb-o"></i> 1.2 研究動機</a>
+      <a href="#s13"><i class="fa fa-bullseye"></i> 1.3 問題定義</a>
+      <a href="#s14"><i class="fa fa-list-check"></i> 1.4 研究目的</a>
+      <a href="#s15"><i class="fa fa-users"></i> 1.5 目標使用者</a>
+      <a href="#s16"><i class="fa fa-cogs"></i> 1.6 系統功能</a>
+      <a href="#s17"><i class="fa fa-diamond"></i> 1.7 決策價值</a>
+      <a href="#s18"><i class="fa fa-sitemap"></i> 1.8 分析邏輯</a>
+      <a href="#s19"><i class="fa fa-check-circle"></i> 1.9 本章重點</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="wrapper" id="top">
+
+      <section class="hero">
+        <div class="eyebrow">CHAPTER 01 · INTRODUCTION</div>
+        <h1>第一章｜前言</h1>
+        <p>
+          從 Google Play App 的產品條件與累積安裝狀態出發，建立可重現的二元分類研究，
+          並以 Machine Learning（機器學習）結果作為探索性決策支援，而非成功保證。
+        </p>
+      </section>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Dataset（資料規模）</div>
+          <div class="value">11,500</div>
+          <div class="note">Google Play App 資料快照</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Success Threshold（成功門檻）</div>
+          <div class="value">10,000+</div>
+          <div class="note">累積安裝量 Installs</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Success = 1</div>
+          <div class="value">16.93%</div>
+          <div class="note">1,947 筆</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Success = 0</div>
+          <div class="value">83.07%</div>
+          <div class="note">9,553 筆</div>
+        </div>
+      </div>
+
+      <section class="section" id="s11">
+        <h2><span class="num">1.1</span>研究背景</h2>
+        <p>
+          App 已深度融入社群、影音、購物、金融、教育與工作等日常情境。Google Play 雖提供成熟的發佈平台，
+          但也代表每款新 App 都必須面對大量同類型產品競爭。
+        </p>
+        <p>
+          類別、價格、容量、內容分級、Android 支援版本與營利方式，都可能與市場表現有關；
+          當影響因素同時存在時，僅靠直覺很難一致比較。
+        </p>
+        <div class="callout">
+          <strong>核心研究問題：</strong>
+          能否利用 Google Play App 的資料快照與產品特徵，建立具有實際辨識能力的分類模型，
+          判斷其累積安裝量是否已達 10,000 次？
+        </div>
+      </section>
+
+      <section class="section" id="s12">
+        <h2><span class="num">1.2</span>研究動機</h2>
+        <div class="grid-3">
+          <div class="mini-card">
+            <div class="icon blue"><i class="fa fa-money"></i></div>
+            <b>降低錯誤投入成本</b>
+            <p>開發、測試、上架、推廣與營運都需要資源，初期方向錯誤可能造成後續負擔。</p>
+          </div>
+          <div class="mini-card">
+            <div class="icon green"><i class="fa fa-database"></i></div>
+            <b>補強人工判斷</b>
+            <p>當 App 數量達數千筆時，人難以同時比較多項產品條件，也容易被少數熱門案例影響。</p>
+          </div>
+          <div class="mini-card">
+            <div class="icon orange"><i class="fa fa-balance-scale"></i></div>
+            <b>定位為決策支援</b>
+            <p>模型不取代產品經理或開發者，而是增加可量化、可比較、可重複驗證的參考資訊。</p>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>研究定位：</strong>
+          Decision Support Tool（決策支援工具），不是 Success Guarantee Tool（成功保證工具）。
+        </div>
+      </section>
+
+      <section class="section" id="s13">
+        <h2><span class="num">1.3</span>問題定義</h2>
+        <div class="success-box">
+          <div>
+            <p>
+              為讓 Machine Learning（機器學習）問題可訓練、可驗證，必須先建立一致且可重現的 Success（成功）標準。
+              本研究比較 10,000+、50,000+、100,000+ 與 Top 10%／20%／25% 等門檻後，
+              最終採用 <b>Installs ≥ 10,000</b>。
+            </p>
+            <div class="formula">Success = 1：Installs ≥ 10,000　｜　Success = 0：Installs &lt; 10,000</div>
+            <p>
+              因 Target（目標變數）只有 0 與 1，本研究屬於 Supervised Learning（監督式學習）
+              中的 Binary Classification（二元分類）問題。
+            </p>
+          </div>
+          <div class="donut-wrap">
+            <div>
+              <div class="donut">
+                <div class="donut-center"><b>16.93%</b><span>Success = 1</span></div>
+              </div>
+              <div class="legend">
+                <div><span class="dot" style="background:#2596e8"></span>Success = 1：1,947 筆</div>
+                <div><span class="dot" style="background:#d8dee8"></span>Success = 0：9,553 筆</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="s14">
+        <h2><span class="num">1.4</span>研究目的</h2>
+        <div class="objectives">
+          <div class="objective">整理原始資料，確認欄位定義、資料品質與市場分布。</div>
+          <div class="objective">依 Installs ≥ 10,000 建立 Success，形成可訓練的二元分類問題。</div>
+          <div class="objective">建立並比較多種分類模型，觀察對 Success = 1 的辨識能力。</div>
+          <div class="objective">使用 Accuracy、Precision、Recall、F1-score、ROC-AUC、PR-AUC 與 Confusion Matrix 評估模型。</div>
+          <div class="objective">分析處理後特徵與模型輸出的關聯，但不宣稱因果效果。</div>
+          <div class="objective">將鎖定模型整理成可操作的研究原型，並依獨立測試結果限制系統宣稱。</div>
+        </div>
+      </section>
+
+      <section class="section" id="s15">
+        <h2><span class="num">1.5</span>目標使用者（Who）</h2>
+        <div class="grid-2">
+          <div class="mini-card">
+            <div class="icon purple"><i class="fa fa-code"></i></div>
+            <b>App 開發者／小型團隊</b>
+            <p>比較免費或付費、是否內購、廣告模式、Android 支援版本等不同產品設定。</p>
+          </div>
+          <div class="mini-card">
+            <div class="icon blue"><i class="fa fa-briefcase"></i></div>
+            <b>產品經理／企劃／市場分析</b>
+            <p>將模型輸出作為市場調查、產品定位與營運討論之外的量化補充。</p>
+          </div>
+        </div>
+        <div class="callout">
+          模型分數屬於固定模型下的估計結果；尚未完成機率校準驗證前，
+          不應直接解讀成真實成功機率，也不能單獨支持產品採用或放棄決策。
+        </div>
+      </section>
+
+      <section class="section" id="s16">
+        <h2><span class="num">1.6</span>系統功能（What）</h2>
+        <p>
+          使用者輸入 App 條件後，系統依訓練階段相同的正式資料前處理進行轉換，
+          再送入鎖定模型完成推論，輸出 Success 分類與模型估計分數。
+        </p>
+        <div class="flow">
+          <span class="step">App 條件輸入</span><span class="arrow">→</span>
+          <span class="step">輸入驗證</span><span class="arrow">→</span>
+          <span class="step">正式前處理</span><span class="arrow">→</span>
+          <span class="step">鎖定模型推論</span><span class="arrow">→</span>
+          <span class="step">Success 分類</span><span class="arrow">→</span>
+          <span class="step">模型分數與限制</span>
+        </div>
+      </section>
+
+      <section class="section" id="s17">
+        <h2><span class="num">1.7</span>系統的決策價值</h2>
+        <div class="grid-3">
+          <div class="mini-card">
+            <div class="icon blue"><i class="fa fa-bar-chart"></i></div>
+            <b>量化比較</b>
+            <p>把大量歷史資料轉成可比較的模型輸出，補強純經驗式討論。</p>
+          </div>
+          <div class="mini-card">
+            <div class="icon green"><i class="fa fa-search"></i></div>
+            <b>探索訊號</b>
+            <p>模型顯示的特徵關聯可作為後續市場研究與產品檢查的優先線索。</p>
+          </div>
+          <div class="mini-card">
+            <div class="icon red"><i class="fa fa-warning"></i></div>
+            <b>限制優先</b>
+            <p>若獨立測試泛化證據不足，系統僅提供探索性訊號，不取代原有決策程序。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="s18">
+        <h2><span class="num">1.8</span>系統分析邏輯</h2>
+        <p>
+          本專題不是先決定演算法，再找資料套用；而是先確認使用者缺少何種判斷依據，
+          再以資料治理、Machine Learning（機器學習）與 Independent Test（獨立測試）
+          逐步確認系統能提供多少有效資訊。
+        </p>
+        <div class="flow">
+          <span class="step">市場問題</span><span class="arrow">→</span>
+          <span class="step">使用者需求</span><span class="arrow">→</span>
+          <span class="step">資料治理</span><span class="arrow">→</span>
+          <span class="step">模型建構</span><span class="arrow">→</span>
+          <span class="step">獨立測試</span><span class="arrow">→</span>
+          <span class="step">結果解釋與限制</span><span class="arrow">→</span>
+          <span class="step">探索性決策支援</span>
+        </div>
+      </section>
+
+      <section class="section" id="s19">
+        <h2><span class="num">1.9</span>本章重點整理</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>項目</th><th>本專題正式定義</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Research Question（研究問題）</td><td>分類 App 在資料快照觀察時點的累積安裝量是否已達 10,000 次</td></tr>
+              <tr><td>Problem Type（問題類型）</td><td>Supervised Learning（監督式學習）— Binary Classification（二元分類）</td></tr>
+              <tr><td>Target（目標變數）</td><td>Y = Success</td></tr>
+              <tr><td>Success = 1</td><td>Installs ≥ 10,000</td></tr>
+              <tr><td>Success = 0</td><td>Installs &lt; 10,000</td></tr>
+              <tr><td>Dataset（資料規模）</td><td>11,500 筆 App 資料</td></tr>
+              <tr><td>Class 1</td><td>1,947 筆（16.93%）</td></tr>
+              <tr><td>Class 0</td><td>9,553 筆（83.07%）</td></tr>
+              <tr><td>Primary Users（主要使用者）</td><td>App 開發者、產品經理／企劃、市場分析與營運人員</td></tr>
+              <tr><td>System Value（系統價值）</td><td>提供資料快照為基礎的探索性分類、模型估計與限制說明，作為產品與市場討論的補充依據</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="footer">Ch01｜Google Play App AI Success Prediction Project</div>
+    </div>
+  </main>
+</div>
+
+
+<script>
+(function () {
+  const toggle = document.getElementById("ch01Toggle");
+  const menu = document.getElementById("ch01SectionMenu");
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener("click", function (event) {
+    event.preventDefault();
+    const isCollapsed = menu.classList.contains("is-collapsed");
+
+    if (isCollapsed) {
+      // 已收合 → 展開
+      menu.classList.remove("is-collapsed");
+      toggle.classList.add("menu-open");
+    } else {
+      // 已展開 → 收合
+      menu.classList.add("is-collapsed");
+      toggle.classList.remove("menu-open");
+    }
+  });
+})();
+</script>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("embed") === "1") {
+    document.body.classList.add("embed-mode");
+  }
+})();
+</script>
+
+</body>
+</html>
