@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
 <style>
 :root{
   --bg:#f4f7fb;
   --card:#ffffff;
   --ink:#1f2937;
-  --muted:#667085;
+  --muted:#0033FF;
   --line:#e6eaf0;
   --blue:#2596e8;
   --blue-dark:#136fb0;
@@ -109,9 +110,25 @@ a{text-decoration:none;color:inherit}
   background:var(--card);border:1px solid var(--line);border-radius:15px;
   padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04);
 }
-.kpi .label{color:var(--muted);font-size:13px}
+.kpi .label{color:var(--muted);font-size:16px}
 .kpi .value{font-weight:800;font-size:25px;margin:4px 0}
-.kpi .note{font-size:13px;color:#475467}
+.kpi .note{font-size:16px;color:#D94DFF}
+
+.kpi.dataset-kpi {
+    background-color: #FFFFC5;
+}
+
+.kpi.threshold-kpi {
+    background-color: #EBFFEB;
+}
+
+.kpi.success-kpi {
+    background-color: #F5DEB3;
+}
+
+.kpi.failure-kpi {
+    background-color: #E6CFE6;
+}
 
 .section{
   background:var(--card);
@@ -160,22 +177,22 @@ a{text-decoration:none;color:inherit}
   display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center
 }
 .donut-wrap{display:flex;justify-content:center;align-items:center}
-.donut{
-  width:210px;height:210px;border-radius:50%;
-  background:conic-gradient(var(--blue) 0 16.93%, #d8dee8 16.93% 100%);
+.donut-stage{
   position:relative;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.03)
+  width:260px;height:260px;
+  display:flex;align-items:center;justify-content:center;
+  perspective:900px;
 }
-.donut:after{
-  content:"";
-  position:absolute;inset:34px;border-radius:50%;background:#fff
+.donut-canvas{
+  width:260px !important;height:260px !important;
+  display:block;cursor:pointer;
 }
 .donut-center{
-  position:absolute;inset:0;z-index:2;
+  position:absolute;inset:0;z-index:3;pointer-events:none;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center
+  text-align:center;transform:translateY(-2px);
 }
-.donut-center b{font-size:30px}
+.donut-center b{font-size:30px;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,.08)}
 .donut-center span{font-size:13px;color:var(--muted)}
 .legend{margin-top:16px}
 .legend div{display:flex;align-items:center;gap:9px;margin:7px 0;font-size:14px}
@@ -289,7 +306,8 @@ body.embed-mode {
 <a href="#s11"><i class="fa fa-globe"></i> 1.1 研究背景</a>
       <a href="#s12"><i class="fa fa-lightbulb-o"></i> 1.2 研究動機</a>
       <a href="#s13"><i class="fa fa-bullseye"></i> 1.3 問題定義</a>
-      <a href="#s14"><i class="fa fa-list-check"></i> 1.4 研究目的</a>
+      <a href="#s14"><i class="fa fa-list" aria-hidden="true"></i> 1.4 研究目的</a>
+
       <a href="#s15"><i class="fa fa-users"></i> 1.5 目標使用者</a>
       <a href="#s16"><i class="fa fa-cogs"></i> 1.6 系統功能</a>
       <a href="#s17"><i class="fa fa-diamond"></i> 1.7 決策價值</a>
@@ -311,28 +329,34 @@ body.embed-mode {
         </p>
       </section>
 
-      <div class="kpis">
-        <div class="kpi">
-          <div class="label">Dataset（資料規模）</div>
-          <div class="value">11,500</div>
-          <div class="note">Google Play App 資料快照</div>
-        </div>
-        <div class="kpi">
-          <div class="label">Success Threshold（成功門檻）</div>
-          <div class="value">10,000+</div>
-          <div class="note">累積安裝量 Installs</div>
-        </div>
-        <div class="kpi">
-          <div class="label">Success = 1</div>
-          <div class="value">16.93%</div>
-          <div class="note">1,947 筆</div>
-        </div>
-        <div class="kpi">
-          <div class="label">Success = 0</div>
-          <div class="value">83.07%</div>
-          <div class="note">9,553 筆</div>
-        </div>
-      </div>
+
+<div class="kpis">
+
+  <div class="kpi dataset-kpi">
+    <div class="label">Dataset（資料規模）</div>
+    <div class="value">11,500</div>
+    <div class="note">Google Play App 資料快照</div>
+  </div>
+
+  <div class="kpi threshold-kpi">
+    <div class="label">Success Threshold（成功門檻）</div>
+    <div class="value">10,000+</div>
+    <div class="note">累積安裝量 Installs</div>
+  </div>
+
+  <div class="kpi success-kpi">
+    <div class="label">Success = 1</div>
+    <div class="value">16.93%</div>
+    <div class="note">1,947 筆</div>
+  </div>
+
+  <div class="kpi failure-kpi">
+    <div class="label">Success = 0</div>
+    <div class="value">83.07%</div>
+    <div class="note">9,553 筆</div>
+  </div>
+
+</div>
 
       <section class="section" id="s11">
         <h2><span class="num">1.1</span>研究背景</h2>
@@ -393,12 +417,16 @@ body.embed-mode {
           </div>
           <div class="donut-wrap">
             <div>
-              <div class="donut">
-                <div class="donut-center"><b>16.93%</b><span>Success = 1</span></div>
+              <div class="donut-stage">
+                <canvas id="successDonut" class="donut-canvas" aria-label="Success 1 與 Success 0 比例甜甜圈圖"></canvas>
+                <div class="donut-center">
+                  <b>16.93%</b>
+                  <span>Success = 1</span>
+                </div>
               </div>
               <div class="legend">
-                <div><span class="dot" style="background:#2596e8"></span>Success = 1：1,947 筆</div>
-                <div><span class="dot" style="background:#d8dee8"></span>Success = 0：9,553 筆</div>
+                <div><span class="dot" style="background:#66FF00"></span>Success = 1：1,947 筆</div>
+                <div><span class="dot" style="background:#E680FF"></span>Success = 0：9,553 筆</div>
               </div>
             </div>
           </div>
@@ -421,7 +449,7 @@ body.embed-mode {
         <h2><span class="num">1.5</span>目標使用者（Who）</h2>
         <div class="grid-2">
           <div class="mini-card">
-            <div class="icon purple"><i class="fa fa-code"></i></div>
+            <div class="icon purple"><i class="fa fa-snowflake-o"></i></div>
             <b>App 開發者／小型團隊</b>
             <p>比較免費或付費、是否內購、廣告模式、Android 支援版本等不同產品設定。</p>
           </div>
@@ -523,6 +551,226 @@ body.embed-mode {
 
 <script>
 (function () {
+  // ===== 1.3 Success Donut｜3D 立體甜甜圈效果 =====
+  // 與「已貼上文字 (1).txt」採用相同概念：
+  // Exploded 3D Doughnut（切片外擴 + 側壁厚度）＋ Hover Pulse（滑鼠脈衝）。
+  if (!window.Chart) return;
+
+  const canvas = document.getElementById('successDonut');
+  if (!canvas) return;
+
+  const colors = ['#66FF00', '#E680FF'];
+
+  const darken = (hex, amount = 0.48) => {
+    if (typeof hex !== 'string') return '#12304d';
+    const clean = hex.replace('#', '');
+    if (!/^[0-9a-fA-F]{6}$/.test(clean)) return hex;
+    const r = parseInt(clean.slice(0, 2), 16);
+    const g = parseInt(clean.slice(2, 4), 16);
+    const b = parseInt(clean.slice(4, 6), 16);
+    const k = Math.max(0, Math.min(1, amount));
+    return `rgb(${Math.round(r*k)}, ${Math.round(g*k)}, ${Math.round(b*k)})`;
+  };
+
+  const doughnut3DPluginCh01 = {
+    id: 'doughnut3DPluginCh01',
+    beforeDatasetsDraw(chart) {
+      if (chart.config.type !== 'doughnut') return;
+      const {ctx} = chart;
+      const meta = chart.getDatasetMeta(0);
+      const dataset = chart.data.datasets[0];
+      if (!meta?.data?.length) return;
+
+      const depth = 12;
+      const explodedOffset = 10;
+      const firstArc = meta.data[0];
+
+      // 淡淡的離地陰影
+      ctx.save();
+      ctx.globalAlpha = .15;
+      ctx.fillStyle = '#000';
+      ctx.shadowColor = 'rgba(0,0,0,.20)';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.ellipse(
+        firstArc.x,
+        firstArc.y + firstArc.outerRadius * .54 + depth + 3,
+        firstArc.outerRadius * .80,
+        firstArc.outerRadius * .20,
+        0, 0, Math.PI * 2
+      );
+      ctx.fill();
+      ctx.restore();
+
+      // 由下往上堆疊側壁，形成 3D 厚度
+      for (let layer = depth; layer >= 1; layer--) {
+        meta.data.forEach((arc, index) => {
+          const color = Array.isArray(dataset.backgroundColor)
+            ? dataset.backgroundColor[index] : dataset.backgroundColor;
+          const mid = (arc.startAngle + arc.endAngle) / 2;
+          const ox = Math.cos(mid) * explodedOffset;
+          const oy = Math.sin(mid) * explodedOffset;
+          const cx = arc.x + ox;
+          const cy = arc.y + oy + layer;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, arc.outerRadius, arc.startAngle, arc.endAngle);
+          ctx.arc(cx, cy, arc.innerRadius, arc.endAngle, arc.startAngle, true);
+          ctx.closePath();
+          ctx.fillStyle = darken(color, .46 + (depth-layer) * .010);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    },
+    afterDatasetsDraw(chart) {
+      if (chart.config.type !== 'doughnut') return;
+      const {ctx} = chart;
+      const meta = chart.getDatasetMeta(0);
+
+      // 上表面高光邊
+      ctx.save();
+      ctx.lineWidth = 1.25;
+      ctx.strokeStyle = 'rgba(255,255,255,.68)';
+      meta.data.forEach((arc) => {
+        const mid = (arc.startAngle + arc.endAngle) / 2;
+        const cx = arc.x + Math.cos(mid) * 10;
+        const cy = arc.y + Math.sin(mid) * 10;
+        ctx.beginPath();
+        ctx.arc(cx, cy, arc.outerRadius - .8, arc.startAngle, arc.endAngle);
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+  };
+
+  const doughnutPulsePluginCh01 = {
+    id: 'doughnutPulsePluginCh01',
+    afterInit(chart) {
+      chart.$ch01PulseState = {activeKey:null, startTime:0, rafId:null};
+    },
+    afterEvent(chart) {
+      const state = chart.$ch01PulseState;
+      if (!state) return;
+
+      const active = chart.getActiveElements();
+      const current = active?.length
+        ? {datasetIndex:active[0].datasetIndex,index:active[0].index} : null;
+      const key = current ? `${current.datasetIndex}:${current.index}` : null;
+
+      if (key !== state.activeKey) {
+        state.activeKey = key;
+        state.startTime = performance.now();
+      }
+
+      if (current && !state.rafId) {
+        const animate = () => {
+          if (!chart.$ch01PulseState?.activeKey) {
+            if (chart.$ch01PulseState) chart.$ch01PulseState.rafId = null;
+            return;
+          }
+          chart.draw();
+          chart.$ch01PulseState.rafId = requestAnimationFrame(animate);
+        };
+        state.rafId = requestAnimationFrame(animate);
+      }
+
+      if (!current && state.rafId) {
+        cancelAnimationFrame(state.rafId);
+        state.rafId = null;
+        chart.draw();
+      }
+    },
+    afterDatasetsDraw(chart) {
+      const state = chart.$ch01PulseState;
+      if (!state?.activeKey) return;
+
+      const [di, ii] = state.activeKey.split(':').map(Number);
+      const arc = chart.getDatasetMeta(di)?.data?.[ii];
+      if (!arc) return;
+
+      const elapsed = performance.now() - state.startTime;
+      const cycle = (elapsed % 1000) / 1000;
+      const wave = .5 - .5 * Math.cos(cycle * Math.PI * 2);
+      const expansion = 5 + wave * 12;
+      const alpha = .42 * (1-cycle) + .10;
+
+      const dataset = chart.data.datasets[di];
+      const sourceColor = Array.isArray(dataset.backgroundColor)
+        ? dataset.backgroundColor[ii] : dataset.backgroundColor;
+
+      const mid = (arc.startAngle + arc.endAngle) / 2;
+      const ox = Math.cos(mid) * 10;
+      const oy = Math.sin(mid) * 10;
+      const x = arc.x + ox;
+      const y = arc.y + oy;
+
+      const {ctx} = chart;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x,y,arc.outerRadius+expansion,arc.startAngle,arc.endAngle);
+      ctx.arc(x,y,Math.max(0,arc.outerRadius+expansion-7),arc.endAngle,arc.startAngle,true);
+      ctx.closePath();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = sourceColor || '#fff';
+      ctx.shadowColor = sourceColor || '#fff';
+      ctx.shadowBlur = 16 + wave * 10;
+      ctx.fill();
+      ctx.restore();
+    },
+    beforeDestroy(chart) {
+      const state = chart.$ch01PulseState;
+      if (state?.rafId) cancelAnimationFrame(state.rafId);
+    }
+  };
+
+  new Chart(canvas, {
+    type:'doughnut',
+    plugins:[doughnut3DPluginCh01,doughnutPulsePluginCh01],
+    data:{
+      labels:['Success = 1','Success = 0'],
+      datasets:[{
+        data:[16.93,83.07],
+        backgroundColor:colors,
+        borderColor:'#ffffff',
+        borderWidth:2,
+        cutout:'54%',
+        spacing:5,
+        offset:10,
+        hoverOffset:18,
+        hoverBorderWidth:3
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      layout:{padding:22},
+      rotation:-90,
+      circumference:360,
+      animation:{duration:900,easing:'easeOutCubic'},
+      hover:{mode:'nearest',intersect:true},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(17,24,39,.96)',
+          padding:11,
+          titleColor:'#fff',
+          bodyColor:'#fff',
+          callbacks:{
+            label(context){
+              return `${context.label}：${Number(context.raw||0).toFixed(2)}%`;
+            }
+          }
+        }
+      }
+    }
+  });
+})();
+</script>
+
+<script>
+(function () {
   const toggle = document.getElementById("ch01Toggle");
   const menu = document.getElementById("ch01SectionMenu");
   if (!toggle || !menu) return;
@@ -549,6 +797,11 @@ body.embed-mode {
   const params = new URLSearchParams(window.location.search);
   if (params.get("embed") === "1") {
     document.body.classList.add("embed-mode");
+  }
+
+  // 轉場由 index.html 控制；transitioned=1 僅表示本頁是由轉場完成後載入。
+  if (params.get("transitioned") === "1") {
+    document.body.setAttribute("data-transitioned", "true");
   }
 })();
 </script>

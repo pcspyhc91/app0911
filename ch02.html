@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -9,10 +10,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
 <style>
 :root{
-  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#0033FF;--line:#e6eaf0;
   --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
   --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
   --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
@@ -41,7 +43,17 @@ a{text-decoration:none;color:inherit}
 .hero p{margin:0;max-width:850px;font-size:17px;opacity:.96}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
-.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0}.kpi .note{font-size:13px;color:#475467}
+.kpi .label{color:var(--muted);font-size:16px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0}.kpi .note{font-size:16px;color:#D94DFF}
+
+.kpi.dataset-kpi {background-color: #FFFFC5;}
+
+.kpi.threshold-kpi {background-color: #EBFFEB;}
+
+.kpi.success-kpi {background-color: #F5DEB3;}
+
+.kpi.failure-kpi {background-color: #E6CFE6;}
+
+
 .section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}
 .section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}
 .section h3{margin:18px 0 8px;font-size:18px}.section p{margin:8px 0;color:#344054}
@@ -52,8 +64,8 @@ a{text-decoration:none;color:inherit}
 .mini-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}.mini-card .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
 .icon.blue{background:var(--blue-soft);color:var(--blue-dark)}.icon.green{background:var(--green-soft);color:var(--green)}.icon.orange{background:var(--orange-soft);color:#a96600}.icon.purple{background:var(--purple-soft);color:var(--purple)}.icon.red{background:var(--red-soft);color:var(--red)}
 .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.flow .step{padding:9px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px;font-weight:600}.flow .arrow{color:#98a2b3}
-.bar-list{display:grid;gap:10px;margin-top:15px}.bar-row{display:grid;grid-template-columns:190px 1fr 90px;align-items:center;gap:10px;font-size:14px}.bar-track{height:14px;background:#edf1f5;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,#2596e8,#69baf0);border-radius:999px}
-.class-viz{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:center}.donut-wrap{display:flex;justify-content:center}.donut{width:210px;height:210px;border-radius:50%;background:conic-gradient(var(--blue) 0 16.93%,#d8dee8 16.93% 100%);position:relative}.donut:after{content:"";position:absolute;inset:34px;border-radius:50%;background:#fff}.donut-center{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center}.donut-center b{font-size:30px}.donut-center span{font-size:13px;color:var(--muted)}
+.bar-list{display:grid;gap:10px;margin-top:15px}.bar-row{display:grid;grid-template-columns:190px 1fr 90px;align-items:center;gap:10px;font-size:14px}.bar-track{height:14px;background:#edf1f5;border-radius:999px;overflow:hidden;cursor:pointer}.bar-fill{height:100%;width:var(--target-width);background:var(--bar-color);border-radius:0 5px 5px 0;transform:scaleX(0);transform-origin:left center;opacity:.82;will-change:transform,opacity;animation:categoryBarInitial 1600ms cubic-bezier(.215,.61,.355,1) forwards;animation-delay:var(--delay,0ms)}@keyframes categoryBarInitial{0%{transform:scaleX(0);opacity:.82}100%{transform:scaleX(1);opacity:1}}@media(prefers-reduced-motion:reduce){.bar-fill{animation:none!important;transform:scaleX(1);opacity:1}}
+.class-viz{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:center}.donut-wrap{display:flex;justify-content:center;align-items:center}.donut-stage{position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center;perspective:900px}.donut-canvas{width:260px!important;height:260px!important;display:block;cursor:pointer}.donut-center{position:absolute;inset:0;z-index:3;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transform:translateY(-2px)}.donut-center b{font-size:30px;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,.08)}.donut-center span{font-size:13px;color:var(--muted)}.donut-legend{margin-top:14px}.donut-legend div{display:flex;align-items:center;gap:9px;margin:7px 0;font-size:14px}.donut-dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
 .table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f8fafc;color:#475467}td:first-child{font-weight:700;color:#344054}
 .footer{color:#98a2b3;text-align:center;font-size:13px;padding:24px 0 10px}
 body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.embed-mode .layout{display:block!important;min-height:100vh!important}body.embed-mode .main{padding:16px 22px 30px!important;width:100%!important}body.embed-mode .wrapper{max-width:1180px!important;margin:0 auto!important}body.embed-mode{background:#f4f7fb!important}
@@ -95,11 +107,32 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
 </section>
 
 <div class="kpis">
-  <div class="kpi"><div class="label">Raw Dataset（原始資料）</div><div class="value">11,500</div><div class="note">筆 App 紀錄</div></div>
-  <div class="kpi"><div class="label">Raw Features（原始欄位）</div><div class="value">15</div><div class="note">Success 為後續衍生 Target</div></div>
-  <div class="kpi"><div class="label">Exact Duplicate Rows</div><div class="value">0</div><div class="note">無完全相同重複列</div></div>
-  <div class="kpi"><div class="label">Rating Missing</div><div class="value">46.76%</div><div class="note">5,377 筆缺失</div></div>
+  <div class="kpi dataset-kpi">
+    <div class="label">Raw Dataset（原始資料）</div>
+    <div class="value">11,500</div>
+    <div class="note">筆 App 紀錄</div>
+  </div>
+
+  <div class="kpi threshold-kpi">
+    <div class="label">Raw Features（原始欄位）</div>
+    <div class="value">15</div>
+    <div class="note">Success 為後續衍生 Target</div> 
+  </div>
+
+  <div class="kpi success-kpi">
+    <div class="label">Exact Duplicate Rows</div>
+    <div class="value">0</div>
+    <div class="note">無完全相同重複列</div>
+  </div>
+
+  <div class="kpi failure-kpi">
+    <div class="label">Rating Missing</div>
+    <div class="value">46.76%</div>
+    <div class="note">5,377 筆缺失</div>
+  </div>
 </div>
+
+
 
 <section class="section" id="s21">
 <h2><span class="num">2.1</span>資料理解的目的</h2>
@@ -156,13 +189,13 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
 </div>
 <h3>主要 Category 資料量</h3>
 <div class="bar-list">
-<div class="bar-row"><span>GAME</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><b>2,061</b></div>
-<div class="bar-row"><span>FAMILY</span><div class="bar-track"><div class="bar-fill" style="width:85.5%"></div></div><b>1,763</b></div>
-<div class="bar-row"><span>TOOLS</span><div class="bar-track"><div class="bar-fill" style="width:56.4%"></div></div><b>1,162</b></div>
-<div class="bar-row"><span>PRODUCTIVITY</span><div class="bar-track"><div class="bar-fill" style="width:46.1%"></div></div><b>951</b></div>
-<div class="bar-row"><span>ARTIFICIAL_INTELLIGENCE</span><div class="bar-track"><div class="bar-fill" style="width:39.9%"></div></div><b>823</b></div>
-<div class="bar-row"><span>FINANCE</span><div class="bar-track"><div class="bar-fill" style="width:35.0%"></div></div><b>721</b></div>
-<div class="bar-row"><span>SOCIAL</span><div class="bar-track"><div class="bar-fill" style="width:29.5%"></div></div><b>607</b></div>
+<div class="bar-row"><span>GAME</span><div class="bar-track"><div class="bar-fill" style="--target-width:100%;--bar-color:#A93BF2;--delay:0ms"></div></div><b>2,061</b></div>
+<div class="bar-row"><span>FAMILY</span><div class="bar-track"><div class="bar-fill" style="--target-width:85.5%;--bar-color:#FF6A1A;--delay:180ms"></div></div><b>1,763</b></div>
+<div class="bar-row"><span>TOOLS</span><div class="bar-track"><div class="bar-fill" style="--target-width:56.4%;--bar-color:#50C732;--delay:360ms"></div></div><b>1,162</b></div>
+<div class="bar-row"><span>PRODUCTIVITY</span><div class="bar-track"><div class="bar-fill" style="--target-width:46.1%;--bar-color:#4F86E8;--delay:540ms"></div></div><b>951</b></div>
+<div class="bar-row"><span>ARTIFICIAL_INTELLIGENCE</span><div class="bar-track"><div class="bar-fill" style="--target-width:39.9%;--bar-color:#EF2C86;--delay:720ms"></div></div><b>823</b></div>
+<div class="bar-row"><span>FINANCE</span><div class="bar-track"><div class="bar-fill" style="--target-width:35.0%;--bar-color:#2DBBC3;--delay:900ms"></div></div><b>721</b></div>
+<div class="bar-row"><span>SOCIAL</span><div class="bar-track"><div class="bar-fill" style="--target-width:29.5%;--bar-color:#FFCC6E;--delay:1080ms"></div></div><b>607</b></div>
 </div>
 <div class="callout"><strong>商業模式：</strong>In-App Purchases（內購）Yes = 66.90%；Ad Supported（廣告支援）Yes = 77.10%。</div>
 </section>
@@ -185,7 +218,7 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
 <section class="section" id="s27">
 <h2><span class="num">2.7</span>Target Success 的 Exploratory Data Analysis（探索式資料分析）</h2>
 <div class="class-viz">
-<div class="donut-wrap"><div class="donut"><div class="donut-center"><b>16.93%</b><span>Success = 1</span></div></div></div>
+<div class="donut-wrap"><div><div class="donut-stage"><canvas id="successDonutCh02" class="donut-canvas" aria-label="Success 1 與 Success 0 比例立體甜甜圈圖"></canvas><div class="donut-center"><b>16.93%</b><span>Success = 1</span></div></div><div class="donut-legend"><div><span class="donut-dot" style="background:#50C732"></span>Success = 1：1,947 筆</div><div><span class="donut-dot" style="background:#A93BF2"></span>Success = 0：9,553 筆</div></div></div></div>
 <div>
 <p><b>Success = 1：</b>Installs ≥ 10,000，共 1,947 筆（16.93%）。</p>
 <p><b>Success = 0：</b>Installs &lt; 10,000，共 9,553 筆（83.07%）。</p>
@@ -248,6 +281,222 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
   }
   const params=new URLSearchParams(window.location.search);
   if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+  document.querySelectorAll(".bar-track").forEach(function(track){
+    const bar=track.querySelector(".bar-fill");
+    if(!bar){return;}
+
+    const state={raf:null,locked:false};
+
+    function replayBarAnimation(){
+      if(state.locked){return;}
+
+      state.locked=true;
+      if(state.raf){cancelAnimationFrame(state.raf);}
+
+      bar.style.animation="none";
+      bar.style.transform="scaleX(0)";
+      bar.style.opacity="0.82";
+
+      const startTime=performance.now();
+      const duration=1800;
+
+      function animateBar(now){
+        const t=Math.min(1,(now-startTime)/duration);
+        const progress=1-Math.pow(1-t,3);
+
+        bar.style.transform="scaleX("+progress+")";
+        bar.style.opacity=String(0.82+(0.18*progress));
+
+        if(t<1){
+          state.raf=requestAnimationFrame(animateBar);
+        }else{
+          state.raf=null;
+          bar.style.transform="scaleX(1)";
+          bar.style.opacity="1";
+        }
+      }
+
+      state.raf=requestAnimationFrame(animateBar);
+    }
+
+    function unlockBarAnimation(){
+      state.locked=false;
+    }
+
+    // mouseenter 為桌面瀏覽器的主要觸發；pointerenter 補強觸控筆等裝置。
+    // state.locked 可防止同一次進入被兩種事件重複執行。
+    track.addEventListener("mouseenter",replayBarAnimation);
+    track.addEventListener("pointerenter",replayBarAnimation);
+    track.addEventListener("mouseleave",unlockBarAnimation);
+    track.addEventListener("pointerleave",unlockBarAnimation);
+  });
+  // transitioned=1 僅用來標示 index.html 的 Tr02.mp4 已播放完成；
+  // 章節載入後立即清除，避免重新整理或複製網址時保留內部狀態參數。
+  if(params.get("transitioned")==="1"&&window.history&&window.history.replaceState){
+    params.delete("transitioned");
+    const cleanQuery=params.toString();
+    const cleanUrl=window.location.pathname+(cleanQuery?"?"+cleanQuery:"")+window.location.hash;
+    window.history.replaceState(null,"",cleanUrl);
+  }
+})();
+</script>
+<script>
+(function(){
+  if(!window.Chart){return;}
+  const canvas=document.getElementById("successDonutCh02");
+  if(!canvas){return;}
+
+  const colors=["#50C732","#A93BF2"];
+  const darken=function(hex,amount){
+    const clean=String(hex).replace("#","");
+    if(!/^[0-9a-fA-F]{6}$/.test(clean)){return hex;}
+    const k=Math.max(0,Math.min(1,amount));
+    const r=parseInt(clean.slice(0,2),16);
+    const g=parseInt(clean.slice(2,4),16);
+    const b=parseInt(clean.slice(4,6),16);
+    return "rgb("+Math.round(r*k)+","+Math.round(g*k)+","+Math.round(b*k)+")";
+  };
+
+  const doughnut3DPluginCh02={
+    id:"doughnut3DPluginCh02",
+    beforeDatasetsDraw:function(chart){
+      if(chart.config.type!=="doughnut"){return;}
+      const ctx=chart.ctx;
+      const meta=chart.getDatasetMeta(0);
+      const dataset=chart.data.datasets[0];
+      if(!meta||!meta.data||!meta.data.length){return;}
+      const depth=12;
+      const explodedOffset=10;
+      const firstArc=meta.data[0];
+
+      ctx.save();
+      ctx.globalAlpha=.15;
+      ctx.fillStyle="#000";
+      ctx.shadowColor="rgba(0,0,0,.20)";
+      ctx.shadowBlur=8;
+      ctx.beginPath();
+      ctx.ellipse(firstArc.x,firstArc.y+firstArc.outerRadius*.54+depth+3,firstArc.outerRadius*.80,firstArc.outerRadius*.20,0,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+
+      for(let layer=depth;layer>=1;layer--){
+        meta.data.forEach(function(arc,index){
+          const color=Array.isArray(dataset.backgroundColor)?dataset.backgroundColor[index]:dataset.backgroundColor;
+          const mid=(arc.startAngle+arc.endAngle)/2;
+          const cx=arc.x+Math.cos(mid)*explodedOffset;
+          const cy=arc.y+Math.sin(mid)*explodedOffset+layer;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx,cy,arc.outerRadius,arc.startAngle,arc.endAngle);
+          ctx.arc(cx,cy,arc.innerRadius,arc.endAngle,arc.startAngle,true);
+          ctx.closePath();
+          ctx.fillStyle=darken(color,.46+(depth-layer)*.010);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    },
+    afterDatasetsDraw:function(chart){
+      if(chart.config.type!=="doughnut"){return;}
+      const ctx=chart.ctx;
+      const meta=chart.getDatasetMeta(0);
+      ctx.save();
+      ctx.lineWidth=1.25;
+      ctx.strokeStyle="rgba(255,255,255,.68)";
+      meta.data.forEach(function(arc){
+        const mid=(arc.startAngle+arc.endAngle)/2;
+        const cx=arc.x+Math.cos(mid)*10;
+        const cy=arc.y+Math.sin(mid)*10;
+        ctx.beginPath();
+        ctx.arc(cx,cy,arc.outerRadius-.8,arc.startAngle,arc.endAngle);
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+  };
+
+  const doughnutPulsePluginCh02={
+    id:"doughnutPulsePluginCh02",
+    afterInit:function(chart){chart.$ch02PulseState={activeKey:null,startTime:0,rafId:null};},
+    afterEvent:function(chart){
+      const state=chart.$ch02PulseState;
+      if(!state){return;}
+      const active=chart.getActiveElements();
+      const current=active&&active.length?{datasetIndex:active[0].datasetIndex,index:active[0].index}:null;
+      const key=current?current.datasetIndex+":"+current.index:null;
+      if(key!==state.activeKey){state.activeKey=key;state.startTime=performance.now();}
+      if(current&&!state.rafId){
+        const animate=function(){
+          if(!chart.$ch02PulseState||!chart.$ch02PulseState.activeKey){
+            if(chart.$ch02PulseState){chart.$ch02PulseState.rafId=null;}
+            return;
+          }
+          chart.draw();
+          chart.$ch02PulseState.rafId=requestAnimationFrame(animate);
+        };
+        state.rafId=requestAnimationFrame(animate);
+      }
+      if(!current&&state.rafId){cancelAnimationFrame(state.rafId);state.rafId=null;chart.draw();}
+    },
+    afterDatasetsDraw:function(chart){
+      const state=chart.$ch02PulseState;
+      if(!state||!state.activeKey){return;}
+      const keys=state.activeKey.split(":").map(Number);
+      const arc=chart.getDatasetMeta(keys[0]).data[keys[1]];
+      if(!arc){return;}
+      const elapsed=performance.now()-state.startTime;
+      const cycle=(elapsed%1000)/1000;
+      const wave=.5-.5*Math.cos(cycle*Math.PI*2);
+      const expansion=5+wave*12;
+      const alpha=.42*(1-cycle)+.10;
+      const dataset=chart.data.datasets[keys[0]];
+      const color=Array.isArray(dataset.backgroundColor)?dataset.backgroundColor[keys[1]]:dataset.backgroundColor;
+      const mid=(arc.startAngle+arc.endAngle)/2;
+      const x=arc.x+Math.cos(mid)*10;
+      const y=arc.y+Math.sin(mid)*10;
+      const ctx=chart.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x,y,arc.outerRadius+expansion,arc.startAngle,arc.endAngle);
+      ctx.arc(x,y,Math.max(0,arc.outerRadius+expansion-7),arc.endAngle,arc.startAngle,true);
+      ctx.closePath();
+      ctx.globalAlpha=alpha;
+      ctx.fillStyle=color||"#fff";
+      ctx.shadowColor=color||"#fff";
+      ctx.shadowBlur=16+wave*10;
+      ctx.fill();
+      ctx.restore();
+    },
+    beforeDestroy:function(chart){
+      const state=chart.$ch02PulseState;
+      if(state&&state.rafId){cancelAnimationFrame(state.rafId);}
+    }
+  };
+
+  new Chart(canvas,{
+    type:"doughnut",
+    plugins:[doughnut3DPluginCh02,doughnutPulsePluginCh02],
+    data:{
+      labels:["Success = 1","Success = 0"],
+      datasets:[{data:[16.93,83.07],backgroundColor:colors,borderColor:"#ffffff",borderWidth:2,cutout:"54%",spacing:5,offset:10,hoverOffset:18,hoverBorderWidth:3}]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      layout:{padding:22},
+      rotation:-90,
+      circumference:360,
+      animation:{duration:900,easing:"easeOutCubic"},
+      hover:{mode:"nearest",intersect:true},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:"rgba(17,24,39,.96)",padding:11,titleColor:"#fff",bodyColor:"#fff",
+          callbacks:{label:function(context){return context.label+"："+Number(context.raw||0).toFixed(2)+"%";}}
+        }
+      }
+    }
+  });
 })();
 </script>
 </body>

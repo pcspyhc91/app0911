@@ -12,7 +12,7 @@
 
 <style>
 :root{
-  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#0033FF;--line:#e6eaf0;
   --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
   --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
   --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
@@ -37,7 +37,20 @@ a{text-decoration:none;color:inherit}
 .hero:after{content:"";position:absolute;right:-100px;top:-120px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.12)}
 .hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}.hero p{margin:0;max-width:900px;font-size:17px;opacity:.96}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
-.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-weight:800;font-size:24px;margin:4px 0}.kpi .note{font-size:13px;color:#475467}
+
+.kpi .label{color:var(--muted);font-size:16px}
+.kpi .value{font-weight:800;font-size:24px;margin:4px 0}
+.kpi .note{font-size:16px;color:#D94DFF}
+
+.kpi.dataset-kpi {background-color: #FFFFC5;}
+
+.kpi.threshold-kpi {background-color: #EBFFEB;}
+
+.kpi.success-kpi {background-color: #F5DEB3;}
+
+.kpi.failure-kpi {background-color: #E6CFE6;}
+
+
 .section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}
 .section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}
 .section h3{font-size:18px;margin:20px 0 8px}.section p{margin:8px 0;color:#344054}
@@ -90,10 +103,30 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
 </section>
 
 <div class="kpis">
-  <div class="kpi"><div class="label">Training / Test</div><div class="value">9,200 / 2,300</div><div class="note">固定 Stratified Split</div></div>
-  <div class="kpi"><div class="label">Baseline Features</div><div class="value">13 → 63</div><div class="note">Raw representations → processed</div></div>
-  <div class="kpi"><div class="label">Selected Model</div><div class="value">LR | Tuned</div><div class="note">Relative Best Candidate</div></div>
-  <div class="kpi"><div class="label">Final Test PR-AUC</div><div class="value">0.162386</div><div class="note">低於 No-skill 0.169130</div></div>
+  <div class="kpi dataset-kpi">
+    <div class="label">Training / Test</div>
+    <div class="value">9,200 / 2,300</div>
+    <div class="note">固定 Stratified Split</div>
+  </div>
+
+  <div class="kpi threshold-kpi">
+   <div class="label">Baseline Features</div>
+   <div class="value">13 → 63</div>
+   <div class="note">Raw representations → processed</div>
+  </div>
+
+  <div class="kpi success-kpi">
+    <div class="label">Selected Model</div>
+    <div class="value">LR | Tuned</div>
+    <div class="note">Relative Best Candidate</div>
+  </div>
+
+  <div class="kpi failure-kpi">
+    <div class="label">Final Test PR-AUC</div>
+    <div class="value">0.162386</div>
+    <div class="note">低於 No-skill 0.169130</div>
+  </div>
+
 </div>
 
 <section class="section" id="s41">
@@ -252,7 +285,7 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
   <div class="audit"><i class="fa fa-check-circle"></i>4.6.6 Audit：48 / 48 PASS</div>
 </div>
 
-<div class="danger callout"><strong>第四章最終結論：</strong>研究已建立可重現、可稽核且維持 Test Set 隔離的完整 Machine Learning（機器學習）流程，並選出 Logistic Regression | Tuned 作為 Relative Best Candidate。然而，獨立 Test 結果不支持良好泛化能力，也未識別出 Strong Model。流程成功與模型效能不足必須同時、如實呈現。</div>
+<div class="danger callout"><strong>本章最終結論：</strong>研究已建立可重現、可稽核且維持 Test Set 隔離的完整 Machine Learning（機器學習）流程，並選出 Logistic Regression | Tuned 作為 Relative Best Candidate。然而，獨立 Test 結果不支持良好泛化能力，也未識別出 Strong Model。流程成功與模型效能不足必須同時、如實呈現。</div>
 </section>
 
 <div class="footer">Ch04｜Google Play App AI Success Prediction Project</div>
@@ -273,6 +306,12 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
   }
   const params=new URLSearchParams(window.location.search);
   if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+  if(params.get("transitioned")==="1"&&window.history&&window.history.replaceState){
+    params.delete("transitioned");
+    const cleanQuery=params.toString();
+    const cleanUrl=window.location.pathname+(cleanQuery?"?"+cleanQuery:"")+window.location.hash;
+    window.history.replaceState(null,"",cleanUrl);
+  }
 })();
 </script>
 </body>

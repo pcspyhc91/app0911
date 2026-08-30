@@ -37,8 +37,16 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   padding: 9px 12px;
   color: #24364b;
   font-size: 15px;
+  text-decoration: none !important;
   border-radius: 6px 0 0 6px;
   transition: background-color .18s ease, color .18s ease, padding-left .18s ease;
+}
+#mySidebar .chapter-submenu a:link,
+#mySidebar .chapter-submenu a:visited,
+#mySidebar .chapter-submenu a:hover,
+#mySidebar .chapter-submenu a:active,
+#mySidebar .chapter-submenu a:focus {
+  text-decoration: none !important;
 }
 #mySidebar .chapter-submenu a:hover {
   background: #F4D7FF !important;
@@ -64,6 +72,109 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   background: #f4f7fb;
 }
 #dashboardContent.is-hidden { display: none !important; }
+/* ===== Overview：清空原內容並改為 YouTube 影片 ===== */
+#dashboardContent > :not(.youtube-overview) {
+  display: none !important;
+}
+.youtube-overview {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 43px);
+  min-height: 520px;
+  padding: 18px;
+  background: #000;
+  box-sizing: border-box;
+}
+.youtube-overview video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+  object-fit: contain;
+}
+.yt-full-button {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 2px solid #8f0000;
+  border-radius: 15px;
+  background: linear-gradient(180deg,#ff6b6b 0%,#ff2020 48%,#c90000 100%);
+  color: #FFFFFF !important;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  text-decoration: none !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.78);
+  box-shadow: 0 8px 0 #780000,0 13px 22px rgba(0,0,0,.48),inset 0 2px 2px rgba(255,255,255,.65);
+  transform: translateY(0) rotateX(0deg);
+  transform-origin: center bottom;
+  animation: ytButtonFloat 1.8s ease-in-out infinite,ytButtonGlow 1.4s ease-in-out infinite alternate;
+  transition: transform .12s ease,box-shadow .12s ease,filter .15s ease;
+}
+.yt-full-button:hover,
+.yt-full-button:focus {
+  color: #FFFFFF !important;
+  filter: brightness(1.12) saturate(1.08);
+  outline: 3px solid rgba(255,255,255,.72);
+  outline-offset: 3px;
+}
+.yt-full-button:active {
+  transform: translateY(7px) rotateX(8deg);
+  box-shadow: 0 2px 0 #780000,0 5px 10px rgba(0,0,0,.42),inset 0 2px 3px rgba(80,0,0,.35);
+  animation-play-state: paused;
+}
+@keyframes ytButtonFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes ytButtonGlow {
+  from { filter: drop-shadow(0 0 2px rgba(255,30,30,.40)); }
+  to { filter: drop-shadow(0 0 11px rgba(255,30,30,.92)); }
+}
+@media (max-width: 600px) {
+  .yt-full-button { right: 6px;bottom: 6px;min-width: 104px;min-height: 38px;font-size: 14px;padding: 7px 12px; }
+}
+/* ===== Ch01 ~ Ch04 transition videos：固定於右側內容區 ===== */
+#ch01Transition,
+#ch02Transition,
+#ch03Transition,
+#ch04Transition {
+  position: fixed;
+  top: 43px;
+  right: 0;
+  bottom: 0;
+  left: var(--sidebar-width, 300px);
+  z-index: 9996;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+#ch01Transition.is-playing,
+#ch02Transition.is-playing,
+#ch03Transition.is-playing,
+#ch04Transition.is-playing {
+  display: flex;
+}
+#ch01Transition video,
+#ch02Transition video,
+#ch03Transition video,
+#ch04Transition video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
 
 
 /* ===== Permanent top-left project brand ===== */
@@ -158,6 +269,12 @@ body.sidebar-resizing iframe {
   .w3-main {
     margin-left: 0 !important;
   }
+  #ch01Transition,
+  #ch02Transition,
+  #ch03Transition,
+  #ch04Transition {
+    left: 0;
+  }
 }
 
 </style>
@@ -242,10 +359,13 @@ body.sidebar-resizing iframe {
       <a href="ch04.html?embed=1#s45"><i class="fa fa-trophy fa-fw"></i>&nbsp; 4.5 候選模型與選模</a>
       <a href="ch04.html?embed=1#s46"><i class="fa fa-flask fa-fw"></i>&nbsp; 4.6 最終 Test 評估</a>
     </div>
+    <!-- GitHub Pages 尚未部署：Ch05～Ch07 暫時註解停用
     <a href="ch05.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch05"><i class="fa fa-bell fa-fw"></i>&nbsp; Ch05</a>
     <a href="ch06.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch06"><i class="fa fa-bank fa-fw"></i>&nbsp; Ch06</a>
     <a href="ch07.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch07"><i class="fa fa-history fa-fw"></i>&nbsp; Ch07</a>
+    
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
+    -->
   </div>
 </nav>
 <div id="sidebarResizer" title="拖曳調整左側選單寬度" aria-label="拖曳調整左側選單寬度"></div>
@@ -259,7 +379,18 @@ body.sidebar-resizing iframe {
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
   <div id="dashboardContent">
 
+  <div class="youtube-overview">
+    <video id="overviewVideo" controls playsinline preload="metadata" aria-label="Google Play App AI Project Video">
+      <source src="./Video/App545.mp4" type="video/mp4">
+      您的瀏覽器不支援 HTML5 Video（HTML5 影片播放器）。
+    </video>
+    <a id="ytFullButton" class="yt-full-button" href="https://youtu.be/XDMQmLHyamI" target="_blank" rel="noopener noreferrer" aria-label="前往 YouTube 觀看完整版">看完整版</a>
+  </div>
 
+
+  <!-- 舊 Dashboard 與 amCharts 程式暫時封存停用。
+       使用 inert template 可避免內部既有 HTML 註解造成巢狀註解失效。 -->
+  <template id="legacyDashboardArchive">
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
     <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
@@ -604,7 +735,31 @@ body.sidebar-resizing iframe {
     <h4>FOOTER</h4>
     <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
   </footer>
+  </template>
+  <!-- 舊 Dashboard 與 amCharts 程式封存結束 -->
 
+  </div>
+
+  <div id="ch01Transition" aria-hidden="true">
+    <video id="ch01TransitionVideo"
+           src="./Video/Tr01.mp4"
+           preload="auto"
+           playsinline></video>
+  </div>
+
+  <div id="ch02Transition" aria-hidden="true">
+    <video id="ch02TransitionVideo"
+           src="./Video/Tr02.mp4"
+           preload="auto"
+           playsinline></video>
+  </div>
+
+  <div id="ch03Transition" aria-hidden="true">
+    <video id="ch03TransitionVideo" src="./Video/Tr03.mp4" preload="auto" playsinline></video>
+  </div>
+
+  <div id="ch04Transition" aria-hidden="true">
+    <video id="ch04TransitionVideo" src="./Video/Tr04.mp4" preload="auto" playsinline></video>
   </div>
 
   <div id="chapterFrameWrap">
@@ -639,6 +794,53 @@ function w3_close() {
 }
 </script>
 
+<script>
+/* ===== Overview Video Playback Governance ===== */
+(function () {
+  const video = document.getElementById("overviewVideo");
+  const sidebar = document.getElementById("mySidebar");
+  const overviewLink = document.getElementById("overviewLink");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const ytFullButton = document.getElementById("ytFullButton");
+  if (!video || !sidebar || !overviewLink || !dashboardContent || !ytFullButton) return;
+
+  // index.html 初次開啟或重新整理時，本身即為 Overview，允許使用者直接按播放鈕。
+  // 切換至其他章節後會失效；再次點擊 Overview 時恢復。
+  let overviewPlaybackAuthorized = true;
+
+  function stopAndRewindOverviewVideo() {
+    video.pause();
+    try {
+      video.currentTime = 0;
+    } catch (error) {
+      // Metadata 尚未載入時 currentTime 可能暫時不可設定；影片仍保持暫停。
+    }
+  }
+
+  // Capture Phase：在各章節既有 Click Handler 執行前先停止並回到開頭。
+  sidebar.addEventListener("click", function (event) {
+    const link = event.target.closest("a");
+    if (!link) return;
+
+    stopAndRewindOverviewVideo();
+    overviewPlaybackAuthorized = (link === overviewLink);
+  }, true);
+
+  // 即使透過其他程式或快捷鍵要求播放，只要未先點 Overview 就立即阻擋。
+  video.addEventListener("play", function () {
+    const overviewVisible = !dashboardContent.classList.contains("is-hidden");
+    if (!overviewPlaybackAuthorized || !overviewVisible) {
+      stopAndRewindOverviewVideo();
+    }
+  });
+
+  // 開啟 YouTube 完整版前，先停止本機影片並將播放時間歸零，避免雙重音源衝突。
+  ytFullButton.addEventListener("click", function () {
+    stopAndRewindOverviewVideo();
+  }, true);
+})();
+</script>
+
 
 <script>
 (function () {
@@ -647,6 +849,13 @@ function w3_close() {
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
+  const transition = document.getElementById("ch01Transition");
+  const transitionVideo = document.getElementById("ch01TransitionVideo");
+
+  if (!ch01Link || !submenu || !dashboardContent || !frameWrap || !frame ||
+      !transition || !transitionVideo) return;
+
+  let transitionRunning = false;
 
   function showCh01(url) {
     dashboardContent.classList.add("is-hidden");
@@ -675,6 +884,38 @@ function w3_close() {
     ch01Link.classList.remove("chapter-open");
   }
 
+  function finishTransition(url) {
+    if (!transitionRunning) return;
+    transitionRunning = false;
+
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.remove("is-playing");
+    transition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("ch01-transitioning");
+
+    showCh01(url);
+  }
+
+  function playCh01Transition(url) {
+    transitionRunning = true;
+
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.add("is-playing");
+    transition.setAttribute("aria-hidden", "false");
+    document.body.classList.add("ch01-transitioning");
+
+    const playPromise = transitionVideo.play();
+
+    // 若瀏覽器阻擋播放，直接開啟 Ch01，避免卡在黑畫面。
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(function () {
+        finishTransition(url);
+      });
+    }
+  }
+
   ch01Link.addEventListener("click", function (event) {
     event.preventDefault();
     const isOpen = submenu.classList.contains("is-open");
@@ -683,9 +924,9 @@ function w3_close() {
       // 已展開 → 收合子選單；右側內容維持目前畫面
       closeCh01Menu();
     } else {
-      // 已收合 → 展開子選單，並在右側顯示 Ch01
+      // 已收合 → 先播放 Tr01.mp4 一次，結束後才載入 Ch01
       openCh01Menu();
-      showCh01("ch01.html?embed=1");
+      playCh01Transition("ch01.html?embed=1&transitioned=1");
     }
   });
 
@@ -693,8 +934,13 @@ function w3_close() {
     link.addEventListener("click", function (event) {
       event.preventDefault();
       openCh01Menu();
+      // 1.1～1.9 直接切換，不重播首頁轉場。
       showCh01(link.getAttribute("href"));
     });
+  });
+
+  transitionVideo.addEventListener("ended", function () {
+    finishTransition("ch01.html?embed=1&transitioned=1");
   });
 
   frame.addEventListener("load", function () {
@@ -760,7 +1006,13 @@ function w3_close() {
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
-  if (!ch02Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+  const transition = document.getElementById("ch02Transition");
+  const transitionVideo = document.getElementById("ch02TransitionVideo");
+  if (!ch02Link || !submenu || !dashboardContent || !frameWrap || !frame ||
+      !transition || !transitionVideo) return;
+
+  let transitionRunning = false;
+  let pendingCh02Url = "ch02.html?embed=1&transitioned=1";
 
   function closeOtherChapterMenus() {
     document.querySelectorAll(".chapter-submenu").forEach(function(menu){
@@ -778,6 +1030,33 @@ function w3_close() {
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
+  function finishCh02Transition() {
+    if (!transitionRunning) return;
+    transitionRunning = false;
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.remove("is-playing");
+    transition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("ch02-transitioning");
+    showCh02(pendingCh02Url);
+  }
+
+  function playCh02Transition(url) {
+    pendingCh02Url = url || "ch02.html?embed=1&transitioned=1";
+    transitionRunning = true;
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.add("is-playing");
+    transition.setAttribute("aria-hidden", "false");
+    document.body.classList.add("ch02-transitioning");
+
+    const playPromise = transitionVideo.play();
+    // 若瀏覽器阻擋影片播放，仍直接開啟第二章，避免停在黑畫面。
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(finishCh02Transition);
+    }
+  }
+
   ch02Link.addEventListener("click", function(event){
     event.preventDefault();
     const isOpen = submenu.classList.contains("is-open");
@@ -788,7 +1067,8 @@ function w3_close() {
       closeOtherChapterMenus();
       submenu.classList.add("is-open");
       ch02Link.classList.add("chapter-open");
-      showCh02("ch02.html?embed=1");
+      // 主選單首次開啟第二章時，先完整播放 Tr02.mp4 一次。
+      playCh02Transition("ch02.html?embed=1&transitioned=1");
     }
   });
 
@@ -801,6 +1081,9 @@ function w3_close() {
       showCh02(link.getAttribute("href"));
     });
   });
+
+  transitionVideo.addEventListener("ended", finishCh02Transition);
+  transitionVideo.addEventListener("error", finishCh02Transition);
 })();
 </script>
 
@@ -812,7 +1095,13 @@ function w3_close() {
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
-  if (!ch03Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+  const transition = document.getElementById("ch03Transition");
+  const transitionVideo = document.getElementById("ch03TransitionVideo");
+  if (!ch03Link || !submenu || !dashboardContent || !frameWrap || !frame ||
+      !transition || !transitionVideo) return;
+
+  let transitionRunning = false;
+  let pendingCh03Url = "ch03.html?embed=1&transitioned=1";
 
   function closeOtherChapterMenus() {
     document.querySelectorAll(".chapter-submenu").forEach(function(menu){
@@ -830,6 +1119,31 @@ function w3_close() {
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
+  function finishCh03Transition() {
+    if (!transitionRunning) return;
+    transitionRunning = false;
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.remove("is-playing");
+    transition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("ch03-transitioning");
+    showCh03(pendingCh03Url);
+  }
+
+  function playCh03Transition(url) {
+    pendingCh03Url = url || "ch03.html?embed=1&transitioned=1";
+    transitionRunning = true;
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.add("is-playing");
+    transition.setAttribute("aria-hidden", "false");
+    document.body.classList.add("ch03-transitioning");
+    const playPromise = transitionVideo.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(finishCh03Transition);
+    }
+  }
+
   ch03Link.addEventListener("click", function(event){
     event.preventDefault();
     const isOpen = submenu.classList.contains("is-open");
@@ -840,7 +1154,7 @@ function w3_close() {
       closeOtherChapterMenus();
       submenu.classList.add("is-open");
       ch03Link.classList.add("chapter-open");
-      showCh03("ch03.html?embed=1");
+      playCh03Transition("ch03.html?embed=1&transitioned=1");
     }
   });
 
@@ -853,6 +1167,9 @@ function w3_close() {
       showCh03(link.getAttribute("href"));
     });
   });
+
+  transitionVideo.addEventListener("ended", finishCh03Transition);
+  transitionVideo.addEventListener("error", finishCh03Transition);
 })();
 </script>
 
@@ -864,7 +1181,13 @@ function w3_close() {
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
-  if (!ch04Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+  const transition = document.getElementById("ch04Transition");
+  const transitionVideo = document.getElementById("ch04TransitionVideo");
+  if (!ch04Link || !submenu || !dashboardContent || !frameWrap || !frame ||
+      !transition || !transitionVideo) return;
+
+  let transitionRunning = false;
+  let pendingCh04Url = "ch04.html?embed=1&transitioned=1";
 
   function closeOtherChapterMenus() {
     document.querySelectorAll(".chapter-submenu").forEach(function(menu){
@@ -882,6 +1205,31 @@ function w3_close() {
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
+  function finishCh04Transition() {
+    if (!transitionRunning) return;
+    transitionRunning = false;
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.remove("is-playing");
+    transition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("ch04-transitioning");
+    showCh04(pendingCh04Url);
+  }
+
+  function playCh04Transition(url) {
+    pendingCh04Url = url || "ch04.html?embed=1&transitioned=1";
+    transitionRunning = true;
+    transitionVideo.pause();
+    transitionVideo.currentTime = 0;
+    transition.classList.add("is-playing");
+    transition.setAttribute("aria-hidden", "false");
+    document.body.classList.add("ch04-transitioning");
+    const playPromise = transitionVideo.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(finishCh04Transition);
+    }
+  }
+
   ch04Link.addEventListener("click", function(event){
     event.preventDefault();
     const isOpen = submenu.classList.contains("is-open");
@@ -892,7 +1240,7 @@ function w3_close() {
       closeOtherChapterMenus();
       submenu.classList.add("is-open");
       ch04Link.classList.add("chapter-open");
-      showCh04("ch04.html?embed=1");
+      playCh04Transition("ch04.html?embed=1&transitioned=1");
     }
   });
 
@@ -905,6 +1253,9 @@ function w3_close() {
       showCh04(link.getAttribute("href"));
     });
   });
+
+  transitionVideo.addEventListener("ended", finishCh04Transition);
+  transitionVideo.addEventListener("error", finishCh04Transition);
 })();
 </script>
 

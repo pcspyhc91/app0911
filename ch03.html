@@ -12,7 +12,7 @@
 
 <style>
 :root{
-  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#0033FF;--line:#e6eaf0;
   --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
   --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
   --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
@@ -36,8 +36,21 @@ a{text-decoration:none;color:inherit}
 .hero{position:relative;overflow:hidden;border-radius:20px;padding:38px 40px;background:linear-gradient(135deg,#136fae 0%,#2596e8 58%,#76c3f2 100%);color:#fff;box-shadow:var(--shadow)}
 .hero:after{content:"";position:absolute;right:-90px;top:-120px;width:330px;height:330px;border-radius:50%;background:rgba(255,255,255,.12)}
 .hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}.hero p{margin:0;max-width:880px;font-size:17px;opacity:.96}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
-.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0}.kpi .note{font-size:13px;color:#475467}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}
+
+.kpi .label{color:var(--muted);font-size:16px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0}.kpi .note{font-size:16px;color:#D94DFF}
+
+.kpi.dataset-kpi {background-color: #FFFFC5;}
+
+.kpi.threshold-kpi {background-color: #EBFFEB;}
+
+.kpi.success-kpi {background-color: #F5DEB3;}
+
+.kpi.failure-kpi {background-color: #E6CFE6;}
+
+
 .section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}
 .section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}
 .section h3{font-size:18px;margin:20px 0 8px}.section p{margin:8px 0;color:#344054}
@@ -89,10 +102,29 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
 </section>
 
 <div class="kpis">
-  <div class="kpi"><div class="label">Working Data</div><div class="value">11,500 × 29</div><div class="note">google_playstore_work</div></div>
-  <div class="kpi"><div class="label">Baseline X</div><div class="value">13</div><div class="note">正式 feature representations</div></div>
-  <div class="kpi"><div class="label">Processed Features</div><div class="value">63</div><div class="note">53 Categorical + 4 Numeric + 6 Binary</div></div>
-  <div class="kpi"><div class="label">Modeling Readiness</div><div class="value">READY</div><div class="note">Preprocessing Final Audit 全部 PASS</div></div>
+  <div class="kpi dataset-kpi">
+    <div class="label">Working Data</div>
+    <div class="value">11,500 × 29</div>
+    <div class="note">google_playstore_work</div>
+ </div>
+
+  <div class="kpi threshold-kpi">
+    <div class="label">Baseline X</div>
+    <div class="value">13</div>
+    <div class="note">正式 feature representations</div>
+ </div>
+
+  <div class="kpi success-kpi">
+    <div class="label">Processed Features</div>
+    <div class="value">63</div>
+    <div class="note">53 Categorical + 4 Numeric + 6 Binary</div>
+  </div>
+
+  <div class="kpi failure-kpi">
+    <div class="label">Modeling Readiness</div>
+    <div class="value">READY</div>
+    <div class="note">Preprocessing Final Audit 全部 PASS</div>
+  </div>
 </div>
 
 <section class="section" id="s31">
@@ -256,6 +288,12 @@ body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.emb
   }
   const params=new URLSearchParams(window.location.search);
   if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+  if(params.get("transitioned")==="1"&&window.history&&window.history.replaceState){
+    params.delete("transitioned");
+    const cleanQuery=params.toString();
+    const cleanUrl=window.location.pathname+(cleanQuery?"?"+cleanQuery:"")+window.location.hash;
+    window.history.replaceState(null,"",cleanUrl);
+  }
 })();
 </script>
 </body>
