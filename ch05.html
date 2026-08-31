@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ch05｜第五章 預測系統與成果呈現</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f4f7fb;--card:#ffffff;--ink:#1f2937;--muted:#667085;--line:#e6eaf0;
+  --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;--green:#2ea66f;
+  --green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;--red:#dc5a5a;
+  --red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;--shadow:0 8px 28px rgba(31,41,55,.08);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans TC",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#111827;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.13)}
+.brand{font-weight:800;letter-spacing:.4px}.top-actions{display:flex;gap:10px}.top-actions a{padding:7px 12px;border-radius:8px;background:#253044;color:#fff;font-size:14px}.top-actions a:hover{background:#34425b}
+.layout{display:flex;min-height:calc(100vh - 58px);margin-left:0!important;padding-top:0!important}
+.sidebar{width:260px!important;flex:0 0 260px;position:sticky!important;top:58px!important;height:calc(100vh - 58px)!important;background:#fff;border-right:1px solid var(--line);padding:24px 16px!important;overflow:auto;z-index:auto!important}
+.sidebar h3{margin:0 10px 16px;font-size:18px;color:var(--ink)}
+.sidebar a{display:flex!important;align-items:center;gap:12px;padding:11px 12px!important;margin:4px 0!important;border-radius:9px!important;color:#344054!important;font-size:15px!important;transition:.18s ease}
+.sidebar a:hover{background:var(--blue-soft)!important;color:var(--blue-dark)!important;transform:translateX(2px)}
+.sidebar a i{width:18px;text-align:center}.sidebar .home{background:var(--blue)!important;color:#fff!important;font-weight:700;margin-bottom:12px!important}
+.main{flex:1;min-width:0;max-width:none!important;margin:0!important;padding:30px!important}
+.wrapper{max-width:1180px;margin:0 auto}
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:38px 40px;background:linear-gradient(135deg,#177fc5 0%,#2596e8 58%,#68baf0 100%);color:#fff;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;right:-100px;top:-120px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}.hero p{margin:0;max-width:800px;font-size:17px;opacity:.96;color:#fff!important}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+.kpis>.kpi{border:1px solid var(--line)!important;border-radius:15px!important;padding:18px 20px!important;box-shadow:0 4px 18px rgba(31,41,55,.04)!important;text-align:left!important}
+.kpis>.kpi:nth-child(1){background:#FFFFC5!important}
+.kpis>.kpi:nth-child(2){background:#EBFFEB!important}
+.kpis>.kpi:nth-child(3){background:#F5DEB3!important}
+.kpis>.kpi:nth-child(4){background:#E6CFE6!important}
+.kpis>.kpi .label{color:#0000FF!important;font-size:15px!important}
+.kpis>.kpi .value{font-weight:800!important;font-size:25px!important;margin:4px 0!important;color:#111827!important}
+.kpis>.kpi .note{font-size:14px!important;color:#FF33FF!important;background:transparent!important;border:0!important;padding:0!important;border-radius:0!important}
+.kpi.danger .v{color:var(--red)!important}.kpi.good .v{color:var(--green)!important}
+.section{scroll-margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04)}
+.section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}.section p{margin:8px 0;color:#344054}.lead{margin:0 0 18px!important;color:var(--muted)!important}
+.warning{margin-top:16px;background:#fff3cd;color:#664d03;border-left:5px solid #f59e0b;padding:12px 14px;border-radius:8px}.section{scroll-margin-top:66px;margin-top:24px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 5px 16px rgba(15,23,42,.05)}.section h2{margin:0 0 6px;font-size:25px}.section h2 .num{color:#2563eb}.lead{margin:0 0 18px;color:var(--muted)}.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}.kpi{text-align:center}.kpi .v{font-size:29px;font-weight:800;color:#174ea6}.kpi .l{font-size:13px;color:var(--muted)}.kpi.danger .v{color:#c62828}.kpi.good .v{color:#16833b}.flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}.flow .node{flex:1 1 140px;background:#eef5ff;border:1px solid #b9d1f4;border-radius:10px;padding:13px;text-align:center;font-weight:700}.flow .arrow{align-self:center;color:#64748b;font-size:22px}.audit{background:#f0fdf4;border-color:#b7e4c7}.audit strong{color:#137333}.risk{background:#fff7ed;border-color:#fed7aa}.fail{background:#fef2f2;border-color:#fecaca}.chartbox{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}.charttitle{text-align:center;font-weight:800;margin-bottom:14px}.barrow{display:grid;grid-template-columns:150px 1fr 72px;align-items:center;gap:10px;margin:9px 0;font-size:13px}.track{height:22px;background:#edf2f7;border-radius:4px;overflow:hidden}.bar{height:100%;background:#2f66e5;border-radius:999px;transform-origin:left center}
+.bar.ch02-style{background:var(--bar-color);border-radius:0 5px 5px 0}
+.bar.red{background:#e32626}.bar.green{background:#18863b}.bar.neg{background:#c83c3c;float:right}
+.bar.reveal-bar{width:var(--target);transform:scaleX(0);transform-origin:left center;opacity:.82;will-change:transform,opacity;animation:ch02BarInitial 1600ms cubic-bezier(.215,.61,.355,1) forwards;animation-delay:var(--delay,0ms)}
+@keyframes ch02BarInitial{0%{transform:scaleX(0);opacity:.82}100%{transform:scaleX(1);opacity:1}}
+
+/* ===== Confusion Matrix 3D Animation（套用 Ch06 立體動畫效果）===== */
+.matrix{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:24px;
+  border:0;
+  max-width:620px;
+  margin:18px auto 28px;
+  padding:18px;
+  background:transparent;
+  perspective:1200px;
+  transform-style:preserve-3d;
+  overflow:visible;
+}
+.water-slot{
+  position:relative;
+  min-height:170px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1000px;
+  transform-style:preserve-3d;
+  overflow:visible;
+  isolation:isolate;
+}
+.water-slot::before,.water-slot::after{display:none!important}
+.cell{
+  position:relative;
+  z-index:4;
+  width:100%;
+  min-height:138px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  font-size:24px;
+  border:1px solid rgba(255,255,255,.62);
+  cursor:pointer;
+  transform-origin:center center;
+  will-change:transform;
+  isolation:isolate;
+  box-shadow:var(--matrix-shadow);
+  animation:matrixBuild3D 900ms cubic-bezier(.215,.61,.355,1) both;
+}
+.water-slot:nth-child(1) .cell{animation-delay:0ms}
+.water-slot:nth-child(2) .cell{animation-delay:120ms}
+.water-slot:nth-child(3) .cell{animation-delay:240ms}
+.water-slot:nth-child(4) .cell{animation-delay:360ms}
+.cell::after{
+  content:"";
+  position:absolute;
+  left:7px;
+  right:-11px;
+  top:100%;
+  height:14px;
+  background:rgba(15,23,42,.30);
+  transform:skewX(-38deg);
+  transform-origin:left top;
+  pointer-events:none;
+  z-index:-1;
+}
+.cell::before{
+  content:"";
+  position:absolute;
+  top:8px;
+  bottom:-14px;
+  left:100%;
+  width:11px;
+  background:rgba(15,23,42,.24);
+  transform:skewY(-52deg);
+  transform-origin:left top;
+  pointer-events:none;
+  z-index:-1;
+}
+.cell b{font-size:28px}
+/* 四格使用 Ch06 相同的獨立、不透明實色陰影。 */
+.tn{background:#123b73;color:#fff;--matrix-shadow-color:#001F5B;--matrix-shadow:0 16px 28px #001F5B}
+.fp{background:#2c74b7;color:#fff;--matrix-shadow-color:#00A8FF;--matrix-shadow:0 16px 28px #00A8FF}
+.fn{background:#dce9f7;--matrix-shadow-color:#B85C00;--matrix-shadow:0 16px 28px #B85C00}
+.tp{background:#f4f8fc;--matrix-shadow-color:#006B2E;--matrix-shadow:0 16px 28px #006B2E}
+@keyframes matrixBuild3D{
+  0%{transform:translateY(20px) scale(.90);opacity:0}
+  72%{transform:translateY(-4px) scale(1.025);opacity:1}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+.axis{text-align:center;color:#475467;margin:8px}
+.coefrow{display:grid;grid-template-columns:250px 1fr 72px;align-items:center;gap:8px;margin:6px 0;font-size:12px}.coeftrack{height:16px;background:linear-gradient(to right,transparent 49.7%,#6b7280 49.7%,#6b7280 50.3%,transparent 50.3%);position:relative}.coefpos,.coefneg{position:absolute;top:0;height:100%}.coefpos{left:50%;background:#18863b}.coefneg{right:50%;background:#c83c3c}.coefpos.reveal-coef,.coefneg.reveal-coef{width:var(--target-width);transform:scaleX(0);opacity:.82;will-change:transform,opacity}.coefpos.reveal-coef{transform-origin:left center}.coefneg.reveal-coef{transform-origin:right center}.coefpos.reveal-coef{animation:coefBarInitial 1600ms cubic-bezier(.215,.61,.355,1) forwards;animation-delay:var(--delay,0ms)}.coefneg.reveal-coef{animation:coefBarInitial 1600ms cubic-bezier(.215,.61,.355,1) forwards;animation-delay:var(--delay,0ms)}@keyframes coefBarInitial{0%{transform:scaleX(0);opacity:.82}100%{transform:scaleX(1);opacity:1}}.table{width:100%;border-collapse:collapse;font-size:14px}.table th,.table td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}.table th{background:#e8f2fb}.pill{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700}.pass{background:#dcfce7;color:#166534}.blocked{background:#fee2e2;color:#991b1b}.limited{background:#fef3c7;color:#92400e}.footer{text-align:center;color:#667085;padding:26px;font-size:13px}.small{font-size:13px;color:#667085}.note{border-left:4px solid #2563eb;padding:10px 12px;background:#eff6ff;border-radius:6px}.critical{border-left-color:#dc2626;background:#fef2f2}.legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:12px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}.posdot{background:#18863b}.negdot{background:#c83c3c}.zerodot{background:#94a3b8}
+@media(max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}.sidebar{display:none}.layout{margin-left:0}.main{padding:16px}.coefrow{grid-template-columns:190px 1fr 65px}}
+@media(max-width:650px){.g4,.g3,.g2{grid-template-columns:1fr}.hero h1{font-size:27px}.barrow{grid-template-columns:110px 1fr 62px}.coefrow{grid-template-columns:145px 1fr 58px}.main{padding:10px}.section{padding:15px}.cell{min-height:110px;font-size:20px}}
+body.embed-mode .topbar,body.embed-mode .sidebar{display:none}body.embed-mode .layout{margin-left:0;padding-top:0}body.embed-mode .main{max-width:none;padding-top:12px}
+
+@media(max-width:980px){.sidebar{display:none!important}.main{padding:20px!important}.kpis,.g4{grid-template-columns:repeat(2,1fr)!important}.g3,.g2{grid-template-columns:1fr!important}}
+@media(max-width:680px){.kpis,.g4,.g3,.g2{grid-template-columns:1fr!important}.hero{padding:28px 22px}.hero h1{font-size:29px}.barrow{grid-template-columns:110px 1fr 62px}.coefrow{grid-template-columns:145px 1fr 58px}}
+body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}
+body.embed-mode .layout{display:block!important;min-height:100vh!important;margin-left:0!important;padding-top:0!important}
+body.embed-mode .main{padding:16px 22px 30px!important;width:100%!important;max-width:none!important}
+body.embed-mode .wrapper{max-width:1180px!important;margin:0 auto!important}
+body.embed-mode{background:#f4f7fb!important}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><i class="fa fa-line-chart"></i>  Google Play App AI Project</div><div class="top-actions"><a href="index.html"><i class="fa fa-home"></i>  Dashboard</a></div></header>
+<aside class="sidebar"><h3>第五章｜預測系統與成果呈現</h3>
+<nav class="nav">
+<a class="home" href="index.html"><i class="fa fa-dashboard"></i> 返回 Dashboard</a>
+<a href="#s51"><i class="fa fa-users"></i> 5.1 系統需求與使用情境</a>
+<a href="#s52"><i class="fa fa-sitemap"></i> 5.2 系統架構</a>
+<a href="#s53"><i class="fa fa-cloud-upload"></i> 5.3 模型部署與預測流程</a>
+<a href="#s54"><i class="fa fa-check-square-o"></i> 5.4 使用者輸入與資料驗證</a>
+<a href="#s55"><i class="fa fa-magic"></i> 5.5 App 成功預測</a>
+<a href="#s56"><i class="fa fa-bar-chart"></i> 5.6 預測結果與關鍵特徵呈現</a>
+<a href="#s57"><i class="fa fa-balance-scale"></i> 5.7 決策建議與使用限制</a>
+<a href="#s58"><i class="fa fa-check-circle"></i> 5.8 本章小結</a>
+</nav></aside>
+<div class="layout"><main class="main"><div class="wrapper" id="top">
+<section class="hero"><div class="eyebrow">CHAPTER 05 · PREDICTION SYSTEM &amp; RESULTS</div>
+<h1>第五章｜預測系統與成果呈現</h1>
+<p>將正式鎖定的 Logistic Regression | Tuned Pipeline（調參後邏輯斯迴歸管線）整合為可重現、可稽核的 Research Prototype（研究原型），呈現系統推論、最終測試證據、關鍵特徵與使用限制。</p></section><div class="kpis">
+<div class="kpi"><div class="label">Model（正式模型）</div><div class="value">Logistic Regression</div><div class="note">Tuned｜Relative Best Candidate</div></div>
+<div class="kpi"><div class="label">Threshold（固定門檻）</div><div class="value">0.5</div><div class="note">第五章不得重新調整</div></div>
+<div class="kpi"><div class="label">Feature Contract（特徵契約）</div><div class="value">13 → 63</div><div class="note">Raw → Processed Features</div></div>
+<div class="kpi"><div class="label">Chapter Audit（章節稽核）</div><div class="value">30/30 PASS</div><div class="note">Chapter 5 FORMALLY_COMPLETED</div></div>
+</div><div class="warning"><b>Research Boundary（研究邊界）：</b>Final Test PR-AUC 0.162386 低於 No-skill PR-AUC 0.169130，Strong Model Identified=False。系統定位維持為 Exploratory Decision Support（探索性決策支援），不得解讀為成功保證或生產型自動決策系統。</div>
+<section class="section" id="s51"><h2><span class="num">5.1</span> System Requirements and Usage Scenarios（系統需求與使用情境）</h2><p class="lead">系統接收符合研究定義的 App 屬性，執行正式驗證與前處理，再輸出分類、模型估計分數與限制說明。</p><div class="grid g4"><div class="card kpi"><div class="v">13</div><div class="l">Raw Model Features（原始模型特徵）</div></div><div class="card kpi"><div class="v">63</div><div class="l">Processed Features（處理後特徵）</div></div><div class="card kpi"><div class="v">0.5</div><div class="l">Fixed Threshold（固定門檻）</div></div><div class="card kpi danger"><div class="v">False</div><div class="l">Strong Model Identified</div></div></div><div class="grid g2" style="margin-top:14px"><div class="card"><b>適用情境</b><p>既有 App 快照狀態探索性分類、研究流程展示、假設條件的模型內比較，以及後續研究原型。</p></div><div class="card fail"><b>不適用情境</b><p>新 App 固定時間窗未來成功預測、自動核准／拒絕、直接投資或預算配置、將分數視為真實成功機率。</p></div></div></section>
+<section class="section" id="s52"><h2><span class="num">5.2</span> System Architecture（系統架構）</h2><p class="lead">採 Layered Architecture（分層式架構），明確分離 Offline Model Development（離線模型開發）與 Inference Application（推論應用）。</p><div class="flow"><div class="node">User Interface<br/><span class="small">使用者介面</span></div><div class="arrow">→</div><div class="node">Input Validation<br/><span class="small">輸入驗證</span></div><div class="arrow">→</div><div class="node">Feature Transformation<br/><span class="small">特徵轉換</span></div><div class="arrow">→</div><div class="node">Model Integrity<br/><span class="small">模型完整性</span></div><div class="arrow">→</div><div class="node">Inference<br/><span class="small">模型推論</span></div><div class="arrow">→</div><div class="node">Explanation &amp; Risk<br/><span class="small">解釋與風險</span></div><div class="arrow">→</div><div class="node">Audit Log<br/><span class="small">稽核紀錄</span></div></div><div class="grid g3" style="margin-top:16px"><div class="card audit"><strong>Pipeline Consistency</strong><br/>沿用鎖定完整 Pipeline，不另建 Encoder、Scaler 或 Imputer。</div><div class="card audit"><strong>Fail-safe Design</strong><br/>無法確認模型或資料正確性時停止推論。</div><div class="card audit"><strong>Transparent Limitation</strong><br/>弱泛化、FP／FN 與未校準分數必須直接可見。</div></div></section>
+<section class="section" id="s53"><h2><span class="num">5.3</span> Model Deployment and Prediction Process（模型部署與預測流程）</h2><p class="lead">部署只執行已鎖定模型的推論，不重新訓練、調參、選模或調整 Threshold。</p><div class="grid g4"><div class="card kpi"><div class="v">0.1</div><div class="l">C</div></div><div class="card kpi"><div class="v">1.0 / L1</div><div class="l">l1_ratio / Regularization</div></div><div class="card kpi"><div class="v">balanced</div><div class="l">class_weight</div></div><div class="card kpi good"><div class="v">MATCH</div><div class="l">SHA-256 Integrity</div></div></div><div class="flow" style="margin-top:16px"><div class="node">Model Manifest</div><div class="arrow">→</div><div class="node">File + SHA-256</div><div class="arrow">→</div><div class="node">Pipeline / 13→63 / [0,1]</div><div class="arrow">→</div><div class="node">Startup Health Check</div><div class="arrow">→</div><div class="node">READY_FOR_INFERENCE</div></div><p class="small">正式模型 SHA-256：792c77ccfbd89bd67dff9e7c9c155d661faff50869bce24e8a14dca67fc20882</p></section>
+<section class="section" id="s54"><h2><span class="num">5.4</span> User Input and Data Validation（使用者輸入與資料驗證）</h2><p class="lead">介面資料必須依固定契約建立 13 項正式模型輸入；未知類別、矛盾欄位與研究時點外輸入採保守阻擋。</p><div class="flow"><div class="node">Required Fields</div><div class="arrow">→</div><div class="node">Data Type</div><div class="arrow">→</div><div class="node">Allowed Values</div><div class="arrow">→</div><div class="node">Range / OOD</div><div class="arrow">→</div><div class="node">Cross-field</div><div class="arrow">→</div><div class="node">Schema PASS</div></div><div class="grid g3" style="margin-top:16px"><div class="card"><b>Categorical（類別型）</b><p>Category、Content Rating、Genre_Secondary</p></div><div class="card"><b>Numerical（數值型）</b><p>Price、Size_MB、Days_Since_Update、Min_Android_Ver</p></div><div class="card"><b>Binary（二元型）</b><p>Size_Varies、Is_Paid、Current_Ver_Varies、Android_Ver_Varies、Has_In_App_Purchases、Has_Ad_Support</p></div></div><div class="note critical" style="margin-top:14px"><b>Leakage Guard（資料洩漏防護）：</b>Installs、Reviews、Rating、App 與 Has_Rating／Rating_Available／Rating_Missing 等代理特徵不得進入模型。</div></section>
+<section class="section" id="s55"><h2><span class="num">5.5</span> App Success Prediction（App 成功預測）</h2><p class="lead">只有 Validation、Model Integrity、Feature Schema、Leakage Guard、13→63 轉換與 Class Order 全部通過，才可執行授權推論。</p><div class="flow"><div class="node">12 User-facing Inputs</div><div class="arrow">→</div><div class="node">Validation PASS</div><div class="arrow">→</div><div class="node">1×13 Model Input</div><div class="arrow">→</div><div class="node">1×63 Pipeline Output</div><div class="arrow">→</div><div class="node">predict_proba ×1</div><div class="arrow">→</div><div class="node">Threshold 0.5</div><div class="arrow">→</div><div class="node">Publish Result</div></div><div class="grid g4" style="margin-top:16px"><div class="card kpi good"><div class="v">14/14</div><div class="l">End-to-end Tests PASS</div></div><div class="card kpi good"><div class="v">20/20</div><div class="l">Implementation Audit PASS</div></div><div class="card kpi"><div class="v">0</div><div class="l">Blocked-case predict_proba Calls</div></div><div class="card kpi"><div class="v">1</div><div class="l">Authorized Request Call</div></div></div><div class="note" style="margin-top:14px"><b>Result Invalidation：</b>任何輸入修改會立即使既有 Validation Result、1×13、1×63、Predicted Class 與 Score 失效；舊請求不得覆蓋 Active Request。</div></section>
+<section class="section" id="s56"><h2><span class="num">5.6</span> Prediction Results and Key Feature Presentation（預測結果與關鍵特徵呈現）</h2><p class="lead">以下視覺化只重述既有 Final Test Evidence 與鎖定模型唯讀係數，不重新存取 Test Set、不重新訓練。</p>
+<div class="grid g4"><div class="card kpi"><div class="v">2,300</div><div class="l">Final Test Samples</div></div><div class="card kpi danger"><div class="v">0.162386</div><div class="l">Final Test PR-AUC</div></div><div class="card kpi"><div class="v">0.169130</div><div class="l">No-skill PR-AUC</div></div><div class="card kpi danger"><div class="v">0.960125</div><div class="l">PR-AUC Lift</div></div></div>
+<div class="chartbox" style="margin-top:16px"><div class="charttitle">Final Test Classification Performance（最終測試分類效能）</div>
+<div class="barrow"><span>Accuracy</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#A93BF2;--target:88.1%;--delay:.00s"></div></div><b>0.528696</b></div><div class="barrow"><span>Precision 1</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#FF6A1A;--target:25.6%;--delay:.07s"></div></div><b>0.153539</b></div><div class="barrow"><span>Recall 1</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#50C732;--target:66.0%;--delay:.14s"></div></div><b>0.395887</b></div><div class="barrow"><span>F1 1</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#4F86E8;--target:36.9%;--delay:.21s"></div></div><b>0.221264</b></div><div class="barrow"><span>F1 Macro</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#EF2C86;--target:73.6%;--delay:.28s"></div></div><b>0.441680</b></div><div class="barrow"><span>ROC-AUC</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#2DBBC3;--target:79.6%;--delay:.35s"></div></div><b>0.477585</b></div><div class="barrow"><span>PR-AUC</span><div class="track"><div class="bar ch02-style reveal-bar" style="--bar-color:#FFCC6E;--target:27.1%;--delay:.42s"></div></div><b>0.162386</b></div></div>
+<div class="grid g2" style="margin-top:16px"><div class="chartbox"><div class="charttitle">Confusion Matrix（混淆矩陣）</div><div class="axis">Predicted Class（預測類別）</div><div class="matrix"><div class="water-slot"><div class="cell tn" tabindex="0">TN<b>1,062</b></div></div><div class="water-slot"><div class="cell fp" tabindex="0">FP<b>849</b></div></div><div class="water-slot"><div class="cell fn" tabindex="0">FN<b>235</b></div></div><div class="water-slot"><div class="cell tp" tabindex="0">TP<b>154</b></div></div></div><div class="axis">Actual Class（實際類別）</div></div><div class="chartbox"><div class="charttitle">PR-AUC versus No-skill Baseline</div><div class="barrow"><span>No-skill PR-AUC</span><div class="track"><div class="bar reveal-bar" style="--target:84.565%;--delay:.08s"></div></div><b>0.169130</b></div><div class="barrow"><span>Final Test PR-AUC</span><div class="track"><div class="bar red reveal-bar" style="--target:81.193%;--delay:.18s"></div></div><b>0.162386</b></div><div class="note critical" style="margin-top:22px"><b>Lift = 0.960125</b><br/>Weak Independent Generalization Evidence（弱獨立泛化證據）</div></div></div>
+<div class="chartbox" style="margin-top:16px"><div class="charttitle">Locked-model Coefficients（鎖定模型係數｜Top 10 Positive / Negative）</div>
+<div class="coefrow"><span>Genre_Secondary_Simulation</span><div class="coeftrack"><i class="coefpos reveal-coef" style="--target-width:32.5%;--delay:0ms"></i></div><b>0.163917</b></div><div class="coefrow"><span>Content Rating_Everyone 10+</span><div class="coeftrack"><i class="coefpos reveal-coef" style="--target-width:29.3%;--delay:120ms"></i></div><b>0.147738</b></div><div class="coefrow"><span>Category_PRODUCTIVITY</span><div class="coeftrack"><i class="coefpos reveal-coef" style="--target-width:20.2%;--delay:240ms"></i></div><b>0.102091</b></div><div class="coefrow"><span>Category_FAMILY</span><div class="coeftrack"><i class="coefpos reveal-coef" style="--target-width:18.8%;--delay:360ms"></i></div><b>0.094700</b></div><div class="coefrow"><span>Category_PHOTOGRAPHY</span><div class="coeftrack"><i class="coefpos reveal-coef" style="--target-width:10.6%;--delay:480ms"></i></div><b>0.053535</b></div><div class="coefrow"><span>Content Rating_Everyone</span><div class="coeftrack"><i class="coefneg reveal-coef" style="--target-width:10.5%;--delay:600ms"></i></div><b>-0.052720</b></div><div class="coefrow"><span>Content Rating_Teen</span><div class="coeftrack"><i class="coefneg reveal-coef" style="--target-width:8.6%;--delay:720ms"></i></div><b>-0.043502</b></div><div class="coefrow"><span>Category_ARTIFICIAL_INTELLIGENCE</span><div class="coeftrack"><i class="coefneg reveal-coef" style="--target-width:7.2%;--delay:840ms"></i></div><b>-0.036412</b></div><div class="coefrow"><span>Genre_Secondary_RPG</span><div class="coeftrack"><i class="coefneg reveal-coef" style="--target-width:46.0%;--delay:960ms"></i></div><b>-0.232203</b></div><div class="coefrow"><span>Category_BEAUTY</span><div class="coeftrack"><i class="coefneg reveal-coef" style="--target-width:50%;--delay:1080ms"></i></div><b>-0.252165</b></div><div class="legend"><span><i class="dot posdot"></i>Positive</span><span><i class="dot negdot"></i>Negative</span></div></div>
+<div class="chartbox" style="margin-top:16px"><div class="charttitle">Coefficient Sparsity under L1 Regularization（L1 正規化係數稀疏性）</div><div class="grid g3"><div class="card kpi good"><div class="v">10</div><div class="l">Positive</div></div><div class="card kpi danger"><div class="v">11</div><div class="l">Negative</div></div><div class="card kpi"><div class="v" style="color:#64748b">42</div><div class="l">Zero</div></div></div><p class="small">Zero Coefficient（零係數）代表在鎖定 L1 模型中未保留線性貢獻，不代表真實世界無作用。係數不等於 Causal Effect（因果效果）。</p></div></section>
+<section class="section" id="s57"><h2><span class="num">5.7</span> Decision Recommendations and Usage Limitations（決策建議與使用限制）</h2><p class="lead">模型輸出只能作為有限、可追溯且需要 Human-in-the-loop（人工參與）的探索性訊號。</p><div class="grid g3"><div class="card audit"><strong>允許</strong><p>教學、研究原型、探索性條件比較、初步風險提醒、後續研究假設。</p></div><div class="card risk"><strong>有限可用</strong><p>Model-estimated Score 必須同時揭露未校準與弱泛化限制。</p></div><div class="card fail"><strong>禁止</strong><p>真實成功機率、成功保證、自動決策、因果宣稱、直接資源配置或產品淘汰。</p></div></div><div class="grid g2" style="margin-top:16px"><div class="card"><b>False Positive Risk（假陽性風險）</b><div class="kpi danger"><div class="v">849</div><div class="l">過度樂觀、資源誤配 → 必須人工覆核</div></div></div><div class="card"><b>False Negative Risk（假陰性風險）</b><div class="kpi"><div class="v">235</div><div class="l">可能錯失具潛力 App → 不得直接淘汰</div></div></div></div></section>
+<section class="section" id="s58"><h2><span class="num">5.8</span> Section Summary（本章小結）</h2><p class="lead">第五章完成需求、架構、部署、驗證、單筆推論、結果呈現與決策治理的完整 Evidence Chain（證據鏈）。</p><div class="flow"><div class="node">5.1 Requirements</div><div class="arrow">→</div><div class="node">5.2–5.3 Architecture &amp; Deployment</div><div class="arrow">→</div><div class="node">5.4 Validation</div><div class="arrow">→</div><div class="node">5.5 Prediction</div><div class="arrow">→</div><div class="node">5.6 Results &amp; Features</div><div class="arrow">→</div><div class="node">5.7 Governance</div><div class="arrow">→</div><div class="node">5.8 Conclusion</div></div><div class="grid g4" style="margin-top:16px"><div class="card kpi good"><div class="v">30/30</div><div class="l">Final Chapter Audit PASS</div></div><div class="card kpi good"><div class="v">PASS</div><div class="l">SHA-256 Exact Match</div></div><div class="card kpi"><div class="v">False</div><div class="l">Test Set Reused</div></div><div class="card kpi"><div class="v">False</div><div class="l">Training Performed</div></div></div><div class="note critical" style="margin-top:16px"><b>Final Chapter Judgment（第五章最終判定）：</b>System Implementation Completed（系統實作完成）與 Strong Predictive Model Not Confirmed（未確認強預測模型）必須同時保留。系統用途維持為研究、教學與 Exploratory Decision Support（探索性決策支援）。</div></section>
+<div class="footer">Google Play App 成功率預測專題｜Chapter 5 FORMALLY_COMPLETED｜GitHub Pages Ready</div>
+</div></main></div>
+<script>
+(function(){
+  const p=new URLSearchParams(location.search);
+  if(p.get('embed')==='1')document.body.classList.add('embed-mode');
+
+  document.querySelectorAll('.track').forEach(function(track){
+    const bar=track.querySelector('.reveal-bar');
+    if(!bar)return;
+    const state={raf:null,locked:false};
+
+    function replayBarAnimation(){
+      if(state.locked)return;
+      state.locked=true;
+      if(state.raf)cancelAnimationFrame(state.raf);
+      bar.style.animation='none';
+      bar.style.transform='scaleX(0)';
+      bar.style.opacity='0.82';
+      const startTime=performance.now();
+      const duration=1800;
+      function animateBar(now){
+        const t=Math.min(1,(now-startTime)/duration);
+        const progress=1-Math.pow(1-t,3);
+        bar.style.transform='scaleX('+progress+')';
+        bar.style.opacity=String(0.82+(0.18*progress));
+        if(t<1){state.raf=requestAnimationFrame(animateBar);}
+        else{state.raf=null;bar.style.transform='scaleX(1)';bar.style.opacity='1';}
+      }
+      state.raf=requestAnimationFrame(animateBar);
+    }
+    function unlockBarAnimation(){state.locked=false;}
+    track.addEventListener('mouseenter',replayBarAnimation);
+    track.addEventListener('pointerenter',replayBarAnimation);
+    track.addEventListener('mouseleave',unlockBarAnimation);
+    track.addEventListener('pointerleave',unlockBarAnimation);
+  });
+
+
+  document.querySelectorAll('.coeftrack').forEach(function(track){
+    const bar=track.querySelector('.reveal-coef');
+    if(!bar)return;
+    const state={raf:null,locked:false};
+
+    function replayCoefAnimation(){
+      if(state.locked)return;
+      state.locked=true;
+      if(state.raf)cancelAnimationFrame(state.raf);
+      bar.style.animation='none';
+      bar.style.transform='scaleX(0)';
+      bar.style.opacity='0.82';
+      const startTime=performance.now();
+      const duration=1800;
+      function animateCoef(now){
+        const t=Math.min(1,(now-startTime)/duration);
+        const progress=1-Math.pow(1-t,3);
+        bar.style.transform='scaleX('+progress+')';
+        bar.style.opacity=String(0.82+(0.18*progress));
+        if(t<1){state.raf=requestAnimationFrame(animateCoef);}
+        else{state.raf=null;bar.style.transform='scaleX(1)';bar.style.opacity='1';}
+      }
+      state.raf=requestAnimationFrame(animateCoef);
+    }
+    function unlockCoefAnimation(){state.locked=false;}
+    track.addEventListener('mouseenter',replayCoefAnimation);
+    track.addEventListener('pointerenter',replayCoefAnimation);
+    track.addEventListener('mouseleave',unlockCoefAnimation);
+    track.addEventListener('pointerleave',unlockCoefAnimation);
+  });
+
+
+  // Confusion Matrix Triple Pulse Animation（與 Ch06 相同）：
+  // 使用 Web Animations API 直接控制 TN / FP / FN / TP 方塊。
+  document.querySelectorAll(".matrix .cell").forEach(function(cell){
+    let pulseAnimation=null;
+    let hoverLocked=false;
+
+    function replayTriplePulse(){
+      if(hoverLocked){return;}
+      hoverLocked=true;
+
+      cell.style.animation="none";
+      cell.style.transform="scale(1)";
+
+      if(pulseAnimation){
+        try{pulseAnimation.cancel();}catch(e){}
+      }
+
+      const shadowColor=getComputedStyle(cell).getPropertyValue("--matrix-shadow-color").trim() || "#001F5B";
+      const baseShadow="0 16px 28px "+shadowColor;
+      const liftShadow="0 24px 34px "+shadowColor;
+
+      pulseAnimation=cell.animate([
+        {transform:"translateY(0) scale(1)",boxShadow:baseShadow,offset:0},
+        {transform:"translateY(-6px) scale(1.18)",boxShadow:liftShadow,offset:0.12},
+        {transform:"translateY(0) scale(0.94)",boxShadow:baseShadow,offset:0.24},
+        {transform:"translateY(-6px) scale(1.18)",boxShadow:liftShadow,offset:0.40},
+        {transform:"translateY(0) scale(0.94)",boxShadow:baseShadow,offset:0.52},
+        {transform:"translateY(-6px) scale(1.18)",boxShadow:liftShadow,offset:0.68},
+        {transform:"translateY(0) scale(0.96)",boxShadow:baseShadow,offset:0.82},
+        {transform:"translateY(0) scale(1)",boxShadow:baseShadow,offset:1}
+      ],{
+        duration:3000,
+        easing:"cubic-bezier(.25,.65,.30,1)",
+        iterations:1,
+        fill:"none"
+      });
+
+      pulseAnimation.onfinish=function(){
+        cell.style.transform="scale(1)";
+      };
+    }
+
+    function unlockTriplePulse(){
+      hoverLocked=false;
+      if(pulseAnimation){
+        try{pulseAnimation.cancel();}catch(e){}
+        pulseAnimation=null;
+      }
+      cell.style.transform="scale(1)";
+    }
+
+    cell.addEventListener("mouseenter",replayTriplePulse);
+    cell.addEventListener("mouseleave",unlockTriplePulse);
+    cell.addEventListener("pointerenter",replayTriplePulse);
+    cell.addEventListener("pointerleave",unlockTriplePulse);
+    cell.addEventListener("focus",replayTriplePulse);
+    cell.addEventListener("blur",unlockTriplePulse);
+    cell.addEventListener("click",function(){
+      hoverLocked=false;
+      replayTriplePulse();
+    });
+  });
+})();
+</script>
+</body></html>

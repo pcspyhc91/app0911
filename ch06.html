@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch06｜第六章 結論與未來展望</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#1f2937;--muted:#0033FF;--line:#e6eaf0;
+  --blue:#2596e8;--blue-dark:#136fb0;--blue-soft:#eaf5fd;
+  --green:#2ea66f;--green-soft:#eaf8f1;--orange:#f5a623;--orange-soft:#fff5df;
+  --red:#dc5a5a;--red-soft:#fff0f0;--purple:#7b61c9;--purple-soft:#f1edfb;
+  --shadow:0 8px 28px rgba(31,41,55,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans TC",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#111827;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.13)}
+.brand{font-weight:800;letter-spacing:.4px}.top-actions{display:flex;gap:10px}.top-actions a{padding:7px 12px;border-radius:8px;background:#253044;color:#fff;font-size:14px}.top-actions a:hover{background:#34425b}
+.layout{display:flex;min-height:calc(100vh - 58px)}
+.sidebar{width:260px;flex:0 0 260px;background:#fff;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto}
+.sidebar h3{margin:0 10px 16px;font-size:18px}.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:4px 0;border-radius:9px;color:#344054;font-size:14px;transition:.18s ease}.nav a:hover{background:var(--blue-soft);color:var(--blue-dark);transform:translateX(2px)}.nav i{width:18px;text-align:center}.nav .active{background:var(--blue);color:#fff;font-weight:700}.ch06-section-menu{display:block}.ch06-section-menu.is-collapsed{display:none}#ch06Toggle{cursor:pointer;user-select:none}#ch06Toggle .toggle-icon{margin-left:auto;transition:transform .18s ease}#ch06Toggle.menu-open .toggle-icon{transform:rotate(180deg)}
+.main{flex:1;min-width:0;padding:30px}.wrapper{max-width:1180px;margin:0 auto}
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:38px 40px;background:linear-gradient(135deg,#177fc5 0%,#2596e8 58%,#68baf0 100%);color:#fff;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;right:-100px;top:-120px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero .eyebrow{font-size:14px;opacity:.88;font-weight:700;letter-spacing:1px}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 12px}.hero p{margin:0;max-width:900px;font-size:17px;opacity:.96}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.kpi{border:1px solid var(--line);border-radius:15px;padding:18px 20px;box-shadow:0 4px 18px rgba(31,41,55,.04)}.kpi .label{color:#0000FF;font-size:16px}.kpi .value{font-weight:800;font-size:25px;margin:4px 0;color:#111827}.kpi .note{font-size:16px;color:#D94DFF}.kpi.dataset-kpi{background:#FFFFC5}.kpi.threshold-kpi{background:#EBFFEB}.kpi.success-kpi{background:#F5DEB3}.kpi.failure-kpi{background:#E6CFE6}
+.section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:18px 0;box-shadow:0 5px 18px rgba(31,41,55,.04);scroll-margin-top:18px}.section h2{margin:0 0 14px;font-size:24px;display:flex;align-items:center;gap:10px}.section h2 .num{background:var(--blue-soft);color:var(--blue-dark);font-size:14px;padding:4px 9px;border-radius:999px}.section h3{margin:18px 0 8px;font-size:18px}.section p{margin:8px 0;color:#344054}
+.callout{border-left:5px solid var(--blue);background:var(--blue-soft);border-radius:10px;padding:14px 16px;margin:14px 0}.callout strong{color:var(--blue-dark)}.warning{border-left-color:var(--orange);background:var(--orange-soft)}.warning strong{color:#9a6200}.danger{border-left-color:var(--red);background:var(--red-soft)}.danger strong{color:#9d3030}.success{border-left-color:var(--green);background:var(--green-soft)}.success strong{color:#176a48}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.mini-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}.mini-card .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}.icon.blue{background:var(--blue-soft);color:var(--blue-dark)}.icon.green{background:var(--green-soft);color:var(--green)}.icon.orange{background:var(--orange-soft);color:#a96600}.icon.purple{background:var(--purple-soft);color:var(--purple)}.icon.red{background:var(--red-soft);color:var(--red)}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}.flow .step{padding:9px 12px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-size:14px;font-weight:600}.flow .arrow{color:#98a2b3}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f8fafc;color:#475467}td:first-child{font-weight:700;color:#344054}
+.chartbox{border:1px solid var(--line);border-radius:13px;padding:18px;background:#fff}.charttitle{text-align:center;font-weight:800;font-size:18px;margin-bottom:14px}.bar-list{display:grid;gap:10px;margin-top:14px}.bar-row{display:grid;grid-template-columns:190px 1fr 90px;align-items:center;gap:10px;font-size:14px}.bar-track{height:15px;background:#edf1f5;border-radius:999px;overflow:hidden;cursor:pointer}.bar-fill{height:100%;width:var(--target-width);background:var(--bar-color);border-radius:0 5px 5px 0;transform:scaleX(0);transform-origin:left center;opacity:.82;will-change:transform,opacity;animation:barInitial 1600ms cubic-bezier(.215,.61,.355,1) forwards;animation-delay:var(--delay,0ms)}@keyframes barInitial{0%{transform:scaleX(0);opacity:.82}100%{transform:scaleX(1);opacity:1}}
+.matrix{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:24px;
+  border:0;
+  max-width:620px;
+  margin:18px auto 28px;
+  padding:18px;
+  background:transparent;
+  perspective:1200px;
+  transform-style:preserve-3d;
+  overflow:visible;
+}
+/* Confusion Matrix：四個方塊維持獨立，Hover 時做 3 次明顯放大／縮小。 */
+.water-slot{
+  position:relative;
+  min-height:170px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1000px;
+  transform-style:preserve-3d;
+  overflow:visible;
+  isolation:isolate;
+}
+.water-slot::before,.water-slot::after{display:none!important}
+.cell{
+  position:relative;
+  z-index:4;
+  width:100%;
+  min-height:138px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  font-size:24px;
+  border:1px solid rgba(255,255,255,.62);
+  cursor:pointer;
+  transform-origin:center center;
+  will-change:transform;
+  isolation:isolate;
+  box-shadow:var(--matrix-shadow);
+  animation:matrixBuild3D 900ms cubic-bezier(.215,.61,.355,1) both;
+}
+.water-slot:nth-child(1) .cell{animation-delay:0ms}
+.water-slot:nth-child(2) .cell{animation-delay:120ms}
+.water-slot:nth-child(3) .cell{animation-delay:240ms}
+.water-slot:nth-child(4) .cell{animation-delay:360ms}
+.cell::after{
+  content:"";
+  position:absolute;
+  left:7px;
+  right:-11px;
+  top:100%;
+  height:14px;
+  background:rgba(15,23,42,.30);
+  transform:skewX(-38deg);
+  transform-origin:left top;
+  pointer-events:none;
+  z-index:-1;
+}
+.cell::before{
+  content:"";
+  position:absolute;
+  top:8px;
+  bottom:-14px;
+  left:100%;
+  width:11px;
+  background:rgba(15,23,42,.24);
+  transform:skewY(-52deg);
+  transform-origin:left top;
+  pointer-events:none;
+  z-index:-1;
+}
+.cell b{font-size:28px}
+/* Confusion Matrix 四格使用各自獨立、完全不透明的實色陰影。 */
+.tn{background:#123b73;color:#fff;--matrix-shadow-color:#001F5B;--matrix-shadow:0 16px 28px #001F5B}
+.fp{background:#2c74b7;color:#fff;--matrix-shadow-color:#00A8FF;--matrix-shadow:0 16px 28px #00A8FF}
+.fn{background:#dce9f7;--matrix-shadow-color:#B85C00;--matrix-shadow:0 16px 28px #B85C00}
+.tp{background:#f4f8fc;--matrix-shadow-color:#006B2E;--matrix-shadow:0 16px 28px #006B2E}
+@keyframes matrixBuild3D{
+  0%{transform:translateY(20px) scale(.90);opacity:0}
+  72%{transform:translateY(-4px) scale(1.025);opacity:1}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+/* 三次放大／縮小：每次都回到 1，再放大，最後停在原尺寸。 */
+.cell.matrix-triple-pulse{
+  z-index:40;
+  animation:matrixTriplePulse 1500ms cubic-bezier(.22,.72,.24,1) both !important;
+}
+@keyframes matrixTriplePulse{
+  0%   {transform:scale(1)}
+  12%  {transform:scale(1.14)}
+  24%  {transform:scale(.96)}
+  36%  {transform:scale(1.14)}
+  48%  {transform:scale(.96)}
+  60%  {transform:scale(1.14)}
+  74%  {transform:scale(.97)}
+  86%  {transform:scale(1.05)}
+  100% {transform:scale(1)}
+}
+/* Hover 結束後平順回到原位。 */
+.cell.matrix-pulse-reset{transition:transform .22s ease-out;transform:scale(1)}
+.axis{text-align:center;color:#475467;margin:8px}
+.donut-panel{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:center}.donut-wrap{display:flex;justify-content:center;align-items:center}.donut-stage{position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center;perspective:900px}.donut-canvas{width:260px!important;height:260px!important;display:block;cursor:pointer}.donut-center{position:absolute;inset:0;z-index:3;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transform:translateY(-2px)}.donut-center b{font-size:30px;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,.08)}.donut-center span{font-size:13px;color:var(--muted)}.donut-legend{margin-top:14px}.donut-legend div{display:flex;align-items:center;gap:9px;margin:7px 0;font-size:14px}.donut-dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+.rq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.rq-card{border:1px solid var(--line);border-radius:13px;padding:16px;background:#fff}.rq-card .q{font-weight:800;color:#174ea6;margin-bottom:5px}.rq-card .answer{font-weight:700;color:#111827}.rq-card .boundary{margin-top:7px;font-size:13px;color:#667085}.audit-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.audit-item{padding:14px;border-radius:12px;border:1px solid #b7e4c7;background:#f0fdf4}.audit-item b{display:block;color:#137333;font-size:19px}.audit-item span{font-size:13px;color:#475467}.roadmap{display:grid;gap:11px;margin-top:14px}.roadmap-step{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}.roadmap-num{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}.roadmap-body{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:#f8fafc}.roadmap-body b{color:#174ea6}.status-pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:800}.pass{background:#dcfce7;color:#166534}.limited{background:#fef3c7;color:#92400e}.blocked{background:#fee2e2;color:#991b1b}.footer{color:#98a2b3;text-align:center;font-size:13px;padding:24px 0 10px}
+body.embed-mode .topbar,body.embed-mode .sidebar{display:none!important}body.embed-mode .layout{display:block!important;min-height:100vh!important}body.embed-mode .main{padding:16px 22px 30px!important;width:100%!important}body.embed-mode .wrapper{max-width:1180px!important;margin:0 auto!important}body.embed-mode{background:#f4f7fb!important}
+@media(max-width:980px){.sidebar{display:none}.main{padding:20px}.kpis,.grid-4,.audit-strip{grid-template-columns:repeat(2,1fr)}.grid-3,.donut-panel{grid-template-columns:1fr}}
+@media(max-width:680px){.kpis,.grid-2,.grid-3,.grid-4,.rq-grid,.audit-strip{grid-template-columns:1fr}.hero{padding:28px 22px}.hero h1{font-size:29px}.bar-row{grid-template-columns:130px 1fr 72px}.donut-stage,.donut-canvas{width:230px!important;height:230px!important}}
+@media(prefers-reduced-motion:reduce){.bar-fill{animation:none!important;transform:scaleX(1);opacity:1}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><i class="fa fa-line-chart"></i>&nbsp; Google Play App AI Project</div><div class="top-actions"><a href="index.html"><i class="fa fa-home"></i>&nbsp; Dashboard</a></div></header>
+<div class="layout">
+<aside class="sidebar"><h3>第六章｜結論與未來展望</h3><nav class="nav"><a class="active menu-open" href="#top" id="ch06Toggle"><i class="fa fa-book"></i><span>Chapter 06</span><i class="fa fa-chevron-up toggle-icon"></i></a><div id="ch06SectionMenu" class="ch06-section-menu"><a href="#s61"><i class="fa fa-bar-chart"></i>6.1 研究結果總結</a><a href="#s62"><i class="fa fa-question-circle"></i>6.2 研究問題回應</a><a href="#s63"><i class="fa fa-diamond"></i>6.3 專題成果與實務價值</a><a href="#s64"><i class="fa fa-exclamation-triangle"></i>6.4 研究限制</a><a href="#s65"><i class="fa fa-road"></i>6.5 未來改善方向</a><a href="#s66"><i class="fa fa-check-circle"></i>6.6 最終結論</a></div></nav></aside>
+<main class="main"><div class="wrapper" id="top">
+<section class="hero"><div class="eyebrow">CHAPTER 06 · CONCLUSION &amp; FUTURE OUTLOOK</div><h1>第六章｜結論與未來展望</h1><p>整合第一章至第五章的正式 Audit Evidence（稽核證據），總結研究結果、問題回應、實務價值、限制與改善方向；本章不重新執行模型、不重新使用 Test Set（測試集），並維持「系統完成但模型效能有限」的正式研究判定。</p></section>
+<div class="kpis"><div class="kpi dataset-kpi"><div class="label">Dataset（資料規模）</div><div class="value">11,500</div><div class="note">15 欄 Google Play App 快照</div></div><div class="kpi threshold-kpi"><div class="label">Locked Model（鎖定模型）</div><div class="value">Logistic Regression</div><div class="note">Tuned｜Threshold = 0.5</div></div><div class="kpi success-kpi"><div class="label">Final Test PR-AUC</div><div class="value">0.162386</div><div class="note">低於 No-skill 0.169130</div></div><div class="kpi failure-kpi"><div class="label">Project Status（專題狀態）</div><div class="value">FORMALLY_COMPLETED</div><div class="note">系統完成但模型效能有限</div></div></div>
+<div class="danger callout"><strong>Final Research Judgment（最終研究判定）：</strong>System Implementation Completed（系統實作完成）與 Strong Predictive Model Not Confirmed（未確認強預測模型）必須同時保留；目前成果適合 Research Prototype（研究原型）、Teaching Demonstration（教學示範）與 Exploratory Decision Support（探索性決策支援），不能宣稱為可靠的商業成功預測工具。</div>
+<section class="section" id="s61"><h2><span class="num">6.1</span>Research Results Summary（研究結果總結）</h2><div class="donut-panel"><div class="donut-wrap"><div><div class="donut-stage"><canvas id="successDonutCh06" class="donut-canvas" aria-label="Success 1 與 Success 0 比例立體甜甜圈圖"></canvas><div class="donut-center"><b>16.93%</b><span>Success = 1</span></div></div><div class="donut-legend"><div><span class="donut-dot" style="background:#50C732"></span>Success = 1：1,947 筆</div><div><span class="donut-dot" style="background:#A93BF2"></span>Success = 0：9,553 筆</div></div></div></div><div><h3>6.1.1 Research Design and Data Results（研究設計與資料結果）</h3><p>研究採 Single Cross-sectional Snapshot Binary Classification（單一橫斷面資料快照二元分類）。Success 定義為快照時點累積 Installs ≥ 10,000；Class 0 / Class 1 分別為 83.07% / 16.93%，Imbalance Ratio 約 4.91:1。</p><div class="flow"><span class="step">11,500 Raw Rows</span><span class="arrow">→</span><span class="step">13 Raw Features</span><span class="arrow">→</span><span class="step">63 Processed Features</span><span class="arrow">→</span><span class="step">9,200 / 2,300 Split</span></div><div class="warning callout"><strong>Feature Governance（特徵治理）：</strong>Installs、Reviews、Rating 維持排除，且不得建立 Has_Rating。</div></div></div><h3>6.1.2 Model Selection and Final Test Results（模型選擇與最終測試結果）</h3><div class="chartbox"><div class="charttitle">Final Test Classification Performance（最終測試分類效能）</div><div class="bar-list"><div class="bar-row"><span>Accuracy</span><div class="bar-track"><div class="bar-fill" style="--target-width:88.1%;--bar-color:#A93BF2;--delay:0ms"></div></div><b>0.528696</b></div><div class="bar-row"><span>Precision Class 1</span><div class="bar-track"><div class="bar-fill" style="--target-width:25.6%;--bar-color:#FF6A1A;--delay:150ms"></div></div><b>0.153539</b></div><div class="bar-row"><span>Recall Class 1</span><div class="bar-track"><div class="bar-fill" style="--target-width:66.0%;--bar-color:#50C732;--delay:300ms"></div></div><b>0.395887</b></div><div class="bar-row"><span>F1 Class 1</span><div class="bar-track"><div class="bar-fill" style="--target-width:36.9%;--bar-color:#4F86E8;--delay:450ms"></div></div><b>0.221264</b></div><div class="bar-row"><span>F1 Macro</span><div class="bar-track"><div class="bar-fill" style="--target-width:73.6%;--bar-color:#EF2C86;--delay:600ms"></div></div><b>0.441680</b></div><div class="bar-row"><span>ROC-AUC</span><div class="bar-track"><div class="bar-fill" style="--target-width:79.6%;--bar-color:#2DBBC3;--delay:750ms"></div></div><b>0.477585</b></div><div class="bar-row"><span>PR-AUC</span><div class="bar-track"><div class="bar-fill" style="--target-width:27.1%;--bar-color:#FFCC6E;--delay:900ms"></div></div><b>0.162386</b></div></div></div><div class="grid-2" style="margin-top:18px"><div class="chartbox"><div class="charttitle">Confusion Matrix（混淆矩陣）</div><div class="axis">Predicted Class（預測類別）</div><div class="matrix"><div class="water-slot"><div class="cell tn" tabindex="0">TN<b>1,062</b></div></div><div class="water-slot"><div class="cell fp" tabindex="0">FP<b>849</b></div></div><div class="water-slot"><div class="cell fn" tabindex="0">FN<b>235</b></div></div><div class="water-slot"><div class="cell tp" tabindex="0">TP<b>154</b></div></div></div><div class="axis">Actual Class（實際類別）</div></div><div class="chartbox"><div class="charttitle">PR-AUC versus No-skill Baseline</div><div class="bar-list"><div class="bar-row"><span>No-skill PR-AUC</span><div class="bar-track"><div class="bar-fill" style="--target-width:84.565%;--bar-color:#2f66e5"></div></div><b>0.169130</b></div><div class="bar-row"><span>Final Test PR-AUC</span><div class="bar-track"><div class="bar-fill" style="--target-width:81.193%;--bar-color:#E32626;--delay:180ms"></div></div><b>0.162386</b></div></div><div class="danger callout"><strong>PR-AUC Lift = 0.960125</strong><br>Independent Generalization Confirmed=False｜Weak Independent Generalization Evidence（弱獨立泛化證據）。</div></div></div><h3>6.1.3 System and Governance Results（系統與治理結果）</h3><div class="audit-strip"><div class="audit-item"><b>50/50 PASS</b><span>4.6 Final Test Audit</span></div><div class="audit-item"><b>14/14 PASS</b><span>5.5 End-to-end Test</span></div><div class="audit-item"><b>20/20 PASS</b><span>5.5 Implementation Audit</span></div><div class="audit-item"><b>30/30 PASS</b><span>5.8 Final Chapter Audit</span></div></div><div class="flow"><span class="step">11,500 筆原始資料</span><span class="arrow">→</span><span class="step">資料處理與特徵治理</span><span class="arrow">→</span><span class="step">模型建立、比較與鎖定</span><span class="arrow">→</span><span class="step">唯一一次獨立測試</span><span class="arrow">→</span><span class="step">預測系統與治理實作</span><span class="arrow">→</span><span class="step">系統完成，但模型效能有限</span></div></section>
+<section class="section" id="s62"><h2><span class="num">6.2</span>Research Question Responses（研究問題回應）</h2><div class="rq-grid"><div class="rq-card"><div class="q">App 屬性能否支援成功狀態分類？</div><div class="answer">可以建立完整分類流程，但未證明可可靠獨立預測。</div><div class="boundary">現有 13 項治理特徵足以執行技術流程，但 Final Test 泛化證據有限。</div></div><div class="rq-card"><div class="q">哪一種候選模型較適合？</div><div class="answer">Logistic Regression｜Tuned 為 Relative Best Candidate。</div><div class="boundary">「相對最佳候選」不等於 Strong Model（強模型）。</div></div><div class="rq-card"><div class="q">模型如何辨識成功類別？</div><div class="answer">Recall = 0.395887；Precision = 0.153539。</div><div class="boundary">389 筆實際 Success=1 中辨識 154 筆，同時產生 849 筆 False Positive。</div></div><div class="rq-card"><div class="q">哪些特徵與模型輸出相關？</div><div class="answer">63 係數：10 正向、11 負向、42 為零。</div><div class="boundary">係數只代表鎖定模型中的條件關聯，不代表 Causal Effect（因果效果）。</div></div><div class="rq-card"><div class="q">模型能否整合為操作介面？</div><div class="answer">可以；14/14 PASS、20/20 PASS、ACCEPTED。</div><div class="boundary">功能可運作不代表模型已達生產環境效能要求。</div></div><div class="rq-card"><div class="q">輸出能否直接驅動正式決策？</div><div class="answer">不可以。</div><div class="boundary">Model-estimated Score 未經獨立校準；投資、預算、核准、人員或產品淘汰均需 Human Review。</div></div></div><div class="flow"><span class="step">技術流程與系統已完成</span><span class="arrow">+</span><span class="step">獨立測試效能有限</span><span class="arrow">→</span><span class="step">探索性決策支援</span><span class="arrow">→</span><span class="step">Human Review Required</span></div></section>
+<section class="section" id="s63"><h2><span class="num">6.3</span>Project Outcomes and Practical Value（專題成果與實務價值）</h2><p>專題價值不以單一模型分數衡量，而由 Methodology（方法）、Data Governance（資料治理）、System Engineering（系統工程）、Interpretability（可解釋性）、Decision Governance（決策治理）與 Education（教學）共同構成。</p><div class="grid-3"><div class="mini-card"><div class="icon blue"><i class="fa fa-sitemap"></i></div><b>Methodological Outcome（方法成果）</b><p>MariaDB → SQL Feature Engineering → Python Preprocessing → Stratified Split → Training-only Selection → One-time Test Evaluation。</p></div><div class="mini-card"><div class="icon green"><i class="fa fa-shield"></i></div><b>Data Governance（資料治理）</b><p>排除 Installs、Reviews、Rating，禁止 Has_Rating，降低 Leakage／Proxy 風險。</p></div><div class="mini-card"><div class="icon orange"><i class="fa fa-cogs"></i></div><b>System Engineering（系統工程）</b><p>12 組介面輸入、13 項模型欄位、63 項處理特徵與完整結果失效控制。</p></div><div class="mini-card"><div class="icon purple"><i class="fa fa-lock"></i></div><b>Governance &amp; Risk Control（治理與風險控制）</b><p>Model Integrity、Leakage Guard、Fail-closed、Request Ownership、Human-in-the-loop。</p></div><div class="mini-card"><div class="icon blue"><i class="fa fa-eye"></i></div><b>Interpretability（可解釋性）</b><p>唯讀擷取 63 個鎖定係數，正式建立「關聯不等於因果」的解讀邊界。</p></div><div class="mini-card"><div class="icon red"><i class="fa fa-graduation-cap"></i></div><b>Educational Value（教學價值）</b><p>誠實保留 Final Test PR-AUC 低於 No-skill 的結果，示範完整機器學習治理與失敗判讀。</p></div></div><div class="success callout"><strong>Practical Value（實務價值）：</strong>形成可重現、可稽核、可操作且不掩蓋限制的 Research Prototype（研究原型）。</div></section>
+<section class="section" id="s64"><h2><span class="num">6.4</span>Research Limitations（研究限制）</h2><div class="table-wrap"><table><thead><tr><th>Limitation（限制）</th><th>Observed Evidence（觀察證據）</th><th>Impact（影響）</th></tr></thead><tbody><tr><td>Cross-sectional Snapshot</td><td>單一觀察快照</td><td>不能推論固定 30／90／180 天後的未來成功。</td></tr><tr><td>Target Definition</td><td>Installs ≥ 10,000</td><td>不代表營收、留存、活躍度或長期商業價值。</td></tr><tr><td>Feature Availability</td><td>排除 Leakage／Proxy，缺少市場行為變數</td><td>可能限制可辨識訊號。</td></tr><tr><td>Class Imbalance</td><td>4.91:1；FP=849、FN=235</td><td>少數類別錯誤風險偏高。</td></tr><tr><td>Model Performance</td><td>PR-AUC 低於 No-skill；ROC-AUC&lt;0.5</td><td>不可作為可靠自動決策模型。</td></tr><tr><td>Calibration</td><td>無獨立 Probability Calibration</td><td>Model-estimated Score 不是真實成功機率。</td></tr><tr><td>Interpretability</td><td>L1 係數受編碼、資料分布與正規化影響</td><td>正負係數與零係數均不得轉為因果宣稱。</td></tr><tr><td>External Validity</td><td>未使用新時間／新市場／新來源資料外部驗證</td><td>生產環境穩定泛化尚未確認。</td></tr></tbody></table></div><div class="danger callout"><strong>Research Boundary（研究邊界）：</strong>限制不表示研究流程無效，而是界定目前結論可以被合理解讀與使用的範圍。</div></section>
+<section class="section" id="s65"><h2><span class="num">6.5</span>Future Improvement Directions（未來改善方向）</h2><p>未來改善應優先處理研究設計與資料訊號，而不是直接增加模型複雜度；任何新研究都應建立新的資料版本與新的 Train／Validation／Test Governance，不得回頭反覆利用本次已開放的 Test Set。</p><div class="roadmap"><div class="roadmap-step"><div class="roadmap-num">1</div><div class="roadmap-body"><b>Longitudinal Research Design（縱向研究設計）</b><br>建立固定預測起點與結果觀察窗，例如用上架後 30 天資料預測 90 天或 180 天結果。</div></div><div class="roadmap-step"><div class="roadmap-num">2</div><div class="roadmap-body"><b>New Prediction-time Features（新增預測時點可用特徵）</b><br>新增開發者歷史、更新頻率、商店文字與素材、支援語言、國家市場與初期行銷條件，逐欄執行 Availability／Leakage Audit。</div></div><div class="roadmap-step"><div class="roadmap-num">3</div><div class="roadmap-body"><b>Temporal and External Validation（時間與外部驗證）</b><br>保留真正未接觸的 External Test Set，檢查不同月份、年度、地區與 App 類型的穩定性。</div></div><div class="roadmap-step"><div class="roadmap-num">4</div><div class="roadmap-body"><b>Model, Imbalance and Calibration Improvement（模型、不平衡與校準改善）</b><br>在新的資料治理邊界內重新比較模型、Cost-sensitive Learning、Threshold Analysis 與 Calibration。</div></div><div class="roadmap-step"><div class="roadmap-num">5</div><div class="roadmap-body"><b>Monitoring and Model Lifecycle Governance（監測與模型生命週期治理）</b><br>建立 Input Drift、Prediction Drift、Performance Monitoring、版本與重新訓練觸發條件。</div></div><div class="roadmap-step"><div class="roadmap-num">6</div><div class="roadmap-body"><b>Interface and Decision-support Improvement（介面與決策支援改善）</b><br>增加比較模式、輸入提示、模型卡與人工覆核紀錄；在完成可靠校準前，不得把分數呈現為真實成功率。</div></div></div><div class="flow"><span class="step">建立縱向新資料</span><span class="arrow">→</span><span class="step">新增預測時點特徵</span><span class="arrow">→</span><span class="step">重新建模與成本敏感評估</span><span class="arrow">→</span><span class="step">時間外與外部驗證</span><span class="arrow">→</span><span class="step">機率校準與決策門檻</span><span class="arrow">→</span><span class="step">監測、失效與重訓治理</span></div></section>
+<section class="section" id="s66"><h2><span class="num">6.6</span>Final Conclusion（最終結論）</h2><div class="grid-2"><div class="mini-card"><div class="icon red"><i class="fa fa-line-chart"></i></div><b>6.6.1 Final Empirical Judgment（最終實證判定）</b><p>Logistic Regression｜Tuned 為 Relative Best Candidate，但 Strong Model Identified=False、Independent Generalization Confirmed=False，正式泛化判定為 Weak Independent Generalization Evidence。</p></div><div class="mini-card"><div class="icon green"><i class="fa fa-check-square-o"></i></div><b>6.6.2 Final System Judgment（最終系統判定）</b><p>固定輸入契約、資料驗證、模型完整性、13→63 特徵轉換、單筆分類、結果失效與錯誤控制均已完成；System Implementation Completed 成立。</p></div><div class="mini-card"><div class="icon orange"><i class="fa fa-user"></i></div><b>6.6.3 Final Usage Positioning（最終使用定位）</b><p>Research Prototype、Teaching Demonstration、Exploratory Decision Support；Human Review Required。</p></div><div class="mini-card"><div class="icon purple"><i class="fa fa-chain"></i></div><b>6.6.4 Final Contribution Statement（最終貢獻陳述）</b><p>建立可追溯資料、模型、測試、介面與決策限制的完整證據鏈，清楚區分「工作已完成」與「能力尚未被證據支持」。</p></div></div><h3>6.6.5 Final Chapter Audit and Project Closure（最終章節稽核與專題結案）</h3><div class="table-wrap"><table><thead><tr><th>Final Audit Item（最終稽核項目）</th><th>Status</th></tr></thead><tbody><tr><td>6.1～6.6 正式研究內容完整</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>第一章至第五章 Audit Evidence 已承接</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Target、13 項特徵、63 項處理後特徵未變更</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>固定 Split、模型、SHA-256、Threshold=0.5 未變更</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Training Performed=False</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Test Set Reused=False</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Streamlit Redeveloped=False</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Strong Model Identified=False 已保留</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Independent Generalization Confirmed=False 已保留</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Human Review Required 已保留</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>System Implementation Completed 已確認</td><td><span class="status-pill pass">PASS</span></td></tr><tr><td>Chapter 6 Status</td><td><span class="status-pill pass">FORMALLY_COMPLETED</span></td></tr></tbody></table></div><div class="success callout"><strong>最終研究結論：</strong>本專題已完成完整且可稽核的 Machine Learning Project（機器學習專題）與 Prediction System Prototype（預測系統原型），但目前模型效能與獨立泛化證據有限。研究成果可支援教學、治理示範與後續資料設計，不能被宣稱為可靠的商業成功預測工具。</div></section>
+<div class="footer">Ch06｜Google Play App AI Success Prediction Project｜Chapter 6 FORMALLY_COMPLETED</div>
+</div></main></div>
+<script>
+(function(){
+  const toggle=document.getElementById("ch06Toggle");
+  const menu=document.getElementById("ch06SectionMenu");
+  if(toggle&&menu){toggle.addEventListener("click",function(e){e.preventDefault();const collapsed=menu.classList.contains("is-collapsed");menu.classList.toggle("is-collapsed",!collapsed);toggle.classList.toggle("menu-open",collapsed);});}
+  const params=new URLSearchParams(window.location.search);
+  if(params.get("embed")==="1"){document.body.classList.add("embed-mode");}
+  document.querySelectorAll(".bar-track").forEach(function(track){const bar=track.querySelector(".bar-fill");if(!bar)return;const state={raf:null,locked:false};function replay(){if(state.locked)return;state.locked=true;if(state.raf)cancelAnimationFrame(state.raf);bar.style.animation="none";bar.style.transform="scaleX(0)";bar.style.opacity="0.82";const start=performance.now(),duration=1800;function step(now){const t=Math.min(1,(now-start)/duration);const p=1-Math.pow(1-t,3);bar.style.transform="scaleX("+p+")";bar.style.opacity=String(.82+.18*p);if(t<1)state.raf=requestAnimationFrame(step);else{state.raf=null;bar.style.transform="scaleX(1)";bar.style.opacity="1";}}state.raf=requestAnimationFrame(step);}function unlock(){state.locked=false}track.addEventListener("mouseenter",replay);track.addEventListener("pointerenter",replay);track.addEventListener("mouseleave",unlock);track.addEventListener("pointerleave",unlock);});
+  // Confusion Matrix Triple Pulse Animation：使用 Web Animations API，
+  // 直接控制每一個 TN / FP / FN / TP 方塊，避免 CSS animation / hover 衝突。
+  document.querySelectorAll(".matrix .cell").forEach(function(cell){
+    let pulseAnimation=null;
+    let hoverLocked=false;
+
+    function replayTriplePulse(){
+      if(hoverLocked){return;}
+      hoverLocked=true;
+
+      // 停止初始進場 CSS animation，確保 transform 由本動畫完全接管。
+      cell.style.animation="none";
+      cell.style.transform="scale(1)";
+
+      if(pulseAnimation){
+        try{pulseAnimation.cancel();}catch(e){}
+      }
+
+      const shadowColor=getComputedStyle(cell).getPropertyValue("--matrix-shadow-color").trim() || "#001F5B";
+      const baseShadow="0 16px 28px "+shadowColor;
+      const liftShadow="0 24px 34px "+shadowColor;
+
+      pulseAnimation=cell.animate([
+        {transform:"translateY(0) scale(1)",boxShadow:baseShadow,offset:0},
+        {transform:"translateY(-6px) scale(1.18)",boxShadow:liftShadow,offset:0.12},
+        {transform:"translateY(0) scale(0.94)",boxShadow:baseShadow,offset:0.24},
+        {transform:"translateY(-6px) scale(1.18)",boxShadow:liftShadow,offset:0.40},
+        {transform:"translateY(0) scale(0.94)",boxShadow:baseShadow,offset:0.52},
+        {transform:"translateY(-6px) scale(1.18)",boxShadow:liftShadow,offset:0.68},
+        {transform:"translateY(0) scale(0.96)",boxShadow:baseShadow,offset:0.82},
+        {transform:"translateY(0) scale(1)",boxShadow:baseShadow,offset:1}
+      ],{
+        duration:3000,
+        easing:"cubic-bezier(.25,.65,.30,1)",
+        iterations:1,
+        fill:"none"
+      });
+
+      pulseAnimation.onfinish=function(){
+        cell.style.transform="scale(1)";
+      };
+    }
+
+    function unlockTriplePulse(){
+      hoverLocked=false;
+      if(pulseAnimation){
+        try{pulseAnimation.cancel();}catch(e){}
+        pulseAnimation=null;
+      }
+      cell.style.transform="scale(1)";
+    }
+
+    cell.addEventListener("mouseenter",replayTriplePulse);
+    cell.addEventListener("mouseleave",unlockTriplePulse);
+    cell.addEventListener("pointerenter",replayTriplePulse);
+    cell.addEventListener("pointerleave",unlockTriplePulse);
+    cell.addEventListener("focus",replayTriplePulse);
+    cell.addEventListener("blur",unlockTriplePulse);
+    cell.addEventListener("click",function(){
+      hoverLocked=false;
+      replayTriplePulse();
+    });
+  });
+
+  if(params.get("transitioned")==="1"&&window.history&&window.history.replaceState){params.delete("transitioned");const q=params.toString();const clean=window.location.pathname+(q?"?"+q:"")+window.location.hash;window.history.replaceState(null,"",clean);}
+})();
+</script>
+
+<script>
+(function(){
+  if(!window.Chart){return;}
+  const canvas=document.getElementById("successDonutCh06");
+  if(!canvas){return;}
+
+  const colors=["#50C732","#A93BF2"];
+  const darken=function(hex,amount){
+    const clean=String(hex).replace("#","");
+    if(!/^[0-9a-fA-F]{6}$/.test(clean)){return hex;}
+    const k=Math.max(0,Math.min(1,amount));
+    const r=parseInt(clean.slice(0,2),16);
+    const g=parseInt(clean.slice(2,4),16);
+    const b=parseInt(clean.slice(4,6),16);
+    return "rgb("+Math.round(r*k)+","+Math.round(g*k)+","+Math.round(b*k)+")";
+  };
+
+  const doughnut3DPluginCh06={
+    id:"doughnut3DPluginCh06",
+    beforeDatasetsDraw:function(chart){
+      if(chart.config.type!=="doughnut"){return;}
+      const ctx=chart.ctx;
+      const meta=chart.getDatasetMeta(0);
+      const dataset=chart.data.datasets[0];
+      if(!meta||!meta.data||!meta.data.length){return;}
+      const depth=12;
+      const explodedOffset=10;
+      const firstArc=meta.data[0];
+
+      ctx.save();
+      ctx.globalAlpha=.15;
+      ctx.fillStyle="#000";
+      ctx.shadowColor="rgba(0,0,0,.20)";
+      ctx.shadowBlur=8;
+      ctx.beginPath();
+      ctx.ellipse(firstArc.x,firstArc.y+firstArc.outerRadius*.54+depth+3,firstArc.outerRadius*.80,firstArc.outerRadius*.20,0,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+
+      for(let layer=depth;layer>=1;layer--){
+        meta.data.forEach(function(arc,index){
+          const color=Array.isArray(dataset.backgroundColor)?dataset.backgroundColor[index]:dataset.backgroundColor;
+          const mid=(arc.startAngle+arc.endAngle)/2;
+          const cx=arc.x+Math.cos(mid)*explodedOffset;
+          const cy=arc.y+Math.sin(mid)*explodedOffset+layer;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx,cy,arc.outerRadius,arc.startAngle,arc.endAngle);
+          ctx.arc(cx,cy,arc.innerRadius,arc.endAngle,arc.startAngle,true);
+          ctx.closePath();
+          ctx.fillStyle=darken(color,.46+(depth-layer)*.010);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    },
+    afterDatasetsDraw:function(chart){
+      if(chart.config.type!=="doughnut"){return;}
+      const ctx=chart.ctx;
+      const meta=chart.getDatasetMeta(0);
+      ctx.save();
+      ctx.lineWidth=1.25;
+      ctx.strokeStyle="rgba(255,255,255,.68)";
+      meta.data.forEach(function(arc){
+        const mid=(arc.startAngle+arc.endAngle)/2;
+        const cx=arc.x+Math.cos(mid)*10;
+        const cy=arc.y+Math.sin(mid)*10;
+        ctx.beginPath();
+        ctx.arc(cx,cy,arc.outerRadius-.8,arc.startAngle,arc.endAngle);
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+  };
+
+  const doughnutPulsePluginCh06={
+    id:"doughnutPulsePluginCh06",
+    afterInit:function(chart){chart.$ch06PulseState={activeKey:null,startTime:0,rafId:null};},
+    afterEvent:function(chart){
+      const state=chart.$ch06PulseState;
+      if(!state){return;}
+      const active=chart.getActiveElements();
+      const current=active&&active.length?{datasetIndex:active[0].datasetIndex,index:active[0].index}:null;
+      const key=current?current.datasetIndex+":"+current.index:null;
+      if(key!==state.activeKey){state.activeKey=key;state.startTime=performance.now();}
+      if(current&&!state.rafId){
+        const animate=function(){
+          if(!chart.$ch06PulseState||!chart.$ch06PulseState.activeKey){
+            if(chart.$ch06PulseState){chart.$ch06PulseState.rafId=null;}
+            return;
+          }
+          chart.draw();
+          chart.$ch06PulseState.rafId=requestAnimationFrame(animate);
+        };
+        state.rafId=requestAnimationFrame(animate);
+      }
+      if(!current&&state.rafId){cancelAnimationFrame(state.rafId);state.rafId=null;chart.draw();}
+    },
+    afterDatasetsDraw:function(chart){
+      const state=chart.$ch06PulseState;
+      if(!state||!state.activeKey){return;}
+      const keys=state.activeKey.split(":").map(Number);
+      const arc=chart.getDatasetMeta(keys[0]).data[keys[1]];
+      if(!arc){return;}
+      const elapsed=performance.now()-state.startTime;
+      const cycle=(elapsed%1000)/1000;
+      const wave=.5-.5*Math.cos(cycle*Math.PI*2);
+      const expansion=5+wave*12;
+      const alpha=.42*(1-cycle)+.10;
+      const dataset=chart.data.datasets[keys[0]];
+      const color=Array.isArray(dataset.backgroundColor)?dataset.backgroundColor[keys[1]]:dataset.backgroundColor;
+      const mid=(arc.startAngle+arc.endAngle)/2;
+      const x=arc.x+Math.cos(mid)*10;
+      const y=arc.y+Math.sin(mid)*10;
+      const ctx=chart.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x,y,arc.outerRadius+expansion,arc.startAngle,arc.endAngle);
+      ctx.arc(x,y,Math.max(0,arc.outerRadius+expansion-7),arc.endAngle,arc.startAngle,true);
+      ctx.closePath();
+      ctx.globalAlpha=alpha;
+      ctx.fillStyle=color||"#fff";
+      ctx.shadowColor=color||"#fff";
+      ctx.shadowBlur=16+wave*10;
+      ctx.fill();
+      ctx.restore();
+    },
+    beforeDestroy:function(chart){
+      const state=chart.$ch06PulseState;
+      if(state&&state.rafId){cancelAnimationFrame(state.rafId);}
+    }
+  };
+
+  new Chart(canvas,{
+    type:"doughnut",
+    plugins:[doughnut3DPluginCh06,doughnutPulsePluginCh06],
+    data:{
+      labels:["Success = 1","Success = 0"],
+      datasets:[{data:[16.93,83.07],backgroundColor:colors,borderColor:"#ffffff",borderWidth:2,cutout:"54%",spacing:5,offset:10,hoverOffset:18,hoverBorderWidth:3}]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      layout:{padding:22},
+      rotation:-90,
+      circumference:360,
+      animation:{duration:900,easing:"easeOutCubic"},
+      hover:{mode:"nearest",intersect:true},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:"rgba(17,24,39,.96)",padding:11,titleColor:"#fff",bodyColor:"#fff",
+          callbacks:{label:function(context){return context.label+"："+Number(context.raw||0).toFixed(2)+"%";}}
+        }
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

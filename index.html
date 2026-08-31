@@ -57,6 +57,10 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   background-color: #E36DFF !important;
   color: #000000 !important;
 }
+#mySidebar .menu-ch05.chapter-open {
+  background-color: #28A028 !important;
+  color: #000000 !important;
+}
 #chapterFrameWrap {
   display: none;
   width: 100%;
@@ -146,7 +150,9 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 #ch01Transition,
 #ch02Transition,
 #ch03Transition,
-#ch04Transition {
+#ch04Transition,
+#ch05Transition,
+#ch06Transition {
   position: fixed;
   top: 43px;
   right: 0;
@@ -161,13 +167,17 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 #ch01Transition.is-playing,
 #ch02Transition.is-playing,
 #ch03Transition.is-playing,
-#ch04Transition.is-playing {
+#ch04Transition.is-playing,
+#ch05Transition.is-playing,
+#ch06Transition.is-playing {
   display: flex;
 }
 #ch01Transition video,
 #ch02Transition video,
 #ch03Transition video,
-#ch04Transition video {
+#ch04Transition video,
+#ch05Transition video,
+#ch06Transition video {
   display: block;
   width: 100%;
   height: 100%;
@@ -216,6 +226,33 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   width: var(--sidebar-width) !important;
   min-width: 220px;
   max-width: 620px;
+
+  /* Chapter 01 ~ Chapter 05：內容超過視窗高度時自動出現垂直捲軸 */
+  top: 43px !important;
+  height: calc(100vh - 43px) !important;
+  max-height: calc(100vh - 43px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding-bottom: 28px !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #9ca3af #f3f4f6;
+}
+
+#mySidebar::-webkit-scrollbar {
+  width: 10px;
+}
+#mySidebar::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+#mySidebar::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 999px;
+  border: 2px solid #f3f4f6;
+}
+#mySidebar::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 
 .w3-main {
@@ -272,10 +309,42 @@ body.sidebar-resizing iframe {
   #ch01Transition,
   #ch02Transition,
   #ch03Transition,
-  #ch04Transition {
+  #ch04Transition,
+  #ch05Transition,
+  #ch06Transition {
     left: 0;
   }
 }
+
+
+/* ===== Sidebar Fixed Header + Chapter-only Scroll ===== */
+#mySidebar{
+  display:flex !important;
+  flex-direction:column;
+  overflow:hidden !important;
+  padding-bottom:0 !important;
+}
+#sidebarFixedArea{
+  flex:0 0 auto;
+  background:#fff;
+  position:relative;
+  z-index:2;
+}
+#sidebarChapterScroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-bottom:28px;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  scrollbar-width:thin;
+  scrollbar-color:#9ca3af #f3f4f6;
+}
+#sidebarChapterScroll::-webkit-scrollbar{width:10px}
+#sidebarChapterScroll::-webkit-scrollbar-track{background:#f3f4f6}
+#sidebarChapterScroll::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:999px;border:2px solid #f3f4f6}
+#sidebarChapterScroll::-webkit-scrollbar-thumb:hover{background:#6b7280}
 
 </style>
 </head>
@@ -295,6 +364,7 @@ body.sidebar-resizing iframe {
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div id="sidebarFixedArea">
   <div class="w3-container" style="padding:8px 10px 10px;">
     <a href="https://thmr.wda.gov.tw/Default.aspx" target="_blank" rel="noopener noreferrer" title="勞動部勞動力發展署桃竹苗分署"><img src="./w3images/THMRB.jpg" alt="勞動部勞動力發展署桃竹苗分署" style="display:block;width:100%;height:auto;object-fit:contain;"></a>
   </div>
@@ -305,7 +375,11 @@ body.sidebar-resizing iframe {
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <a href="index.html" id="overviewLink" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>&nbsp; Overview</a>
-    <a href="ch01.html" id="ch01MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch01">
+  </div>
+  </div>
+  <div id="sidebarChapterScroll">
+  <div class="w3-bar-block">
+        <a href="ch01.html" id="ch01MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch01">
       <i class="fa fa-eye fa-fw"></i>&nbsp; 第一章｜前言
     </a>
     <div id="ch01Submenu" class="chapter-submenu">
@@ -359,14 +433,35 @@ body.sidebar-resizing iframe {
       <a href="ch04.html?embed=1#s45"><i class="fa fa-trophy fa-fw"></i>&nbsp; 4.5 候選模型與選模</a>
       <a href="ch04.html?embed=1#s46"><i class="fa fa-flask fa-fw"></i>&nbsp; 4.6 最終 Test 評估</a>
     </div>
-    <!-- GitHub Pages 尚未部署：Ch05～Ch07 暫時註解停用
-    <a href="ch05.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch05"><i class="fa fa-bell fa-fw"></i>&nbsp; Ch05</a>
-    <a href="ch06.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch06"><i class="fa fa-bank fa-fw"></i>&nbsp; Ch06</a>
+    <a href="ch05.html" id="ch05MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch05">
+      <i class="fa fa-desktop fa-fw"></i>&nbsp; 第五章｜預測系統與成果呈現
+    </a>
+    <div id="ch05Submenu" class="chapter-submenu">
+      <a href="ch05.html?embed=1#s51"><i class="fa fa-users fa-fw"></i>&nbsp; 5.1 系統需求與使用情境</a>
+      <a href="ch05.html?embed=1#s52"><i class="fa fa-sitemap fa-fw"></i>&nbsp; 5.2 系統架構</a>
+      <a href="ch05.html?embed=1#s53"><i class="fa fa-cloud-upload fa-fw"></i>&nbsp; 5.3 模型部署與預測流程</a>
+      <a href="ch05.html?embed=1#s54"><i class="fa fa-check-square-o fa-fw"></i>&nbsp; 5.4 使用者輸入與資料驗證</a>
+      <a href="ch05.html?embed=1#s55"><i class="fa fa-magic fa-fw"></i>&nbsp; 5.5 App 成功預測</a>
+      <a href="ch05.html?embed=1#s56"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 5.6 預測結果與關鍵特徵呈現</a>
+      <a href="ch05.html?embed=1#s57"><i class="fa fa-balance-scale fa-fw"></i>&nbsp; 5.7 決策建議與使用限制</a>
+      <a href="ch05.html?embed=1#s58"><i class="fa fa-check-circle fa-fw"></i>&nbsp; 5.8 本章小結</a>
+    </div>
+    <a href="ch06.html" id="ch06MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch06">
+      <i class="fa fa-bank fa-fw"></i>&nbsp; 第六章｜結論與未來展望
+    </a>
+    <div id="ch06Submenu" class="chapter-submenu">
+      <a href="ch06.html?embed=1#s61"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 6.1 研究結果總結</a>
+      <a href="ch06.html?embed=1#s62"><i class="fa fa-question-circle fa-fw"></i>&nbsp; 6.2 研究問題回應</a>
+      <a href="ch06.html?embed=1#s63"><i class="fa fa-diamond fa-fw"></i>&nbsp; 6.3 專題成果與實務價值</a>
+      <a href="ch06.html?embed=1#s64"><i class="fa fa-exclamation-triangle fa-fw"></i>&nbsp; 6.4 研究限制</a>
+      <a href="ch06.html?embed=1#s65"><i class="fa fa-road fa-fw"></i>&nbsp; 6.5 未來改善方向</a>
+      <a href="ch06.html?embed=1#s66"><i class="fa fa-check-circle fa-fw"></i>&nbsp; 6.6 最終結論</a>
+    </div>
+    <!-- Ch07 尚未部署，暫時停用
     <a href="ch07.html" class="w3-bar-item w3-button w3-padding menu-ch menu-ch07"><i class="fa fa-history fa-fw"></i>&nbsp; Ch07</a>
-    
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
     -->
-  </div>
+    </div>
+</div>
 </nav>
 <div id="sidebarResizer" title="拖曳調整左側選單寬度" aria-label="拖曳調整左側選單寬度"></div>
 
@@ -762,8 +857,16 @@ body.sidebar-resizing iframe {
     <video id="ch04TransitionVideo" src="./Video/Tr04.mp4" preload="auto" playsinline></video>
   </div>
 
+  <div id="ch05Transition" aria-hidden="true">
+    <video id="ch05TransitionVideo" src="./Video/Tr05.mp4" preload="auto" playsinline></video>
+  </div>
+
+  <div id="ch06Transition" aria-hidden="true">
+    <video id="ch06TransitionVideo" src="./Video/Tr06.mp4" preload="auto" playsinline></video>
+  </div>
+
   <div id="chapterFrameWrap">
-    <iframe id="chapterFrame" name="chapterFrame" src="about:blank" title="Chapter 01 Content"></iframe>
+    <iframe id="chapterFrame" name="chapterFrame" src="about:blank" title="Chapter Content"></iframe>
   </div>
 
   <!-- End page content -->
@@ -843,6 +946,113 @@ function w3_close() {
 
 
 <script>
+/* ===== Global Transition Interrupt Navigation =====
+   使用者在 Tr01~Tr06 播放期間點擊任何章節主選單或子選單：
+   立即停止目前轉場、歸零、隱藏轉場層，直接載入使用者指定內容。
+*/
+(function () {
+  const sidebar = document.getElementById("mySidebar");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!sidebar || !dashboardContent || !frameWrap || !frame) return;
+
+  function getTransitionParts(chapterNumber) {
+    return {
+      layer: document.getElementById("ch" + chapterNumber + "Transition"),
+      video: document.getElementById("ch" + chapterNumber + "TransitionVideo")
+    };
+  }
+
+  function isAnyTransitionPlaying() {
+    for (let i = 1; i <= 6; i++) {
+      const n = String(i).padStart(2, "0");
+      const parts = getTransitionParts(n);
+      if (parts.layer && parts.layer.classList.contains("is-playing")) return true;
+    }
+    return false;
+  }
+
+  function stopAllTransitions() {
+    for (let i = 1; i <= 6; i++) {
+      const n = String(i).padStart(2, "0");
+      const parts = getTransitionParts(n);
+      if (parts.video) {
+        // 告知各章原本的 ended/error handler：這次是使用者主動中斷，不得再載入舊章節。
+        parts.video.dataset.userInterrupted = "1";
+        parts.video.pause();
+        try { parts.video.currentTime = 0; } catch (e) {}
+      }
+      if (parts.layer) {
+        parts.layer.classList.remove("is-playing");
+        parts.layer.setAttribute("aria-hidden", "true");
+      }
+      document.body.classList.remove("ch" + n + "-transitioning");
+    }
+  }
+
+  function directLoad(url) {
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function closeAllChapterMenus() {
+    document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
+      menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function (item) {
+      item.classList.remove("chapter-open");
+    });
+  }
+
+  function openChapterMenu(chapterNumber) {
+    closeAllChapterMenus();
+    const mainLink = document.getElementById("ch" + chapterNumber + "MainLink");
+    const submenu = document.getElementById("ch" + chapterNumber + "Submenu");
+    if (submenu) submenu.classList.add("is-open");
+    if (mainLink) mainLink.classList.add("chapter-open");
+  }
+
+  // Capture Phase：一定比各章既有 click handler 更早執行。
+  sidebar.addEventListener("click", function (event) {
+    const link = event.target.closest("a");
+    if (!link || !isAnyTransitionPlaying()) return;
+
+    const mainMatch = link.id && link.id.match(/^ch(0[1-6])MainLink$/);
+    const submenu = link.closest(".chapter-submenu");
+    const submenuMatch = submenu && submenu.id.match(/^ch(0[1-6])Submenu$/);
+
+    // 僅攔截 Chapter 01~06 的主選單／子選單。
+    if (!mainMatch && !submenuMatch) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+
+    stopAllTransitions();
+
+    if (mainMatch) {
+      const chapterNumber = mainMatch[1];
+      openChapterMenu(chapterNumber);
+      directLoad("ch" + chapterNumber + ".html?embed=1");
+      return;
+    }
+
+    if (submenuMatch) {
+      const chapterNumber = submenuMatch[1];
+      openChapterMenu(chapterNumber);
+      directLoad(link.getAttribute("href"));
+    }
+  }, true);
+
+  // 提供 Overview 或其他控制器需要時可共用。
+  window.stopAllChapterTransitions = stopAllTransitions;
+})();
+</script>
+
+<script>
 (function () {
   const ch01Link = document.getElementById("ch01MainLink");
   const submenu = document.getElementById("ch01Submenu");
@@ -885,6 +1095,10 @@ function w3_close() {
   }
 
   function finishTransition(url) {
+    if (transitionVideo.dataset.userInterrupted === "1") {
+      transitionRunning = false;
+      return;
+    }
     if (!transitionRunning) return;
     transitionRunning = false;
 
@@ -899,6 +1113,7 @@ function w3_close() {
 
   function playCh01Transition(url) {
     transitionRunning = true;
+    transitionVideo.dataset.userInterrupted = "0";
 
     transitionVideo.pause();
     transitionVideo.currentTime = 0;
@@ -1031,6 +1246,10 @@ function w3_close() {
   }
 
   function finishCh02Transition() {
+    if (transitionVideo.dataset.userInterrupted === "1") {
+      transitionRunning = false;
+      return;
+    }
     if (!transitionRunning) return;
     transitionRunning = false;
     transitionVideo.pause();
@@ -1044,6 +1263,7 @@ function w3_close() {
   function playCh02Transition(url) {
     pendingCh02Url = url || "ch02.html?embed=1&transitioned=1";
     transitionRunning = true;
+    transitionVideo.dataset.userInterrupted = "0";
     transitionVideo.pause();
     transitionVideo.currentTime = 0;
     transition.classList.add("is-playing");
@@ -1120,6 +1340,10 @@ function w3_close() {
   }
 
   function finishCh03Transition() {
+    if (transitionVideo.dataset.userInterrupted === "1") {
+      transitionRunning = false;
+      return;
+    }
     if (!transitionRunning) return;
     transitionRunning = false;
     transitionVideo.pause();
@@ -1133,6 +1357,7 @@ function w3_close() {
   function playCh03Transition(url) {
     pendingCh03Url = url || "ch03.html?embed=1&transitioned=1";
     transitionRunning = true;
+    transitionVideo.dataset.userInterrupted = "0";
     transitionVideo.pause();
     transitionVideo.currentTime = 0;
     transition.classList.add("is-playing");
@@ -1206,6 +1431,10 @@ function w3_close() {
   }
 
   function finishCh04Transition() {
+    if (transitionVideo.dataset.userInterrupted === "1") {
+      transitionRunning = false;
+      return;
+    }
     if (!transitionRunning) return;
     transitionRunning = false;
     transitionVideo.pause();
@@ -1219,6 +1448,7 @@ function w3_close() {
   function playCh04Transition(url) {
     pendingCh04Url = url || "ch04.html?embed=1&transitioned=1";
     transitionRunning = true;
+    transitionVideo.dataset.userInterrupted = "0";
     transitionVideo.pause();
     transitionVideo.currentTime = 0;
     transition.classList.add("is-playing");
@@ -1256,6 +1486,54 @@ function w3_close() {
 
   transitionVideo.addEventListener("ended", finishCh04Transition);
   transitionVideo.addEventListener("error", finishCh04Transition);
+})();
+</script>
+
+
+<script>
+/* ===== Chapter 05 Controller + Tr05.mp4 ===== */
+(function () {
+  const ch05Link=document.getElementById("ch05MainLink");
+  const submenu=document.getElementById("ch05Submenu");
+  const dashboardContent=document.getElementById("dashboardContent");
+  const frameWrap=document.getElementById("chapterFrameWrap");
+  const frame=document.getElementById("chapterFrame");
+  const transition=document.getElementById("ch05Transition");
+  const transitionVideo=document.getElementById("ch05TransitionVideo");
+  if(!ch05Link||!submenu||!dashboardContent||!frameWrap||!frame||!transition||!transitionVideo)return;
+  let transitionRunning=false;
+  let pendingUrl="ch05.html?embed=1&transitioned=1";
+  function closeOthers(){document.querySelectorAll(".chapter-submenu").forEach(m=>{if(m!==submenu)m.classList.remove("is-open")});document.querySelectorAll(".menu-ch").forEach(i=>{if(i!==ch05Link)i.classList.remove("chapter-open")});}
+  function show(url){dashboardContent.classList.add("is-hidden");frameWrap.style.display="block";frame.src=url||"ch05.html?embed=1";window.scrollTo({top:0,behavior:"smooth"});}
+  function finish(){if(transitionVideo.dataset.userInterrupted==="1"){transitionRunning=false;return;}if(!transitionRunning)return;transitionRunning=false;transitionVideo.pause();try{transitionVideo.currentTime=0}catch(e){}transition.classList.remove("is-playing");transition.setAttribute("aria-hidden","true");show(pendingUrl);}
+  function play(url){pendingUrl=url||"ch05.html?embed=1&transitioned=1";transitionRunning=true;transitionVideo.dataset.userInterrupted="0";transitionVideo.pause();try{transitionVideo.currentTime=0}catch(e){}transition.classList.add("is-playing");transition.setAttribute("aria-hidden","false");const p=transitionVideo.play();if(p&&typeof p.catch==="function")p.catch(finish);}
+  ch05Link.addEventListener("click",function(e){e.preventDefault();const open=submenu.classList.contains("is-open");if(open){submenu.classList.remove("is-open");ch05Link.classList.remove("chapter-open");}else{closeOthers();submenu.classList.add("is-open");ch05Link.classList.add("chapter-open");play();}});
+  submenu.querySelectorAll("a").forEach(link=>link.addEventListener("click",function(e){e.preventDefault();closeOthers();submenu.classList.add("is-open");ch05Link.classList.add("chapter-open");show(link.getAttribute("href"));}));
+  transitionVideo.addEventListener("ended",finish);transitionVideo.addEventListener("error",finish);
+})();
+</script>
+
+
+<script>
+/* ===== Chapter 06 Controller + Tr06.mp4 ===== */
+(function () {
+  const ch06Link=document.getElementById("ch06MainLink");
+  const submenu=document.getElementById("ch06Submenu");
+  const dashboardContent=document.getElementById("dashboardContent");
+  const frameWrap=document.getElementById("chapterFrameWrap");
+  const frame=document.getElementById("chapterFrame");
+  const transition=document.getElementById("ch06Transition");
+  const transitionVideo=document.getElementById("ch06TransitionVideo");
+  if(!ch06Link||!submenu||!dashboardContent||!frameWrap||!frame||!transition||!transitionVideo)return;
+  let transitionRunning=false;
+  let pendingUrl="ch06.html?embed=1&transitioned=1";
+  function closeOthers(){document.querySelectorAll(".chapter-submenu").forEach(m=>{if(m!==submenu)m.classList.remove("is-open")});document.querySelectorAll(".menu-ch").forEach(i=>{if(i!==ch06Link)i.classList.remove("chapter-open")});}
+  function show(url){dashboardContent.classList.add("is-hidden");frameWrap.style.display="block";frame.src=url||"ch06.html?embed=1";window.scrollTo({top:0,behavior:"smooth"});}
+  function finish(){if(transitionVideo.dataset.userInterrupted==="1"){transitionRunning=false;return;}if(!transitionRunning)return;transitionRunning=false;transitionVideo.pause();try{transitionVideo.currentTime=0}catch(e){}transition.classList.remove("is-playing");transition.setAttribute("aria-hidden","true");show(pendingUrl);}
+  function play(url){pendingUrl=url||"ch06.html?embed=1&transitioned=1";transitionRunning=true;transitionVideo.dataset.userInterrupted="0";transitionVideo.pause();try{transitionVideo.currentTime=0}catch(e){}transition.classList.add("is-playing");transition.setAttribute("aria-hidden","false");const p=transitionVideo.play();if(p&&typeof p.catch==="function")p.catch(finish);}
+  ch06Link.addEventListener("click",function(e){e.preventDefault();const open=submenu.classList.contains("is-open");if(open){submenu.classList.remove("is-open");ch06Link.classList.remove("chapter-open");}else{closeOthers();submenu.classList.add("is-open");ch06Link.classList.add("chapter-open");play();}});
+  submenu.querySelectorAll("a").forEach(link=>link.addEventListener("click",function(e){e.preventDefault();closeOthers();submenu.classList.add("is-open");ch06Link.classList.add("chapter-open");show(link.getAttribute("href"));}));
+  transitionVideo.addEventListener("ended",finish);transitionVideo.addEventListener("error",finish);
 })();
 </script>
 
