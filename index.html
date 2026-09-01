@@ -458,11 +458,8 @@ body.sidebar-resizing iframe {
       <a href="ch06.html?embed=1#s66"><i class="fa fa-check-circle fa-fw"></i>&nbsp; 6.6 最終結論</a>
     </div>
     <a href="ch07.html" id="ch07MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch07">
-      <i class="fa fa-mobile fa-fw"></i>&nbsp; 第七章｜App 成功率預測介面
+      <i class="fa fa-mobile fa-fw"></i>&nbsp; 第七章｜App 成功率預測系統展示
     </a>
-    <div id="ch07Submenu" class="chapter-submenu">
-      <a href="ch07.html?embed=1#top"><i class="fa fa-magic fa-fw"></i>&nbsp; 7.1 App 成功率預測系統</a>
-    </div>
     </div>
 </div>
 </nav>
@@ -1551,13 +1548,12 @@ function w3_close() {
 /* ===== Chapter 07 Controller（無轉場影片，直接載入正式預測介面） ===== */
 (function () {
   const ch07Link = document.getElementById("ch07MainLink");
-  const submenu = document.getElementById("ch07Submenu");
   const sidebar = document.getElementById("mySidebar");
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
   const audio = document.getElementById("ch07Audio");
-  if (!ch07Link || !submenu || !sidebar || !dashboardContent || !frameWrap || !frame || !audio) return;
+  if (!ch07Link || !sidebar || !dashboardContent || !frameWrap || !frame || !audio) return;
 
   function stopAudio() {
     audio.pause();
@@ -1591,7 +1587,7 @@ function w3_close() {
 
   function closeOthers() {
     document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
-      if (menu !== submenu) menu.classList.remove("is-open");
+      menu.classList.remove("is-open");
     });
     document.querySelectorAll(".menu-ch").forEach(function (item) {
       if (item !== ch07Link) item.classList.remove("chapter-open");
@@ -1610,27 +1606,10 @@ function w3_close() {
 
   ch07Link.addEventListener("click", function (event) {
     event.preventDefault();
-    const isOpen = submenu.classList.contains("is-open");
-    if (isOpen) {
-      submenu.classList.remove("is-open");
-      ch07Link.classList.remove("chapter-open");
-      return;
-    }
     closeOthers();
-    submenu.classList.add("is-open");
     ch07Link.classList.add("chapter-open");
     show("ch07.html?embed=1#top");
     playAudioOnce();
-  });
-
-  submenu.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function (event) {
-      event.preventDefault();
-      closeOthers();
-      submenu.classList.add("is-open");
-      ch07Link.classList.add("chapter-open");
-      show(link.getAttribute("href"));
-    });
   });
 })();
 </script>
