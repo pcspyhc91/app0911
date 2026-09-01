@@ -1,0 +1,43 @@
+﻿Audit_Item,Status
+4.6.1 Specification Audit Exists,PASS
+4.6.1 Audit Items = 31,PASS
+4.6.1 Audit 31/31 PASS,PASS
+4.6.2 Pre-test Audit Exists,PASS
+4.6.2 Audit Items = 32,PASS
+4.6.2 Audit 32/32 PASS,PASS
+"Official Data Rows = 11,500",PASS
+Official Feature Count = 13,PASS
+"X_train Shape = 9,200 x 13",PASS
+"y_train Shape = 9,200",PASS
+"Train Class 0 = 7,642",PASS
+"Train Class 1 = 1,558",PASS
+Train Index SHA-256 Match,PASS
+Test Index SHA-256 Match,PASS
+Test Index + Target SHA-256 Match,PASS
+Selected Model = Logistic Regression,PASS
+Pipeline Contains Preprocessor,PASS
+Pipeline Contains Model,PASS
+Parameter Combinations = 28,PASS
+CV Folds = 5,PASS
+Expected CV Fits = 140,PASS
+GridSearch Candidate Results = 28,PASS
+Refit Metric = PR-AUC,PASS
+Best CV PR-AUC Is Finite,PASS
+"Best CV PR-AUC in [0, 1]",PASS
+Best Estimator Available,PASS
+Processed Feature Count > 13,PASS
+Search Convergence Warnings Transparently Recorded,PASS
+Selected Best Model n_iter < max_iter,PASS
+Deprecated Interface Warning Count = 0,PASS
+GridSearch Checkpoint File Exists,PASS
+Locked Model File Exists,PASS
+GridSearch Result File Exists,PASS
+Best Model Summary File Exists,PASS
+Model Training Performed = True,PASS
+Training Data = Full Training Set Only,PASS
+Threshold Tuning Applied = False,PASS
+Resampling Applied = False,PASS
+Test Prediction Performed = False,PASS
+Test Scoring Performed = False,PASS
+Test Set Evaluation Performed = False,PASS
+Final Training Model Locked = True,PASS

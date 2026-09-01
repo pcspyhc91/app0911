@@ -1,0 +1,21 @@
+﻿Lock_Item,Locked_Value
+Selected Model,Logistic Regression | Tuned
+Estimator Family,LogisticRegression
+Training Data,Full X_train / y_train only
+Training Rows,"9,200"
+Official Features,13
+Search Method,GridSearchCV
+Parameter Combinations,28
+Cross-validation,"StratifiedKFold(5, shuffle=True, random_state=42)"
+Refit Metric,PR-AUC / Average Precision
+Best Parameters,"{""model__C"": 0.1, ""model__class_weight"": ""balanced"", ""model__l1_ratio"": 1.0}"
+Search Convergence Warnings,9
+Selected Model n_iter,853
+Selected Model max_iter,5000
+Selected Model Converged,True
+Threshold,Default model threshold; no tuning
+Resampling,None
+Test Prediction,Not performed in 4.6.3
+Test Scoring,Not performed in 4.6.3
+Next Authorized Step,4.6.4 one-time final test evaluation
+Test-based Adjustment,Strictly prohibited
