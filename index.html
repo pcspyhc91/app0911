@@ -868,6 +868,9 @@ body.sidebar-resizing iframe {
     <video id="ch06TransitionVideo" src="./Video/Tr06.mp4" preload="auto" playsinline></video>
   </div>
 
+  <!-- Chapter 07：只播放一次；由側邊導覽與 Ch07 驗證按鈕統一停止。 -->
+  <audio id="ch07Audio" src="./Video/Tr07.mp3" preload="auto" hidden></audio>
+
   <div id="chapterFrameWrap">
     <iframe id="chapterFrame" name="chapterFrame" src="about:blank" title="Chapter Content"></iframe>
   </div>
@@ -1040,6 +1043,9 @@ function w3_close() {
       const chapterNumber = mainMatch[1];
       openChapterMenu(chapterNumber);
       directLoad("ch" + chapterNumber + ".html?embed=1");
+      if (chapterNumber === "07" && typeof window.playCh07AudioOnce === "function") {
+        window.playCh07AudioOnce();
+      }
       return;
     }
 
@@ -1546,10 +1552,42 @@ function w3_close() {
 (function () {
   const ch07Link = document.getElementById("ch07MainLink");
   const submenu = document.getElementById("ch07Submenu");
+  const sidebar = document.getElementById("mySidebar");
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
-  if (!ch07Link || !submenu || !dashboardContent || !frameWrap || !frame) return;
+  const audio = document.getElementById("ch07Audio");
+  if (!ch07Link || !submenu || !sidebar || !dashboardContent || !frameWrap || !frame || !audio) return;
+
+  function stopAudio() {
+    audio.pause();
+    try { audio.currentTime = 0; } catch (error) {}
+  }
+
+  function playAudioOnce() {
+    stopAudio();
+    audio.loop = false;
+    const playRequest = audio.play();
+    if (playRequest && typeof playRequest.catch === "function") {
+      playRequest.catch(function (error) {
+        console.warn("Tr07.mp3 無法播放：", error);
+      });
+    }
+  }
+
+  window.stopCh07Audio = stopAudio;
+  window.playCh07AudioOnce = playAudioOnce;
+
+  // 點擊左側任何主選單或子選單時先停止；若點擊 Ch07，後續 handler 會重新從頭播放一次。
+  sidebar.addEventListener("click", function (event) {
+    if (event.target.closest("a")) stopAudio();
+  }, true);
+
+  // 接收內嵌 ch07.html 在按下 Validate Input 時送出的停止要求。
+  window.addEventListener("message", function (event) {
+    if (event.origin !== window.location.origin) return;
+    if (event.data && event.data.type === "STOP_CH07_AUDIO") stopAudio();
+  });
 
   function closeOthers() {
     document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
@@ -1582,6 +1620,7 @@ function w3_close() {
     submenu.classList.add("is-open");
     ch07Link.classList.add("chapter-open");
     show("ch07.html?embed=1#top");
+    playAudioOnce();
   });
 
   submenu.querySelectorAll("a").forEach(function (link) {
