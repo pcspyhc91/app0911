@@ -1830,5 +1830,91 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 })();
 </script>
 
+<script>
+/* ===== Mobile Auto-close Navigation + Chapter Swipe Controller ===== */
+(function () {
+  const MOBILE_MAX_WIDTH = 992;
+  const SWIPE_MIN_X = 70;
+  const SWIPE_AXIS_RATIO = 1.3;
+  const sidebar = document.getElementById("mySidebar");
+  const frame = document.getElementById("chapterFrame");
+  if (!sidebar || !frame) return;
+
+  function isMobile() {
+    return window.matchMedia("(max-width: " + MOBILE_MAX_WIDTH + "px)").matches;
+  }
+
+  // 主選單／子選單完成原有 click handler 後，再自動收合手機側邊欄。
+  sidebar.addEventListener("click", function (event) {
+    if (!isMobile()) return;
+    const rawTarget = event.target;
+    const origin = rawTarget && rawTarget.closest ? rawTarget : rawTarget && rawTarget.parentElement;
+    const link = origin && origin.closest ? origin.closest("a") : null;
+    if (!link) return;
+    const isNavigationLink =
+      link.id === "overviewLink" ||
+      link.classList.contains("menu-ch") ||
+      Boolean(link.closest(".chapter-submenu"));
+    if (isNavigationLink) window.setTimeout(w3_close, 0);
+  });
+
+  function currentChapterNumber() {
+    const src = frame.getAttribute("src") || "";
+    const match = src.match(/ch0([1-7])\.html/i);
+    return match ? Number(match[1]) : 0;
+  }
+
+  function goToChapter(step) {
+    if (!isMobile()) return;
+    const current = currentChapterNumber();
+    let target;
+    if (current === 0) {
+      if (step < 0) return;
+      target = 1;
+    } else {
+      target = current + step;
+    }
+    if (target < 1 || target > 7) return;
+    const link = document.getElementById("ch" + String(target).padStart(2, "0") + "MainLink");
+    if (link) link.click();
+  }
+
+  function bindSwipeSurface(doc) {
+    if (!doc || !doc.documentElement || doc.documentElement.dataset.chapterSwipeBound === "1") return;
+    doc.documentElement.dataset.chapterSwipeBound = "1";
+    let startX = 0;
+    let startY = 0;
+    let ignored = false;
+    const excluded = "a,button,input,select,textarea,[contenteditable='true'],[role='button']";
+
+    doc.addEventListener("touchstart", function (event) {
+      if (!isMobile() || event.touches.length !== 1) return;
+      const target = event.target;
+      ignored = Boolean(target && target.closest && target.closest(excluded));
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    }, { passive: true });
+
+    doc.addEventListener("touchend", function (event) {
+      if (!isMobile() || ignored || event.changedTouches.length !== 1) return;
+      const deltaX = event.changedTouches[0].clientX - startX;
+      const deltaY = event.changedTouches[0].clientY - startY;
+      if (Math.abs(deltaX) < SWIPE_MIN_X || Math.abs(deltaX) < Math.abs(deltaY) * SWIPE_AXIS_RATIO) return;
+      // 依使用者指定：往右滑＝下一章；往左滑＝上一章。
+      goToChapter(deltaX > 0 ? 1 : -1);
+    }, { passive: true });
+  }
+
+  bindSwipeSurface(document);
+  frame.addEventListener("load", function () {
+    try {
+      bindSwipeSurface(frame.contentDocument || frame.contentWindow.document);
+    } catch (error) {
+      console.warn("章節頁滑動導覽無法綁定：", error);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
