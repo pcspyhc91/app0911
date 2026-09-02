@@ -372,6 +372,16 @@ body.sidebar-resizing iframe {
   #sidebarToggle {
     display: none;
   }
+  #mobileMenuButton {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 10000;
+    display: block !important;
+    height: 43px;
+    background: #111827;
+    color: #fff;
+  }
   #sidebarResizer {
     display: none;
   }
@@ -418,6 +428,32 @@ body.sidebar-resizing iframe {
 #sidebarChapterScroll::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:999px;border:2px solid #f3f4f6}
 #sidebarChapterScroll::-webkit-scrollbar-thumb:hover{background:#6b7280}
 
+/* 手機版使用明確狀態 class 控制側邊欄，避免 display:flex !important 阻擋 Close Menu。 */
+@media (max-width: 992px) {
+  #mySidebar {
+    display: none !important;
+    width: min(86vw, 360px) !important;
+    min-width: 0;
+    max-width: 360px;
+    transform: none !important;
+  }
+  body.mobile-sidebar-open #mySidebar {
+    display: flex !important;
+  }
+  #myOverlay {
+    display: none !important;
+  }
+  body.mobile-sidebar-open #myOverlay {
+    display: block !important;
+  }
+}
+
+@media (max-width: 420px) {
+  #mobileMenuButton .mobile-menu-text {
+    display: none;
+  }
+}
+
 </style>
 </head>
 <body class="w3-light-grey sidebar-collapsed">
@@ -430,7 +466,7 @@ body.sidebar-resizing iframe {
 
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:9998;width:100%;height:43px;left:0;right:0;">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <button id="mobileMenuButton" class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" type="button" onclick="w3_open();" aria-controls="mySidebar" aria-expanded="false" aria-label="開啟側邊欄"><i class="fa fa-bars" aria-hidden="true"></i><span class="mobile-menu-text">&nbsp; Menu</span></button>
   
 </div>
 
@@ -959,19 +995,30 @@ var overlayBg = document.getElementById("myOverlay");
 
 // Toggle between showing and hiding the sidebar, and add overlay effect
 function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
+  document.body.classList.add("mobile-sidebar-open");
+  mySidebar.setAttribute("aria-hidden", "false");
+  var mobileMenuButton = document.getElementById("mobileMenuButton");
+  if (mobileMenuButton) {
+    mobileMenuButton.setAttribute("aria-expanded", "true");
+    mobileMenuButton.setAttribute("aria-label", "側邊欄已開啟");
   }
 }
 
 // Close the sidebar with the close button
 function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
+  document.body.classList.remove("mobile-sidebar-open");
+  mySidebar.setAttribute("aria-hidden", "true");
+  var mobileMenuButton = document.getElementById("mobileMenuButton");
+  if (mobileMenuButton) {
+    mobileMenuButton.setAttribute("aria-expanded", "false");
+    mobileMenuButton.setAttribute("aria-label", "開啟側邊欄");
+  }
+}
+
+if (window.matchMedia("(max-width: 992px)").matches) {
+  w3_close();
+} else {
+  mySidebar.setAttribute("aria-hidden", "false");
 }
 </script>
 
