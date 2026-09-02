@@ -226,6 +226,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   width: var(--sidebar-width) !important;
   min-width: 220px;
   max-width: 620px;
+  transition: transform .25s ease !important;
 
   /* Chapter 01 ~ Chapter 05：內容超過視窗高度時自動出現垂直捲軸 */
   top: 43px !important;
@@ -257,7 +258,75 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 .w3-main {
   margin-left: var(--sidebar-width) !important;
-  transition: none !important;
+  transition: margin-left .25s ease !important;
+}
+
+/* ===== Desktop Sidebar Toggle（桌面版側邊欄開關）===== */
+#sidebarToggle {
+  position: fixed;
+  top: 78px;
+  left: calc(var(--sidebar-width) - 22px);
+  z-index: 9999;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 13px;
+  background: #f3f4f6;
+  color: #111827;
+  font-size: 22px;
+  line-height: 44px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15,23,42,.18);
+  transition: left .25s ease,background-color .15s ease,transform .15s ease;
+}
+#sidebarToggle:hover,
+#sidebarToggle:focus-visible {
+  background: #e5e7eb;
+  transform: scale(1.05);
+  outline: 3px solid rgba(33,150,243,.35);
+}
+#sidebarToggle::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 52px;
+  left: 0;
+  width: max-content;
+  max-width: 150px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #1f1f1f;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .15s ease,transform .15s ease,visibility .15s ease;
+}
+#sidebarToggle:hover::after,
+#sidebarToggle:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+@media (min-width: 993px) {
+  body.sidebar-collapsed #mySidebar {
+    transform: translateX(calc(-1 * var(--sidebar-width))) !important;
+  }
+  body.sidebar-collapsed .w3-main {
+    margin-left: 0 !important;
+  }
+  body.sidebar-collapsed #sidebarResizer {
+    display: none;
+  }
+  body.sidebar-collapsed #sidebarToggle {
+    left: 10px;
+  }
 }
 
 #sidebarResizer {
@@ -300,6 +369,9 @@ body.sidebar-resizing iframe {
 }
 
 @media (max-width: 992px) {
+  #sidebarToggle {
+    display: none;
+  }
   #sidebarResizer {
     display: none;
   }
@@ -348,7 +420,7 @@ body.sidebar-resizing iframe {
 
 </style>
 </head>
-<body class="w3-light-grey">
+<body class="w3-light-grey sidebar-collapsed">
 
 <div class="project-brand">
   <i class="fa fa-line-chart" aria-hidden="true"></i>
@@ -463,6 +535,9 @@ body.sidebar-resizing iframe {
     </div>
 </div>
 </nav>
+<button id="sidebarToggle" type="button" aria-controls="mySidebar" aria-expanded="true" aria-label="關閉側邊欄" title="關閉側邊欄" data-tooltip="關閉側邊欄">
+  <i class="fa fa-columns" aria-hidden="true"></i>
+</button>
 <div id="sidebarResizer" title="拖曳調整左側選單寬度" aria-label="拖曳調整左側選單寬度"></div>
 
 
@@ -1681,6 +1756,30 @@ function w3_close() {
     setSidebarWidth(300);
     localStorage.setItem(STORAGE_KEY, "300");
   });
+})();
+</script>
+
+<script>
+/* ===== Desktop Sidebar Toggle Controller ===== */
+(function () {
+  const button = document.getElementById("sidebarToggle");
+  const sidebar = document.getElementById("mySidebar");
+  if (!button || !sidebar) return;
+
+  function updateButton(collapsed) {
+    const label = collapsed ? "開啟側邊欄" : "關閉側邊欄";
+    button.setAttribute("aria-expanded", String(!collapsed));
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+    button.dataset.tooltip = label;
+  }
+
+  button.addEventListener("click", function () {
+    const collapsed = document.body.classList.toggle("sidebar-collapsed");
+    updateButton(collapsed);
+  });
+
+  updateButton(document.body.classList.contains("sidebar-collapsed"));
 })();
 </script>
 
