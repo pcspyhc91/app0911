@@ -1900,8 +1900,8 @@ if (window.matchMedia("(max-width: 992px)").matches) {
       const deltaX = event.changedTouches[0].clientX - startX;
       const deltaY = event.changedTouches[0].clientY - startY;
       if (Math.abs(deltaX) < SWIPE_MIN_X || Math.abs(deltaX) < Math.abs(deltaY) * SWIPE_AXIS_RATIO) return;
-      // 依使用者指定：往右滑＝下一章；往左滑＝上一章。
-      goToChapter(deltaX > 0 ? 1 : -1);
+      // 手機導覽：往右滑＝上一章；往左滑＝下一章。
+      goToChapter(deltaX > 0 ? -1 : 1);
     }, { passive: true });
   }
 
