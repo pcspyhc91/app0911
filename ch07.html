@@ -8,9 +8,9 @@
     :root{--blue:#2563eb;--slate:#475569;--line:#cbd5e1;--soft:#f8fafc;--info:#eff6ff;--danger:#b91c1c;--ok:#166534}
     *{box-sizing:border-box} body{margin:0;background:#fff;color:#0f172a;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.55}
     main{max-width:1180px;margin:auto;padding:2rem 1rem 3rem} h1{margin:.1rem 0;font-size:2rem} .subtitle{color:var(--slate);font-size:1.05rem;margin:.1rem 0 1.4rem}
-    .notice,.status{border:1px solid #93c5fd;border-radius:.65rem;background:var(--info);padding:.9rem 1rem;margin:1rem 0}.status{background:var(--soft);border-color:var(--line);border-left:5px solid var(--blue)}
-    .panel{border:1px solid var(--line);border-radius:.75rem;padding:1.1rem;margin-top:1rem}.section-title{font-weight:700;font-size:1.05rem;margin:1rem 0 .65rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.4rem}
-    label,legend{display:block;font-weight:650;margin-bottom:.35rem} select,input{width:100%;min-height:42px;border:1px solid #94a3b8;border-radius:.45rem;padding:.55rem .65rem;background:#fff;font:inherit} input:disabled,select:disabled{background:#e2e8f0;color:#64748b}
+    .notice,.status{border:1px solid #93c5fd;border-radius:.65rem;background:var(--info);padding:.9rem 1rem;margin:1rem 0}.research-notice{background:#F6B3FF;color:#000}.input-notice{background:#A6FFFF;color:#000}.status{background:var(--soft);border-color:var(--line);border-left:5px solid var(--blue)}
+    .panel{border:1px solid var(--line);border-radius:.75rem;padding:1.1rem;margin-top:1rem}.section-title{background:#6615AD;color:#fff;font-weight:700;font-size:1.05rem;margin:1rem 0 .65rem;padding:.55rem .75rem;border-radius:.45rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.4rem}
+    label,legend{display:block;font-weight:650;margin-bottom:.35rem} select,input{width:100%;min-height:42px;border:1px solid #94a3b8;border-radius:.45rem;padding:.55rem .65rem;background:#FFF8D7;font:inherit} input:disabled,select:disabled{background:#FFF8D7;color:#64748b;opacity:.65}
     .with-help{display:flex;width:100%;align-items:center;justify-content:space-between;gap:.6rem;position:relative}.help-tip{position:relative;display:inline-flex;margin-left:auto;flex:0 0 auto}.help-button{width:18px;height:18px;min-height:18px;padding:0;border:1.5px solid #7c8795;border-radius:50%;background:#fff;color:#6b7280;font:700 12px/15px Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;cursor:help}.help-button:hover,.help-button:focus-visible,.help-tip.open .help-button{color:#2563eb;border-color:#2563eb;background:#eff6ff;outline:none}.help-popup{visibility:hidden;opacity:0;pointer-events:none;position:absolute;z-index:30;right:-2px;bottom:calc(100% + 10px);width:max-content;max-width:min(330px,80vw);padding:.68rem .8rem;border:1px solid #e2e8f0;border-radius:.65rem;background:#fff;color:#334155;font-size:.84rem;font-weight:400;line-height:1.45;box-shadow:0 4px 14px rgba(15,23,42,.14);transform:translateY(4px);transition:opacity .14s ease,transform .14s ease}.help-popup::after{content:"";position:absolute;right:5px;top:100%;border:6px solid transparent;border-top-color:#fff}.help-tip:hover .help-popup,.help-tip:focus-within .help-popup,.help-tip.open .help-popup{visibility:visible;opacity:1;transform:translateY(0)}
     fieldset{border:0;padding:0;margin:0}.radios{display:flex;gap:1.2rem;min-height:42px;align-items:center}.radios label{font-weight:400;margin:0;display:flex;gap:.4rem;align-items:center}.radios input{width:auto;min-height:auto}
     .help,.caption{display:block;color:#64748b;font-size:.86rem;margin-top:.3rem}[hidden]{display:none!important}.structural{color:#1e3a8a}.required-note{margin:.9rem 0;color:#64748b;font-size:.9rem}
@@ -24,9 +24,9 @@
 <body><main id="top">
   <h1>Google Play App 成功率預測系統</h1>
   <p class="subtitle">App Success Prediction Research Prototype（App 成功預測研究原型）</p>
-  <div class="notice">本系統是 Exploratory Decision Support（探索性決策支援）研究原型。預測結果不是 App 成功保證，也不是自動投資或專案核准依據。</div>
+  <div class="notice research-notice">本系統是 Exploratory Decision Support（探索性決策支援）研究原型。預測結果不是 App 成功保證，也不是自動投資或專案核准依據。</div>
   <h2>1. App Input Form（App 輸入表單）</h2>
-  <div class="notice"><strong>請填寫12組 App 屬性。</strong><br>輸入元件、動態欄位控制與正式驗證已整合；按下 Validate Input 後才會判定。</div>
+  <div class="notice input-notice"><strong>請填寫12組 App 屬性。</strong><br>輸入元件、動態欄位控制與正式驗證已整合；按下 Validate Input 後才會判定。</div>
   <form id="appForm" class="panel" novalidate>
     <div class="section-title">A. Basic Information（基本資訊）</div><div class="grid">
       <div><label for="category">1. App Category（App 類別）*</label><select id="category"></select><small class="help">只接受正式36種 Category（類別）。</small></div>
