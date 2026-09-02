@@ -37,7 +37,7 @@
     </div>
     <div class="section-title">B. Size and Update（大小與更新）</div><div class="grid">
       <fieldset><legend>4. Size Varies with Device（大小因裝置而異）*</legend><div class="radios"><label><input type="radio" name="sizeVaries" value="否" checked>否</label><label><input type="radio" name="sizeVaries" value="是">是</label></div><small class="help">選擇「是」時，App Size in MB 會立即停用並建立結構性缺失。</small></fieldset>
-      <div><label for="size">5. App Size in MB（App 大小）</label><input id="size" type="number" min="5" max="1998.9" value="50.0" step="0.1"><small class="help">Size Varies=否時必填；正式範圍為5.0～1,998.9 MB。</small><small id="sizeMissing" class="caption structural" hidden>Structural Missingness：Size_MB = NaN（欄位已停用）</small></div>
+      <div><label for="size">5. App Size in MB（App 大小）</label><input id="size" type="number" min="5" max="1998.9" value="5.0" step="0.1"><small class="help">Size Varies=否時必填；正式範圍為5.0～1,998.9 MB。</small><small id="sizeMissing" class="caption structural" hidden>Structural Missingness：Size_MB = NaN（欄位已停用）</small></div>
       <div><label for="updated">7. Last Updated（最後更新日期）*</label><input id="updated" type="date" min="2020-02-05" max="2026-06-30" value="2026-06-30"><small class="help">固定研究日期範圍：2020-02-05～2026-06-30。</small></div>
       <fieldset><legend>8. Current Version Varies（目前版本因裝置而異）*</legend><div class="radios"><label><input type="radio" name="currentVaries" value="否" checked>否</label><label><input type="radio" name="currentVaries" value="是">是</label></div><small class="help">只接受明確的否／是選項。</small></fieldset>
     </div>
@@ -101,7 +101,7 @@ const helpItems=[
 helpItems.forEach(([selector,message],index)=>{const target=document.querySelector(selector);if(!target)return;target.classList.add('with-help');const tip=document.createElement('span');tip.className='help-tip';const popupId=`field-help-${index+1}`;tip.innerHTML=`<button class="help-button" type="button" aria-label="顯示輸入提醒" aria-describedby="${popupId}" aria-expanded="false">?</button><span class="help-popup" id="${popupId}" role="tooltip">${message}</span>`;target.appendChild(tip);const button=tip.querySelector('button');button.addEventListener('click',event=>{event.stopPropagation();const open=!tip.classList.contains('open');document.querySelectorAll('.help-tip.open').forEach(item=>{item.classList.remove('open');item.querySelector('button').setAttribute('aria-expanded','false')});tip.classList.toggle('open',open);button.setAttribute('aria-expanded',String(open))})});
 document.addEventListener('click',()=>document.querySelectorAll('.help-tip.open').forEach(item=>{item.classList.remove('open');item.querySelector('button').setAttribute('aria-expanded','false')}));
 function fill(id,values,format=v=>v){$(id).innerHTML=values.map(v=>`<option value="${v}">${format(v)}</option>`).join('')}
-fill('category',categories); $('category').value='EDUCATION'; fill('rating',ratings); fill('genre',genres); fill('android',androidVersions,v=>`Android ${Number(v).toFixed(1)}`); $('android').value='8';
+fill('category',categories); $('category').value='ARTIFICIAL_INTELLIGENCE'; fill('rating',ratings); fill('genre',genres); fill('android',androidVersions,v=>`Android ${Number(v).toFixed(1)}`); $('android').value='4.4';
 let validatedSnapshot=null;
 let gaugeAnimationTimer=null;
 function dynamic(){const sv=selected('sizeVaries')==='是',av=selected('androidVaries')==='是';$('size').disabled=sv;$('sizeMissing').hidden=!sv;$('android').disabled=av;$('androidMissing').hidden=!av; markStale()}
