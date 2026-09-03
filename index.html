@@ -568,6 +568,11 @@ body.sidebar-resizing iframe {
     <a href="ch07.html" id="ch07MainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-ch07">
       <i class="fa fa-mobile fa-fw"></i>&nbsp; 第七章｜App 成功率預測系統展示
     </a>
+    <div id="ch07Submenu" class="chapter-submenu">
+      <a href="ch07.html?embed=1#top"><i class="fa fa-list-alt fa-fw"></i>&nbsp; 7.1 12項完整輸入模式</a>
+      <a href="ch07-1.html?embed=1#top"><i class="fa fa-sliders fa-fw"></i>&nbsp; 7.2 ８項簡化輸入模式</a>
+      <a href="ch07-2.html?embed=1#top"><i class="fa fa-compress fa-fw"></i>&nbsp; 7.3 ５項精簡輸入模式</a>
+    </div>
     </div>
 </div>
 </nav>
@@ -1667,15 +1672,16 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 
 
 <script>
-/* ===== Chapter 07 Controller（無轉場影片，直接載入正式預測介面） ===== */
+/* ===== Chapter 07 Controller（依 Chapter 01～06 規則支援子選單 Toggle） ===== */
 (function () {
   const ch07Link = document.getElementById("ch07MainLink");
+  const submenu = document.getElementById("ch07Submenu");
   const sidebar = document.getElementById("mySidebar");
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
   const audio = document.getElementById("ch07Audio");
-  if (!ch07Link || !sidebar || !dashboardContent || !frameWrap || !frame || !audio) return;
+  if (!ch07Link || !submenu || !sidebar || !dashboardContent || !frameWrap || !frame || !audio) return;
 
   function stopAudio() {
     audio.pause();
@@ -1709,7 +1715,7 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 
   function closeOthers() {
     document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
-      menu.classList.remove("is-open");
+      if (menu !== submenu) menu.classList.remove("is-open");
     });
     document.querySelectorAll(".menu-ch").forEach(function (item) {
       if (item !== ch07Link) item.classList.remove("chapter-open");
@@ -1728,10 +1734,34 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 
   ch07Link.addEventListener("click", function (event) {
     event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+    if (isOpen) {
+      submenu.classList.remove("is-open");
+      ch07Link.classList.remove("chapter-open");
+      stopAudio();
+      return;
+    }
     closeOthers();
+    submenu.classList.add("is-open");
     ch07Link.classList.add("chapter-open");
     show("ch07.html?embed=1#top");
     playAudioOnce();
+  });
+
+  submenu.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      closeOthers();
+      submenu.classList.add("is-open");
+      ch07Link.classList.add("chapter-open");
+      const targetUrl = link.getAttribute("href");
+      show(targetUrl);
+      if (/^ch07\.html(?:[?#]|$)/i.test(targetUrl)) {
+        playAudioOnce();
+      } else {
+        stopAudio();
+      }
+    });
   });
 })();
 </script>

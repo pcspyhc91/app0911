@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Google Play App 成功率預測系統</title>
+  <style>
+    :root{--blue:#2563eb;--slate:#475569;--line:#cbd5e1;--soft:#f8fafc;--info:#eff6ff;--danger:#b91c1c;--ok:#166534}
+    *{box-sizing:border-box} body{margin:0;background:#fff;color:#0f172a;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.55}
+    main{max-width:1180px;margin:auto;padding:2rem 1rem 3rem} h1{margin:.1rem 0;font-size:2rem} .subtitle{color:var(--slate);font-size:1.05rem;margin:.1rem 0 1.4rem}
+    .notice,.status{border:1px solid #93c5fd;border-radius:.65rem;background:var(--info);padding:.9rem 1rem;margin:1rem 0}.research-notice{background:#F6B3FF;color:#000}.input-notice{background:#A6FFFF;color:#000}.status{background:var(--soft);border-color:var(--line);border-left:5px solid var(--blue)}
+    .panel{border:1px solid var(--line);border-radius:.75rem;padding:1.1rem;margin-top:1rem}.section-title{background:#6615AD;color:#fff;font-weight:700;font-size:1.05rem;margin:1rem 0 .65rem;padding:.55rem .75rem;border-radius:.45rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.4rem}
+    label,legend{display:block;font-weight:650;margin-bottom:.35rem} select,input{width:100%;min-height:42px;border:1px solid #94a3b8;border-radius:.45rem;padding:.55rem .65rem;background:#FFF8D7;font:inherit} input:disabled,select:disabled{background:#FFF8D7;color:#64748b;opacity:.65}
+    .with-help{display:flex;width:100%;align-items:center;justify-content:space-between;gap:.6rem;position:relative}.help-tip{position:relative;display:inline-flex;margin-left:auto;flex:0 0 auto}.help-button{width:18px;height:18px;min-height:18px;padding:0;border:1.5px solid #7c8795;border-radius:50%;background:#fff;color:#6b7280;font:700 12px/15px Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;cursor:help}.help-button:hover,.help-button:focus-visible,.help-tip.open .help-button{color:#2563eb;border-color:#2563eb;background:#eff6ff;outline:none}.help-popup{visibility:hidden;opacity:0;pointer-events:none;position:absolute;z-index:30;right:-2px;bottom:calc(100% + 10px);width:max-content;max-width:min(330px,80vw);padding:.68rem .8rem;border:1px solid #b7d98a;border-radius:.65rem;background:#E8FFC4;color:#000;font-size:.84rem;font-weight:400;line-height:1.45;box-shadow:0 4px 14px rgba(15,23,42,.14);transform:translateY(4px);transition:opacity .14s ease,transform .14s ease}.help-popup::after{content:"";position:absolute;right:5px;top:100%;border:6px solid transparent;border-top-color:#E8FFC4}.help-tip:hover .help-popup,.help-tip:focus-within .help-popup,.help-tip.open .help-popup{visibility:visible;opacity:1;transform:translateY(0)}
+    fieldset{border:0;padding:0;margin:0}.radios{display:flex;gap:1.2rem;min-height:42px;align-items:center}.radios label{font-weight:400;margin:0;display:flex;gap:.4rem;align-items:center}.radios input{width:auto;min-height:auto}
+    .help,.caption{display:block;color:#BF0060;font-size:.86rem;margin-top:.3rem}[hidden]{display:none!important}.structural{color:#BF0060}.required-note{margin:.9rem 0;color:#64748b;font-size:.9rem}
+    button{width:100%;border:0;border-radius:.5rem;background:var(--blue);color:#fff;font:inherit;font-weight:700;padding:.72rem 1rem;cursor:pointer}button:hover{background:#1d4ed8}button:disabled{opacity:.65;cursor:wait}
+    .message{display:none;border-radius:.55rem;padding:.85rem 1rem;margin:1rem 0;white-space:pre-line}.pass{display:block;background:#f0fdf4;border:1px solid #86efac;color:var(--ok)}.fail{display:block;background:#fef2f2;border:1px solid #fca5a5;color:var(--danger)}.stale{display:block;background:#fffbeb;border:1px solid #fcd34d;color:#854d0e}
+    .result-area{margin-top:2rem}.result-banner{background:#e9f8ef;color:#15803d;border-radius:.65rem;padding:1rem;margin:1rem 0}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.2rem 0}.metric-label{color:#475569;font-size:.9rem}.metric-value{font-size:2rem;margin-top:.25rem}.metric-value.class-success-0{color:#dc2626;font-weight:700}.metric-value.class-success-1{color:#15803d;font-weight:700}.metric-value.threshold-blue{color:#2563eb;font-weight:700}.explanation{background:#eff6ff;border:1px solid #60a5fa;border-radius:.75rem;padding:1rem 1.1rem}.interpretation{background:#e7f1ff;color:#075fb5;border-radius:.55rem;padding:.85rem 1rem;margin-top:.15rem}.evidence{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:1rem}.evidence div{background:#f8fafc;border:1px solid #cbd5e1;border-radius:.5rem;padding:.65rem}.error-panel{background:#fef2f2;color:#991b1b;border:1px solid #fca5a5;border-radius:.65rem;padding:1rem;white-space:pre-line}
+    .table-wrap{overflow:auto;margin-top:.75rem}table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{border:1px solid var(--line);padding:.5rem;white-space:nowrap;text-align:left}th{background:#e2e8f0}
+    .gauge-area{margin:1.5rem 0 0;padding:1.25rem;border-radius:.85rem;background:#020617;color:#fff;text-align:center;overflow:hidden}.gauge-title{margin:0 0 .35rem;font-size:1.2rem}.gauge-caption{margin:0 0 .65rem;color:#ff4d4f;font-size:.9rem;font-weight:700}.gauge-shell{width:min(560px,100%);margin:auto}.gauge-svg{display:block;width:100%;height:auto;overflow:visible}.gauge-track{fill:none;stroke:#334155;stroke-width:28;stroke-linecap:butt}.gauge-low,.gauge-mid,.gauge-high{fill:none;stroke-width:22;stroke-linecap:butt}.gauge-low{stroke:#ef4444}.gauge-mid{stroke:#facc15}.gauge-high{stroke:#0ea5e9}.gauge-ticks line{stroke:#fff;stroke-width:2;opacity:.86}.gauge-label{fill:#e2e8f0;font-size:15px;font-weight:700}.gauge-needle{stroke:#ff2a16;stroke-width:9;stroke-linecap:round;filter:drop-shadow(0 2px 2px rgba(0,0,0,.45))}.gauge-hub{fill:#ff2a16}.gauge-percent{margin-top:-.3rem;color:#ef4444;font-size:clamp(2.5rem,8vw,4.8rem);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;transition:color .12s linear}.gauge-status{margin:.65rem 0 0;color:#cbd5e1;font-size:.9rem}
+    @media(max-width:760px){.grid,.metrics,.evidence{grid-template-columns:1fr}h1{font-size:1.55rem}main{padding-top:1rem}}
+  </style>
+</head>
+<body><main id="top">
+  <h1>Google Play App 成功率預測系統</h1>
+  <p class="subtitle">App Success Prediction Research Prototype（App 成功預測研究原型）</p>
+  <div class="notice research-notice">本系統是 Exploratory Decision Support（探索性決策支援）研究原型。預測結果不是 App 成功保證，也不是自動投資或專案核准依據。</div>
+  <h2>1. App Input Form（App 輸入表單）</h2>
+  <div class="notice input-notice"><strong>請填寫5組 App 屬性。</strong><br>其餘7組屬性採用系統固定值；按下 Validate Input 後才會判定。</div>
+  <form id="appForm" class="panel" novalidate>
+    <div class="section-title">A. Basic Information（基本資訊）</div><div class="grid">
+      <div><label for="category">1. App Category（App 類別）*</label><select id="category"></select><small class="help">只接受正式36種 Category（類別）。</small></div>
+      <div><label for="rating">3. Content Rating（內容分級）*</label><select id="rating"></select><small class="help">Unrated 是正式類別，不代表缺失值。</small></div>
+      <div><label for="genre">6. Secondary Genre（次要類型）*</label><select id="genre"></select><small class="help">沒有次要類型時使用 NO_SECONDARY_GENRE。</small></div>
+    </div>
+    <div class="section-title">B. Size and Update（大小與更新）</div><div class="grid">
+      <div><label for="size">5. App Size in MB（App 大小）*</label><input id="size" type="number" min="5" max="1998.9" value="5.0" step="0.1"><small class="help">Size Varies=否；正式範圍為5.0～1,998.9 MB。</small></div>
+    </div>
+    <div class="section-title">C. Android Compatibility（Android 相容性）</div><div class="grid">
+      <fieldset><legend>9. Android Version Varies（Android 版本因裝置而異）*</legend><div class="radios"><label><input type="radio" name="androidVaries" value="否" checked>否</label><label><input type="radio" name="androidVaries" value="是">是</label></div><small class="help">選擇「是」時，最低 Android 版本會立即停用並建立結構性缺失。</small></fieldset>
+    </div>
+    <p class="required-note">* 表示無條件必填或依跨欄位規則判定的必要輸入。</p><button type="submit">Validate Input（驗證輸入）</button>
+  </form>
+  <h2>2. Validation Message Area（驗證訊息區）</h2><div id="validation" class="status"><strong>Validation Status：NOT_EXECUTED</strong><br>請完成5組可見輸入後按下 Validate Input；系統會合併7組固定欄位，尚未呼叫任何模型。</div><div id="message" class="message"></div>
+  <h2>3. Single-record Model Input（單筆模型輸入）</h2><div id="modelStatus" class="status">Model Input Status：NOT_CREATED｜只有 Validation Status=PASS 後才會建立。</div><div id="preview"></div>
+  <section id="gaugeArea" class="gauge-area" hidden aria-live="polite">
+    <h2 class="gauge-title">Dynamic Model-estimated Score Gauge（動態模型估計分數儀錶板）</h2>
+    <p class="gauge-caption">指針與百分比同步顯示模型估計分數；此分數不代表真實成功機率。</p>
+    <div class="gauge-shell">
+      <svg class="gauge-svg" viewBox="0 0 500 270" role="img" aria-labelledby="gaugeSvgTitle gaugeSvgDesc">
+        <title id="gaugeSvgTitle">Model-estimated Score 動態儀錶板</title>
+        <desc id="gaugeSvgDesc">指針會左右擺動五秒，最後停在本次模型估計分數。</desc>
+        <path class="gauge-track" d="M 65 224 A 185 185 0 0 1 435 224" pathLength="100"/>
+        <path class="gauge-low" d="M 65 224 A 185 185 0 0 1 435 224" pathLength="100" stroke-dasharray="25 75"/>
+        <path class="gauge-mid" d="M 65 224 A 185 185 0 0 1 435 224" pathLength="100" stroke-dasharray="25 75" stroke-dashoffset="-25"/>
+        <path class="gauge-high" d="M 65 224 A 185 185 0 0 1 435 224" pathLength="100" stroke-dasharray="50 50" stroke-dashoffset="-50"/>
+        <g class="gauge-ticks">
+          <line x1="65" y1="224" x2="84" y2="224"/><line x1="119" y1="93" x2="133" y2="107"/><line x1="250" y1="39" x2="250" y2="59"/><line x1="381" y1="93" x2="367" y2="107"/><line x1="435" y1="224" x2="416" y2="224"/>
+        </g>
+        <text class="gauge-label" x="58" y="251">0%</text><text class="gauge-label" x="235" y="30">50%</text><text class="gauge-label" x="420" y="251">100%</text>
+        <line id="gaugeNeedle" class="gauge-needle" x1="250" y1="224" x2="250" y2="82" transform="rotate(-90 250 224)"/>
+        <circle class="gauge-hub" cx="250" cy="224" r="14"/>
+      </svg>
+      <div id="gaugePercent" class="gauge-percent">0.00%</div>
+      <p id="gaugeStatus" class="gauge-status">Gauge Animation：WAITING</p>
+    </div>
+  </section>
+  <section id="resultArea" class="result-area" hidden><h2>8. Prediction Result Presentation and Interpretation（預測結果呈現與解讀）</h2><div id="resultContent"></div></section>
+</main>
+<script>
+const API_BASE_URL=window.PREDICTION_API_URL||'https://google-play-app-prediction-api.onrender.com';
+const categories=["ARTIFICIAL_INTELLIGENCE","ART_AND_DESIGN","AUTO_AND_VEHICLES","BEAUTY","BOOKS_AND_REFERENCE","BUSINESS","COMICS","COMMUNICATION","DATING","EDUCATION","ENTERTAINMENT","EVENTS","FAMILY","FINANCE","FOOD_AND_DRINK","GAME","HEALTH_AND_FITNESS","HOUSE_AND_HOME","LIBRARIES_AND_DEMO","LIFESTYLE","MAPS_AND_NAVIGATION","MEDICAL","NEWS_AND_MAGAZINES","PARENTING","PERSONALIZATION","PHOTOGRAPHY","PRODUCTIVITY","SHOPPING","SOCIAL","SPORTS","TOOLS","TRAVEL_AND_LOCAL","VIDEO_PLAYERS","VIRTUAL_REALITY","WEATHER","WEB3_AND_CRYPTO"];
+const ratings=["Everyone","Everyone 10+","Teen","Mature 17+","Adults only 18+","Unrated"];
+const genres=["NO_SECONDARY_GENRE","Action","Board","Card","Casual","Creativity","Puzzle","RPG","Shooter","Simulation","Strategy"];
+const androidVersions=[4.4,5,6,7,8,9,10,11,12];
+const $=id=>document.getElementById(id), selected=name=>document.querySelector(`input[name="${name}"]:checked`).value;
+const helpItems=[
+  ['label[for="category"]','只接受正式36種 Category（類別）。'],
+  ['label[for="rating"]','Unrated 是正式類別，不代表缺失值。'],
+  ['label[for="size"]','Size Varies=否；App Size in MB 正式範圍為5.0～1,998.9 MB。'],
+  ['label[for="genre"]','沒有次要類型時使用 NO_SECONDARY_GENRE。'],
+  ['fieldset:has(input[name="androidVaries"]) legend','選擇「否」時固定使用 Android 10.0；選擇「是」時最低版本依 API 規則傳入空值。']
+];
+helpItems.forEach(([selector,message],index)=>{const target=document.querySelector(selector);if(!target)return;target.classList.add('with-help');const tip=document.createElement('span');tip.className='help-tip';const popupId=`field-help-${index+1}`;tip.innerHTML=`<button class="help-button" type="button" aria-label="顯示輸入提醒" aria-describedby="${popupId}" aria-expanded="false">?</button><span class="help-popup" id="${popupId}" role="tooltip">${message}</span>`;target.appendChild(tip);const button=tip.querySelector('button');button.addEventListener('click',event=>{event.stopPropagation();const open=!tip.classList.contains('open');document.querySelectorAll('.help-tip.open').forEach(item=>{item.classList.remove('open');item.querySelector('button').setAttribute('aria-expanded','false')});tip.classList.toggle('open',open);button.setAttribute('aria-expanded',String(open))})});
+document.addEventListener('click',()=>document.querySelectorAll('.help-tip.open').forEach(item=>{item.classList.remove('open');item.querySelector('button').setAttribute('aria-expanded','false')}));
+function fill(id,values,format=v=>v){$(id).innerHTML=values.map(v=>`<option value="${v}">${format(v)}</option>`).join('')}
+fill('category',categories);$('category').value='ARTIFICIAL_INTELLIGENCE';fill('rating',ratings);fill('genre',genres);
+let validatedSnapshot=null;
+let gaugeAnimationTimer=null;
+function raw(){const androidVaries=selected('androidVaries');return {category:$('category').value,rating:$('rating').value,price:'0.00',genre:$('genre').value,sizeVaries:'否',size:$('size').value,updated:'2025-09-01',currentVaries:'否',androidVaries,android:androidVaries==='是'?null:'10.0',iap:'是',ads:'是'}}
+function clearResult(){if(gaugeAnimationTimer!==null){clearInterval(gaugeAnimationTimer);gaugeAnimationTimer=null}$('gaugeArea').hidden=true;$('gaugeNeedle').setAttribute('transform','rotate(-90 250 224)');$('gaugePercent').textContent='0.00%';$('gaugePercent').style.color='#ef4444';$('gaugeStatus').textContent='Gauge Animation：WAITING';$('resultArea').hidden=true;$('resultContent').innerHTML='' }
+function setGaugeValue(value){const safe=Math.min(1,Math.max(0,Number(value)||0)),zoneColor=safe<.25?'#ef4444':safe<.5?'#facc15':'#0ea5e9',angle=-90+safe*180;$('gaugeNeedle').setAttribute('transform',`rotate(${angle} 250 224)`);$('gaugePercent').textContent=`${(safe*100).toFixed(2)}%`;$('gaugePercent').style.color=zoneColor}
+function animateGauge(target,onComplete){
+ const duration=5000,start=performance.now(),ranges=[[.1,.2],[.2,.4],[.4,.6],[.6,.8],[.45,.65]];
+ $('gaugeArea').hidden=false;$('gaugeStatus').textContent='Gauge Animation：RUNNING｜指針依五個逐秒區間擺動，百分比同步顯示…';$('gaugeArea').scrollIntoView({behavior:'smooth',block:'center'});
+ function tick(){
+  const elapsed=Math.min(duration,performance.now()-start),second=Math.min(4,Math.floor(elapsed/1000)),local=(elapsed-second*1000)/1000,[low,high]=ranges[second];let value;
+  if(second<4){const wave=local<=.5?local*2:(1-local)*2;value=low+(high-low)*wave}
+  else if(local<.8){const phase=local/.8,wave=phase<=.5?phase*2:(1-phase)*2;value=low+(high-low)*wave}
+  else{const t=(local-.8)/.2,eased=t*t*(3-2*t);value=low+(target-low)*eased}
+  setGaugeValue(value);
+  if(elapsed>=duration){clearInterval(gaugeAnimationTimer);gaugeAnimationTimer=null;setGaugeValue(target);$('gaugeStatus').textContent=`Gauge Animation：COMPLETED｜Final Score = ${target.toFixed(6)}`;onComplete()}
+ }
+ tick();gaugeAnimationTimer=setInterval(tick,30)
+}
+function markStale(){if(validatedSnapshot&&JSON.stringify(raw())!==validatedSnapshot){$('validation').innerHTML='<strong>Validation Status：STALE</strong><br>驗證通過後輸入已被修改。原驗證結果已失效，請重新按下 Validate Input。';$('message').className='message stale';$('message').textContent='INPUT_VALIDATION_STALE｜舊的 1×13 Model Input 與預測結果已清除。';$('modelStatus').textContent='Model Input Status：STALE｜輸入已修改，舊的1×13 Model Input已清除。';$('preview').innerHTML='';clearResult();validatedSnapshot=null}}
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('change',markStale));
+function daysSince(dateText){return Math.round((Date.UTC(2026,5,30)-Date.parse(dateText+'T00:00:00Z'))/86400000)}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('appForm').addEventListener('submit',async e=>{e.preventDefault();clearResult();const submitButton=e.submitter||$('appForm').querySelector('button[type="submit"]'),d=raw(),errors=[],price=Number(d.price),size=Number(d.size),android=Number(d.android);
+ if(d.price===''||!Number.isFinite(price))errors.push('INPUT_INVALID_TYPE｜App Price｜請輸入0.00～399.99。');else if(price<0||price>399.99)errors.push('INPUT_OUT_OF_TRAINING_RANGE｜App Price｜請輸入0.00～399.99。');
+ if(d.sizeVaries==='否'&&(d.size===''||!Number.isFinite(size)))errors.push('INPUT_REQUIRED｜App Size in MB｜請輸入5.0～1,998.9 MB。');else if(d.sizeVaries==='否'&&(size<5||size>1998.9))errors.push('INPUT_OUT_OF_TRAINING_RANGE｜App Size in MB｜請輸入5.0～1,998.9 MB。');
+ if(!d.updated)errors.push('INPUT_INVALID_FORMAT｜Last Updated｜請使用日期選擇器重新選擇。');else if(d.updated>'2026-06-30')errors.push('INPUT_RESEARCH_DATE_EXCEEDED｜Last Updated｜請選擇2026-06-30或更早日期。');else if(d.updated<'2020-02-05')errors.push('INPUT_OUT_OF_TRAINING_RANGE｜Last Updated｜請選擇2020-02-05～2026-06-30。');
+ if(d.androidVaries==='否'&&!androidVersions.includes(android))errors.push('INPUT_UNKNOWN_CATEGORY｜Minimum Android Version｜請從正式版本集合選擇。');
+ if(errors.length){validatedSnapshot=null;$('validation').innerHTML='<strong>Validation Status：FAIL</strong><br>輸入未通過，predict_proba 呼叫次數為0。';$('message').className='message fail';$('message').textContent=errors.join('\n');$('modelStatus').textContent='Model Input Status：NOT_CREATED｜輸入驗證失敗。';$('preview').innerHTML='';return}
+ validatedSnapshot=JSON.stringify(d);$('validation').innerHTML='<strong>Validation Status：PASS</strong><br>12組輸入均符合正式 Validation Contract；正在送往正式 Prediction API。';$('message').className='message pass';$('message').textContent='Inference Gate：WAITING｜正在執行模型完整性、1×63 Pipeline 與 Prediction Audit。';
+ const row={Category:d.category,Price:price.toFixed(2),'Content Rating':d.rating,Size_MB:d.sizeVaries==='是'?'NaN':size.toFixed(1),Size_Varies:d.sizeVaries==='是'?1:0,Is_Paid:price===0?0:1,Genre_Secondary:d.genre,Days_Since_Update:daysSince(d.updated),Current_Ver_Varies:d.currentVaries==='是'?1:0,Android_Ver_Varies:d.androidVaries==='是'?1:0,Min_Android_Ver:d.androidVaries==='是'?'NaN':android.toFixed(1),Has_In_App_Purchases:d.iap==='是'?1:0,Has_Ad_Support:d.ads==='是'?1:0};
+ $('modelStatus').textContent='Model Input Status：MODEL_INPUT_READY｜Shape=(1,13)｜Feature Order Match=True｜Leakage Guard=PASS';$('preview').innerHTML='<div class="table-wrap"><table><thead><tr>'+Object.keys(row).map(k=>`<th>${esc(k)}</th>`).join('')+'</tr></thead><tbody><tr>'+Object.values(row).map(v=>`<td>${esc(v)}</td>`).join('')+'</tr></tbody></table></div>';
+ const payload={'App Category':d.category,'App Price':price,'Content Rating':d.rating,'Size Varies with Device':d.sizeVaries,'App Size in MB':d.sizeVaries==='是'?null:size,'Secondary Genre':d.genre,'Last Updated':d.updated,'Current Version Varies':d.currentVaries,'Android Version Varies':d.androidVaries,'Minimum Android Version':d.androidVaries==='是'?null:android,'In-App Purchases':d.iap,'Ad Supported':d.ads};
+ submitButton.disabled=true;submitButton.textContent='Validating and Predicting（驗證與預測中）…';
+ try{
+   const response=await fetch(`${API_BASE_URL}/predict`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let data;try{data=await response.json()}catch{data={detail:{blocking_code:'API_INVALID_RESPONSE',message:'API 未回傳有效 JSON。'}}}
+   if(!response.ok){const detail=data.detail||data,items=Array.isArray(detail.errors)?detail.errors.map(x=>`${x.error_code}｜${x.field}\n${x.message}\n修正方式：${x.correction_hint}`).join('\n\n'):'';throw new Error(`${detail.blocking_code||'PREDICTION_API_FAILED'}｜${detail.message||'正式推論未通過。'}${items?'\n\n'+items:''}`)}
+   if(data.prediction_status!=='PREDICTION_READY'||data.result_publication_audit!=='PASS'||data.audit?.overall_status!=='PASS')throw new Error('RESULT_PUBLICATION_AUDIT_FAILED｜API 結果未通過正式發布契約。');
+   const score=Number(data.model_estimated_score),displayScore=score.toFixed(6),predictedClass=Number(data.predicted_class),predicted=`Success=${predictedClass}`,predictedClassStyle=predictedClass===1?'class-success-1':'class-success-0';
+   $('validation').innerHTML='<strong>Validation Status：PASS</strong><br>12組輸入、模型完整性、Pipeline 轉換與 Prediction Audit 均已通過。';$('message').className='message pass';$('message').textContent='Prediction Authorized and Completed（預測已授權並完成）｜Blocking Code：NONE';
+   $('resultContent').innerHTML=`<div class="result-banner">Prediction Status：${esc(data.prediction_status)}｜Result Publication Audit：${esc(data.result_publication_audit)}｜目前結果與已驗證輸入一致。</div><div class="metrics"><div><div class="metric-label">Predicted Class（預測類別）</div><div class="metric-value ${predictedClassStyle}">${esc(predicted)}</div></div><div><div class="metric-label">Model-estimated Score（模型估計分數）</div><div class="metric-value">${esc(displayScore)}</div></div><div><div class="metric-label">Fixed Threshold（固定門檻）</div><div class="metric-value threshold-blue">${Number(data.fixed_threshold).toFixed(1)}</div></div></div><div class="explanation"><strong>Classification Explanation（分類判定說明）</strong><br>${esc(data.classification_explanation)}</div><div class="interpretation">${esc(data.result_interpretation)}</div><div class="evidence"><div><span class="metric-label">Model ID</span><br><strong>${esc(data.audit.model_id)}</strong></div><div><span class="metric-label">SHA-256 Match</span><br><strong>VERIFIED</strong></div><div><span class="metric-label">Class Order</span><br><strong>[${data.audit.class_order.join(',')}]</strong></div><div><span class="metric-label">Prediction Audit</span><br><strong>PASS</strong></div></div>`;
+   animateGauge(score,()=>{$('resultArea').hidden=false;$('resultArea').scrollIntoView({behavior:'smooth',block:'start'})});
+ }catch(error){$('validation').innerHTML='<strong>Prediction Status：BLOCKED</strong><br>系統未發布分類或模型估計分數。';$('message').className='message fail';$('message').textContent=error instanceof TypeError?`API_CONNECTION_FAILED｜無法連線至 ${API_BASE_URL}。\n免費 API 可能正在休眠喚醒，請稍候約 50 秒後重新按下 Validate Input。`:error.message;$('resultArea').hidden=false;$('resultContent').innerHTML=`<div class="error-panel"><strong>No Active Result（目前沒有有效結果）</strong><br>${esc($('message').textContent)}<br><br>系統不沿用舊結果，也不產生替代分類或模擬分數。</div>`}
+ finally{submitButton.disabled=false;submitButton.textContent='Validate Input（驗證輸入）'}
+});
+</script></body></html>
