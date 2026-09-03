@@ -1916,5 +1916,39 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 })();
 </script>
 
+<script>
+/* ===== Render Prediction API Warm-up =====
+   開啟首頁時立即呼叫 /health，讓休眠中的 Render Prediction API 提前啟動。
+   此呼叫只執行模型完整性健康檢查，不會產生預測結果。 */
+(function () {
+  const API_BASE_URL = window.PREDICTION_API_URL ||
+    "https://google-play-app-prediction-api.onrender.com";
+
+  window.PREDICTION_API_URL = API_BASE_URL;
+
+  fetch(API_BASE_URL + "/health", {
+    method: "GET",
+    cache: "no-store",
+    headers: { "Accept": "application/json" }
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      console.info("Prediction API warm-up completed:", data.status || "READY");
+    })
+    .catch(function (error) {
+      console.warn(
+        "Prediction API is waking up or temporarily unavailable. " +
+        "The user can continue browsing while Render starts:",
+        error
+      );
+    });
+})();
+</script>
+
 </body>
 </html>
