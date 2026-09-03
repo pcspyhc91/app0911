@@ -1159,6 +1159,9 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 
     event.preventDefault();
     event.stopPropagation();
+    if (submenuMatch && submenuMatch[1] === "07" && typeof window.stopCh07Audio === "function") {
+      window.stopCh07Audio();
+    }
     if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
 
     stopAllTransitions();
@@ -1751,16 +1754,14 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   submenu.querySelectorAll("a").forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault();
+      stopAudio();
       closeOthers();
       submenu.classList.add("is-open");
       ch07Link.classList.add("chapter-open");
       const targetUrl = link.getAttribute("href");
       show(targetUrl);
-      if (/^ch07\.html(?:[?#]|$)/i.test(targetUrl)) {
-        playAudioOnce();
-      } else {
-        stopAudio();
-      }
+      // 7.1～7.3 僅切換右側 iframe；不得播放第七章旁白。
+      stopAudio();
     });
   });
 })();
