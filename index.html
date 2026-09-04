@@ -474,7 +474,7 @@ body.sidebar-resizing iframe {
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div id="sidebarFixedArea">
   <div class="w3-container" style="padding:8px 10px 10px;">
-    <a href="https://thmr.wda.gov.tw/Default.aspx" target="_blank" rel="noopener noreferrer" title="勞動部勞動力發展署桃竹苗分署"><img src="./w3images/THMRB.png" alt="勞動部勞動力發展署桃竹苗分署" style="display:block;width:100%;height:auto;object-fit:contain;"></a>
+    <a href="https://thmr.wda.gov.tw/Default.aspx" target="_blank" rel="noopener noreferrer" title="勞動部勞動力發展署桃竹苗分署"><img src="./w3images/THMRB.jpg" alt="勞動部勞動力發展署桃竹苗分署" style="display:block;width:100%;height:auto;object-fit:contain;"></a>
   </div>
   <hr>
   <div class="w3-container">
@@ -1978,6 +1978,125 @@ if (window.matchMedia("(max-width: 992px)").matches) {
         error
       );
     });
+})();
+</script>
+
+
+<script>
+/* ===== First-Visit Dynamic Catalog Launch =====
+   規則：
+   1. 第一次進入 index.html 後，若 5 秒內開始播放首頁影片，取消 5 秒自動跳轉；影片播放結束後開啟 book_catalog_links.html。
+   2. 第一次進入 index.html 後，若 5 秒內完全沒有開始播放首頁影片，5 秒後自動開啟 book_catalog_links.html。
+   3. 同一瀏覽器分頁工作階段只執行一次，避免從其他頁返回 Overview 時重複觸發。
+*/
+(function () {
+  const FIRST_VISIT_KEY = "googlePlayProjectCatalogLaunched";
+  const CATALOG_URL = "book_catalog_links.html";
+  const AUTO_DELAY_MS = 5000;
+
+  // 從動態目錄選擇章節返回 index.html 時，不可再次啟動 5 秒目錄導向。
+  const catalogChapter = new URLSearchParams(window.location.search).get("catalogChapter");
+  if (catalogChapter) {
+    sessionStorage.setItem(FIRST_VISIT_KEY, "1");
+    return;
+  }
+
+  // 同一分頁工作階段已執行過，就不再啟動。
+  if (sessionStorage.getItem(FIRST_VISIT_KEY) === "1") return;
+
+  const video = document.getElementById("overviewVideo");
+  if (!video) return;
+
+  let hasStartedPlaying = false;
+  let hasNavigated = false;
+  let autoTimer = null;
+
+  function launchCatalog() {
+    if (hasNavigated) return;
+    hasNavigated = true;
+
+    if (autoTimer !== null) {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+    }
+
+    sessionStorage.setItem(FIRST_VISIT_KEY, "1");
+    window.location.href = CATALOG_URL;
+  }
+
+  // 使用者一旦真的開始播放影片，就取消「5 秒未播放」的自動目錄。
+  video.addEventListener("play", function () {
+    hasStartedPlaying = true;
+    if (autoTimer !== null) {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+    }
+  }, { once: true });
+
+  // 只有影片實際播放到結束，才進入動態目錄。
+  video.addEventListener("ended", function () {
+    if (hasStartedPlaying) launchCatalog();
+  });
+
+  // 初次開啟後 5 秒仍未播放影片，自動進入動態目錄。
+  autoTimer = window.setTimeout(function () {
+    if (!hasStartedPlaying) launchCatalog();
+  }, AUTO_DELAY_MS);
+})();
+</script>
+
+
+<script>
+/* ===== Dynamic Catalog -> Index Chapter Bootstrap =====
+   book_catalog_links.html 的「前往」會進入：index.html?catalogChapter=N
+   本段會保留 index.html 的頂部品牌、左側選單與 iframe 架構，
+   再呼叫既有章節主選單 click handler，使畫面呈現方式與直接從左側點章節一致。
+*/
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const chapter = Number(params.get("catalogChapter"));
+  if (!Number.isInteger(chapter) || chapter < 1 || chapter > 7) return;
+
+  // 標記已經完成首次目錄流程，避免章節顯示中再次被 5 秒計時器導回目錄。
+  try {
+    sessionStorage.setItem("googlePlayProjectCatalogLaunched", "1");
+  } catch (error) {}
+
+  function openCatalogChapter() {
+    const link = document.getElementById("ch0" + chapter + "MainLink");
+    if (!link) return;
+
+    // 桌面版保持左側導覽展開，呈現方式與使用者截圖一致。
+    if (window.matchMedia("(min-width: 993px)").matches) {
+      document.body.classList.remove("sidebar-collapsed");
+      const toggle = document.getElementById("sidebarToggle");
+      if (toggle) {
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", "關閉側邊欄");
+        toggle.setAttribute("title", "關閉側邊欄");
+        toggle.dataset.tooltip = "關閉側邊欄";
+      }
+    }
+
+    // 使用既有 click handler：展開該章子選單、執行既有轉場/音效並在右側 iframe 顯示章節。
+    link.click();
+
+    // 清除網址上的 catalogChapter，避免重新整理又重播章節進場流程。
+    window.setTimeout(function () {
+      try {
+        window.history.replaceState(null, "", "index.html");
+      } catch (error) {}
+    }, 100);
+  }
+
+  // 所有既有章節 click handler 都已在本段之前載入；延後一個事件循環再觸發最穩定。
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      window.setTimeout(openCatalogChapter, 0);
+    }, { once: true });
+  } else {
+    window.setTimeout(openCatalogChapter, 0);
+  }
 })();
 </script>
 

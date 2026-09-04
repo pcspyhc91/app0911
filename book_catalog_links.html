@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專題動態目錄</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0ebd8;
+            font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+            overflow: hidden;
+        }
+
+        .book-container {
+            perspective: 1600px;
+        }
+
+        .book {
+            width: 420px;
+            height: 600px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.7s ease;
+            cursor: pointer;
+        }
+
+        .book-cover,
+        .book-pages {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.22);
+        }
+
+        .book-cover {
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .cover-front,
+        .cover-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .cover-front {
+            background: linear-gradient(145deg, #1d3557, #274c77);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 24px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .cover-front h2 {
+            margin: 0 0 14px;
+            font-size: 30px;
+        }
+
+        .cover-front p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .cover-back {
+            background: linear-gradient(145deg, #457b9d, #6096ba);
+            transform: rotateY(180deg);
+            border-radius: 10px 0 0 10px;
+        }
+
+        .book-pages {
+            background-color: #fdf8e2;
+            padding: 34px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .book-pages h3 {
+            margin: 0;
+            color: #1d3557;
+            font-size: 24px;
+        }
+
+        .catalog-list {
+            list-style: none;
+            padding: 0;
+            margin: 24px 0 0;
+        }
+
+        .catalog-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px dashed #b8aa87;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            color: #333;
+            font-size: 17px;
+        }
+
+        .catalog-list a {
+            flex: 0 0 auto;
+            display: inline-block;
+            background: #ffe8a3;
+            color: #7a4e00;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .catalog-list a:hover {
+            background: #ffd166;
+            transform: translateY(-1px);
+        }
+
+        .book.open {
+            transform: translateX(150px);
+        }
+
+        .book.open .book-cover {
+            transform: rotateY(-180deg);
+        }
+
+        .book.open .catalog-list li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .book.open .catalog-list li:nth-child(1) { transition-delay: 0.6s; }
+        .book.open .catalog-list li:nth-child(2) { transition-delay: 0.8s; }
+        .book.open .catalog-list li:nth-child(3) { transition-delay: 1s; }
+        .book.open .catalog-list li:nth-child(4) { transition-delay: 1.2s; }
+
+        @media (max-width: 700px) {
+            body {
+                overflow: auto;
+                padding: 30px 16px;
+            }
+
+            .book {
+                width: min(84vw, 360px);
+                height: 540px;
+            }
+
+            .book.open {
+                transform: translateX(40%);
+            }
+
+            .book-pages {
+                padding: 24px;
+            }
+
+            .catalog-list li {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-container">
+        <div class="book" id="myBook" role="button" tabindex="0" aria-label="點擊開啟或關閉專題目錄">
+
+            <div class="book-cover">
+                <div class="cover-front">
+                    <h2>Google Play App AI Project</h2>
+                    <p>點擊翻開看目錄</p>
+                </div>
+                <div class="cover-back"></div>
+            </div>
+
+            <div class="book-pages">
+                <h3>📜 本專題目錄</h3>
+                <ul class="catalog-list">
+                    <li><span>第一章：前言</span><a href="index.html?catalogChapter=1">前往</a></li>
+                    <li><span>第二章：資料理解與探索式資料分析</span><a href="index.html?catalogChapter=2">前往</a></li>
+                    <li><span>第三章：研究方法</span><a href="index.html?catalogChapter=3">前往</a></li>
+                    <li><span>第四章：機器學模型建立與評估</span><a href="index.html?catalogChapter=4">前往</a></li>
+                    <li><span>第五章：預測系統建置與實作</span><a href="index.html?catalogChapter=5">前往</a></li>
+                    <li><span>第六章：結論與未來展望</span><a href="index.html?catalogChapter=6">前往</a></li>
+                    <li><span>第七章：App 成功預測系統展示</span><a href="index.html?catalogChapter=7">前往</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const book = document.getElementById('myBook');
+
+        function toggleBook() {
+            book.classList.toggle('open');
+        }
+
+        book.addEventListener('click', (event) => {
+            if (event.target.closest('.catalog-list a')) return;
+            toggleBook();
+        });
+
+        book.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleBook();
+            }
+        });
+    </script>
+
+</body>
+</html>
