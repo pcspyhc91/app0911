@@ -2032,9 +2032,18 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   const overlay = document.getElementById("catalogOverlay");
   if (!video || !overlay) return;
 
+  const PAUSE_DELAY_MS = 3000;
   let hasStartedPlaying = false;
   let hasShownCatalog = false;
   let autoTimer = null;
+  let pauseTimer = null;
+
+  function clearPauseTimer() {
+    if (pauseTimer !== null) {
+      clearTimeout(pauseTimer);
+      pauseTimer = null;
+    }
+  }
 
   function showCatalogOverlay() {
     if (hasShownCatalog) return;
@@ -2044,23 +2053,40 @@ if (window.matchMedia("(max-width: 992px)").matches) {
       clearTimeout(autoTimer);
       autoTimer = null;
     }
+    clearPauseTimer();
 
     try { sessionStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (error) {}
     overlay.classList.add("is-visible");
     overlay.setAttribute("aria-hidden", "false");
   }
 
-  // 一旦影片開始播放，就不在第 5 秒顯示；改為等待影片 ended。
+  // 影片開始／恢復播放：取消「暫停 3 秒」計時，並取消首次 5 秒自動顯示。
   video.addEventListener("play", function () {
     hasStartedPlaying = true;
+    clearPauseTimer();
+
     if (autoTimer !== null) {
       clearTimeout(autoTimer);
       autoTimer = null;
     }
-  }, { once: true });
+  });
 
-  // 有播放影片：等影片完整結束後顯示透明動態目錄。
+  // 新增情境：影片曾經播放、尚未播完，中途暫停持續 3 秒後顯示透明動態目錄。
+  // 如果 3 秒內恢復播放，play 事件會自動取消此計時器。
+  video.addEventListener("pause", function () {
+    if (!hasStartedPlaying || hasShownCatalog || video.ended) return;
+
+    clearPauseTimer();
+    pauseTimer = window.setTimeout(function () {
+      if (!video.ended && video.paused && hasStartedPlaying) {
+        showCatalogOverlay();
+      }
+    }, PAUSE_DELAY_MS);
+  });
+
+  // 有播放影片：等影片完整結束後立即顯示透明動態目錄。
   video.addEventListener("ended", function () {
+    clearPauseTimer();
     if (hasStartedPlaying) showCatalogOverlay();
   });
 
