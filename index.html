@@ -98,14 +98,18 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   object-fit: contain;
 }
 
-/* ===== Transparent Dynamic Catalog Overlay ===== */
+/* ===== Transparent Dynamic Catalog Overlay =====
+   只覆蓋影片中央的翻書區域，保留底部原生影片控制列可直接操作。
+*/
 #catalogOverlay {
   position: absolute;
-  inset: 18px;
   z-index: 20;
   display: none;
-  width: calc(100% - 36px);
-  height: calc(100% - 36px);
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: min(920px, calc(100% - 80px));
+  height: min(650px, calc(100% - 110px));
   border: 0;
   background: transparent;
   pointer-events: none;
@@ -116,11 +120,19 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   pointer-events: auto;
 }
 
+@media (max-width: 900px) {
+  #catalogOverlay {
+    width: calc(100% - 24px);
+    height: calc(100% - 105px);
+    top: 45%;
+  }
+}
+
 @media (max-width: 600px) {
   #catalogOverlay {
-    inset: 8px;
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
+    width: calc(100% - 12px);
+    height: calc(100% - 95px);
+    top: 44%;
   }
 }
 .yt-full-button {
@@ -2011,14 +2023,17 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 
 <script>
 /* ===== First-Visit Transparent Dynamic Catalog Overlay =====
-   規則：
-   1. 第一次進入 index.html，若 5 秒內開始播放首頁影片：取消 5 秒計時，影片結束後將動態翻書目錄透明疊在影片上。
-   2. 第一次進入 index.html，若 5 秒內沒有播放影片：第 5 秒將動態翻書目錄透明疊在影片上。
-   3. 不離開 index.html；影片仍保留在背景。
+   首次進入 index.html：
+   1. 尚未播放影片：5 秒後顯示透明翻書目錄。
+   2. 有播放影片並播放完畢：影片 ended 後顯示透明翻書目錄。
+   3. 有播放影片但中途暫停且尚未播完：持續暫停 3 秒後顯示透明翻書目錄。
+   4. 只要翻書目錄正在顯示，使用者按下影片播放：立即關閉目錄並繼續播放。
+      之後若再次暫停，重新計時 3 秒；若一路播完，結束時再次顯示目錄。
 */
 (function () {
   const FIRST_VISIT_KEY = "googlePlayProjectCatalogLaunched";
   const AUTO_DELAY_MS = 5000;
+  const PAUSE_DELAY_MS = 3000;
 
   const catalogChapter = new URLSearchParams(window.location.search).get("catalogChapter");
   if (catalogChapter) {
@@ -2032,11 +2047,16 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   const overlay = document.getElementById("catalogOverlay");
   if (!video || !overlay) return;
 
-  const PAUSE_DELAY_MS = 3000;
   let hasStartedPlaying = false;
-  let hasShownCatalog = false;
   let autoTimer = null;
   let pauseTimer = null;
+
+  function clearAutoTimer() {
+    if (autoTimer !== null) {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+    }
+  }
 
   function clearPauseTimer() {
     if (pauseTimer !== null) {
@@ -2045,54 +2065,59 @@ if (window.matchMedia("(max-width: 992px)").matches) {
     }
   }
 
+  function isCatalogVisible() {
+    return overlay.classList.contains("is-visible");
+  }
+
   function showCatalogOverlay() {
-    if (hasShownCatalog) return;
-    hasShownCatalog = true;
-
-    if (autoTimer !== null) {
-      clearTimeout(autoTimer);
-      autoTimer = null;
-    }
+    clearAutoTimer();
     clearPauseTimer();
-
     try { sessionStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (error) {}
     overlay.classList.add("is-visible");
     overlay.setAttribute("aria-hidden", "false");
   }
 
-  // 影片開始／恢復播放：取消「暫停 3 秒」計時，並取消首次 5 秒自動顯示。
+  function hideCatalogOverlay() {
+    overlay.classList.remove("is-visible");
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  // 按播放或從暫停恢復播放：目錄若正在顯示就立即關閉，影片照目前進度繼續播放。
   video.addEventListener("play", function () {
     hasStartedPlaying = true;
+    clearAutoTimer();
     clearPauseTimer();
 
-    if (autoTimer !== null) {
-      clearTimeout(autoTimer);
-      autoTimer = null;
+    if (isCatalogVisible()) {
+      hideCatalogOverlay();
     }
   });
 
-  // 新增情境：影片曾經播放、尚未播完，中途暫停持續 3 秒後顯示透明動態目錄。
-  // 如果 3 秒內恢復播放，play 事件會自動取消此計時器。
+  // 中途暫停且尚未播完：若持續暫停滿 3 秒，再顯示透明翻書目錄。
   video.addEventListener("pause", function () {
-    if (!hasStartedPlaying || hasShownCatalog || video.ended) return;
+    if (!hasStartedPlaying || video.ended) return;
 
     clearPauseTimer();
     pauseTimer = window.setTimeout(function () {
-      if (!video.ended && video.paused && hasStartedPlaying) {
+      if (hasStartedPlaying && video.paused && !video.ended) {
         showCatalogOverlay();
       }
     }, PAUSE_DELAY_MS);
   });
 
-  // 有播放影片：等影片完整結束後立即顯示透明動態目錄。
+  // 影片完整播放結束：立即重新顯示透明翻書目錄。
   video.addEventListener("ended", function () {
     clearPauseTimer();
-    if (hasStartedPlaying) showCatalogOverlay();
+    if (hasStartedPlaying) {
+      showCatalogOverlay();
+    }
   });
 
-  // 沒播放影片：第 5 秒直接顯示透明動態目錄。
+  // 首次進入且完全沒播放：第 5 秒顯示透明翻書目錄。
   autoTimer = window.setTimeout(function () {
-    if (!hasStartedPlaying) showCatalogOverlay();
+    if (!hasStartedPlaying) {
+      showCatalogOverlay();
+    }
   }, AUTO_DELAY_MS);
 })();
 </script>
