@@ -97,6 +97,32 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   background: #000;
   object-fit: contain;
 }
+
+/* ===== Transparent Dynamic Catalog Overlay ===== */
+#catalogOverlay {
+  position: absolute;
+  inset: 18px;
+  z-index: 20;
+  display: none;
+  width: calc(100% - 36px);
+  height: calc(100% - 36px);
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+#catalogOverlay.is-visible {
+  display: block;
+  pointer-events: auto;
+}
+
+@media (max-width: 600px) {
+  #catalogOverlay {
+    inset: 8px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+  }
+}
 .yt-full-button {
   position: absolute;
   right: 8px;
@@ -596,6 +622,7 @@ body.sidebar-resizing iframe {
       您的瀏覽器不支援 HTML5 Video（HTML5 影片播放器）。
     </video>
     <a id="ytFullButton" class="yt-full-button" href="https://youtu.be/XDMQmLHyamI" target="_blank" rel="noopener noreferrer" aria-label="前往 YouTube 觀看完整版">看完整版</a>
+    <iframe id="catalogOverlay" src="book_catalog_links.html" title="Google Play App AI Project 動態目錄" allowtransparency="true" aria-hidden="true"></iframe>
   </div>
 
 
@@ -1983,48 +2010,47 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 
 
 <script>
-/* ===== First-Visit Dynamic Catalog Launch =====
+/* ===== First-Visit Transparent Dynamic Catalog Overlay =====
    規則：
-   1. 第一次進入 index.html 後，若 5 秒內開始播放首頁影片，取消 5 秒自動跳轉；影片播放結束後開啟 book_catalog_links.html。
-   2. 第一次進入 index.html 後，若 5 秒內完全沒有開始播放首頁影片，5 秒後自動開啟 book_catalog_links.html。
-   3. 同一瀏覽器分頁工作階段只執行一次，避免從其他頁返回 Overview 時重複觸發。
+   1. 第一次進入 index.html，若 5 秒內開始播放首頁影片：取消 5 秒計時，影片結束後將動態翻書目錄透明疊在影片上。
+   2. 第一次進入 index.html，若 5 秒內沒有播放影片：第 5 秒將動態翻書目錄透明疊在影片上。
+   3. 不離開 index.html；影片仍保留在背景。
 */
 (function () {
   const FIRST_VISIT_KEY = "googlePlayProjectCatalogLaunched";
-  const CATALOG_URL = "book_catalog_links.html";
   const AUTO_DELAY_MS = 5000;
 
-  // 從動態目錄選擇章節返回 index.html 時，不可再次啟動 5 秒目錄導向。
   const catalogChapter = new URLSearchParams(window.location.search).get("catalogChapter");
   if (catalogChapter) {
-    sessionStorage.setItem(FIRST_VISIT_KEY, "1");
+    try { sessionStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (error) {}
     return;
   }
 
-  // 同一分頁工作階段已執行過，就不再啟動。
   if (sessionStorage.getItem(FIRST_VISIT_KEY) === "1") return;
 
   const video = document.getElementById("overviewVideo");
-  if (!video) return;
+  const overlay = document.getElementById("catalogOverlay");
+  if (!video || !overlay) return;
 
   let hasStartedPlaying = false;
-  let hasNavigated = false;
+  let hasShownCatalog = false;
   let autoTimer = null;
 
-  function launchCatalog() {
-    if (hasNavigated) return;
-    hasNavigated = true;
+  function showCatalogOverlay() {
+    if (hasShownCatalog) return;
+    hasShownCatalog = true;
 
     if (autoTimer !== null) {
       clearTimeout(autoTimer);
       autoTimer = null;
     }
 
-    sessionStorage.setItem(FIRST_VISIT_KEY, "1");
-    window.location.href = CATALOG_URL;
+    try { sessionStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (error) {}
+    overlay.classList.add("is-visible");
+    overlay.setAttribute("aria-hidden", "false");
   }
 
-  // 使用者一旦真的開始播放影片，就取消「5 秒未播放」的自動目錄。
+  // 一旦影片開始播放，就不在第 5 秒顯示；改為等待影片 ended。
   video.addEventListener("play", function () {
     hasStartedPlaying = true;
     if (autoTimer !== null) {
@@ -2033,14 +2059,14 @@ if (window.matchMedia("(max-width: 992px)").matches) {
     }
   }, { once: true });
 
-  // 只有影片實際播放到結束，才進入動態目錄。
+  // 有播放影片：等影片完整結束後顯示透明動態目錄。
   video.addEventListener("ended", function () {
-    if (hasStartedPlaying) launchCatalog();
+    if (hasStartedPlaying) showCatalogOverlay();
   });
 
-  // 初次開啟後 5 秒仍未播放影片，自動進入動態目錄。
+  // 沒播放影片：第 5 秒直接顯示透明動態目錄。
   autoTimer = window.setTimeout(function () {
-    if (!hasStartedPlaying) launchCatalog();
+    if (!hasStartedPlaying) showCatalogOverlay();
   }, AUTO_DELAY_MS);
 })();
 </script>
