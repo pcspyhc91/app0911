@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App 影片展示</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --gap: clamp(16px, 2.2vw, 30px);
+      --panel: #111827;
+      --border: rgba(255, 255, 255, 0.18);
+      --focus: #67e8f9;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: var(--gap);
+      background: radial-gradient(circle at top, #26354d 0%, #111827 46%, #080c14 100%);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    .gallery {
+      width: min(1180px, 100%);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap);
+    }
+
+    .video-card {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: 0;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(103, 232, 249, 0.78);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.5);
+    }
+
+    .video-card:focus-visible {
+      outline: 4px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    .video-card img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #ffffff;
+    }
+
+    .play-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: clamp(56px, 7vw, 82px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform: translate(-50%, -50%);
+      border: 3px solid rgba(255, 255, 255, 0.92);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.62);
+      color: #ffffff;
+      font-size: clamp(25px, 3vw, 38px);
+      line-height: 1;
+      text-indent: 5px;
+      pointer-events: none;
+    }
+
+    @media (max-width: 720px) {
+      .gallery { grid-template-columns: 1fr; }
+      .video-card { border-radius: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .video-card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="gallery" aria-label="App 影片選單">
+    <button class="video-card" type="button" data-link="https://youtu.be/1p0wbOBce4o" aria-label="在新視窗開啟 YouTube 影片">
+      <img src="./w3images/demo.png" alt="demo 影片封面">
+      <span class="play-icon" aria-hidden="true">▶</span>
+    </button>
+
+    <button class="video-card" type="button" data-video="./Video/demo2B.mp4" aria-label="在新視窗全螢幕播放 demo2B.mp4">
+      <img src="./w3images/demo2B.png" alt="demo2B 影片封面">
+      <span class="play-icon" aria-hidden="true">▶</span>
+    </button>
+
+    <button class="video-card" type="button" data-video="./Video/demo3C.mp4" aria-label="在新視窗全螢幕播放 demo3C.mp4">
+      <img src="./w3images/demo3C.png" alt="demo3C 影片封面">
+      <span class="play-icon" aria-hidden="true">▶</span>
+    </button>
+
+    <button class="video-card" type="button" data-link="https://youtu.be/09TEev_7Fyc" aria-label="在新視窗開啟 YouTube 影片">
+      <img src="./w3images/demo4D.png" alt="demo4D 影片封面">
+      <span class="play-icon" aria-hidden="true">▶</span>
+    </button>
+  </main>
+
+  <script>
+    (function () {
+      function openFullscreenVideo(videoPath) {
+        const width = window.screen.availWidth || window.screen.width;
+        const height = window.screen.availHeight || window.screen.height;
+        const features = [
+          "popup=yes",
+          "left=0",
+          "top=0",
+          "width=" + width,
+          "height=" + height,
+          "resizable=yes",
+          "scrollbars=no"
+        ].join(",");
+
+        const playerWindow = window.open("", "_blank", features);
+        if (!playerWindow) {
+          window.alert("瀏覽器已封鎖影片視窗，請允許此網站開啟彈出式視窗後再試一次。");
+          return;
+        }
+
+        const safeVideoPath = JSON.stringify(new URL(videoPath, window.location.href).href);
+        playerWindow.document.open();
+        playerWindow.document.write(`<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>影片播放</title>
+  <style>
+    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;background:#000;overflow:hidden}
+    body{display:grid;place-items:center;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif}
+    video{width:100%;height:100%;object-fit:contain;background:#000}
+    #fullscreenFallback{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.34);border:0;color:#fff;cursor:pointer;font-size:20px}
+    #fullscreenFallback span{padding:14px 24px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.72)}
+  </style>
+</head>
+<body>
+  <video id="player" src=${safeVideoPath} controls autoplay playsinline></video>
+  <button id="fullscreenFallback" type="button"><span>點擊進入全螢幕</span></button>
+  <script>
+    const player=document.getElementById("player");
+    const fallback=document.getElementById("fullscreenFallback");
+    async function enterFullscreen(){
+      try{
+        if(!document.fullscreenElement){
+          if(player.requestFullscreen) await player.requestFullscreen();
+          else if(player.webkitEnterFullscreen) player.webkitEnterFullscreen();
+        }
+        fallback.style.display="none";
+      }catch(error){fallback.style.display="grid";}
+      try{await player.play();}catch(error){}
+    }
+    fallback.addEventListener("click",enterFullscreen);
+    player.addEventListener("loadedmetadata",enterFullscreen,{once:true});
+    player.addEventListener("ended",function(){player.currentTime=0;});
+    enterFullscreen();
+  <\/script>
+</body>
+</html>`);
+        playerWindow.document.close();
+
+        try {
+          playerWindow.moveTo(0, 0);
+          playerWindow.resizeTo(width, height);
+          playerWindow.focus();
+        } catch (error) {}
+      }
+
+      document.querySelectorAll(".video-card").forEach(function (card) {
+        card.addEventListener("click", function () {
+          if (card.dataset.link) {
+            window.open(card.dataset.link, "_blank", "noopener,noreferrer");
+            return;
+          }
+          openFullscreenVideo(card.dataset.video);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
