@@ -421,7 +421,8 @@
                 'scrollbars=no'
             ].join(',');
 
-            const videoWindow = window.open('./Video/demo.mp4', 'googlePlayDemoVideo', features);
+            const videoUrl = 'https://www.youtube.com/watch?v=1p0wbOBce4o';
+            const videoWindow = window.open(videoUrl, 'googlePlayDemoVideo', features);
             if (videoWindow) {
                 try {
                     videoWindow.moveTo(left, top);
@@ -429,7 +430,7 @@
                     videoWindow.focus();
                 } catch (error) {}
             } else {
-                window.open('./Video/demo.mp4', '_blank');
+                window.open(videoUrl, '_blank', 'noopener,noreferrer');
             }
         }
 
@@ -437,12 +438,21 @@
             event.preventDefault();
             event.stopPropagation();
             keepBookOpen();
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'STOP_BACKGROUND_AUDIO_FOR_VIDEO' }, window.location.origin);
+            }
             openDemoVideoWindow();
         });
 
         /* 開啟影片新視窗、影片結束或切回原頁後，書頁都維持展開。 */
         window.addEventListener('focus', restoreBookOpenState);
         window.addEventListener('pageshow', restoreBookOpenState);
+        window.addEventListener('message', (event) => {
+            if (event.source !== window.parent) return;
+            if (!event.data || event.data.type !== 'google-play-catalog-shown') return;
+            restoreBookOpenState();
+            scheduleNextCat();
+        });
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) restoreBookOpenState();
         });
