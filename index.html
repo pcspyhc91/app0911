@@ -521,7 +521,7 @@ body.sidebar-resizing iframe {
   </div>
   <hr>
   <div class="w3-container">
-    <h5><span style="color:blue; white-space:nowrap;">115年Python與AI應用實務(新竹)第1期</span></h5>
+    <h5><a href="index.html" id="courseHomeLink" style="color:blue; white-space:nowrap; text-decoration:none;" title="回到首頁">115年Python與AI應用實務(新竹)第1期</a></h5>
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
@@ -1029,8 +1029,8 @@ body.sidebar-resizing iframe {
     <video id="ch06TransitionVideo" src="./Video/Tr06.mp4" preload="auto" playsinline></video>
   </div>
 
-  <!-- Chapter 07：只播放一次；由側邊導覽與 Ch07 驗證按鈕統一停止。 -->
-  <audio id="ch07Audio" src="./Video/Tr07.mp3" preload="auto" hidden></audio>
+  <!-- Background Music：30% 音量循環播放；僅在 MP4／外部影片開始播放時停止。 -->
+  <audio id="ch07Audio" src="./Video/Tr08.mp3" preload="auto" loop hidden></audio>
 
   <div id="chapterFrameWrap">
     <iframe id="chapterFrame" name="chapterFrame" src="about:blank" title="Chapter Content"></iframe>
@@ -1254,9 +1254,6 @@ if (bonusCodePenLink) {
 
     event.preventDefault();
     event.stopPropagation();
-    if (submenuMatch && submenuMatch[1] === "07" && typeof window.stopCh07Audio === "function") {
-      window.stopCh07Audio();
-    }
     if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
 
     stopAllTransitions();
@@ -1412,9 +1409,6 @@ if (bonusCodePenLink) {
 
     if (typeof window.stopAllChapterTransitions === "function") {
       window.stopAllChapterTransitions();
-    }
-    if (typeof window.stopCh07Audio === "function") {
-      window.stopCh07Audio();
     }
 
     // 收合所有章節子選單
@@ -1792,29 +1786,30 @@ if (bonusCodePenLink) {
     try { audio.currentTime = 0; } catch (error) {}
   }
 
-  function playAudioOnce() {
+  function playBackgroundAudio() {
     stopAudio();
-    audio.loop = false;
+    audio.loop = true;
+    audio.volume = 0.3;
     const playRequest = audio.play();
     if (playRequest && typeof playRequest.catch === "function") {
       playRequest.catch(function (error) {
-        console.warn("Tr07.mp3 無法播放：", error);
+        console.warn("Tr08.mp3 無法播放：", error);
       });
     }
   }
 
   window.stopCh07Audio = stopAudio;
-  window.playCh07AudioOnce = playAudioOnce;
+  window.playCh07AudioOnce = playBackgroundAudio;
 
-  // 點擊左側任何主選單或子選單時先停止；若點擊 Ch07，後續 handler 會重新從頭播放一次。
-  sidebar.addEventListener("click", function (event) {
-    if (event.target.closest("a")) stopAudio();
-  }, true);
+  // 只有 MP4 或外部影片準備播放時才停止背景音樂。
+  document.querySelectorAll("video").forEach(function (video) {
+    video.addEventListener("play", stopAudio);
+  });
 
-  // 接收內嵌 ch07.html 在按下 Validate Input 時送出的停止要求。
+  // 接收 AppMp4.html 在使用者點擊影片封面時送出的停止要求。
   window.addEventListener("message", function (event) {
     if (event.origin !== window.location.origin) return;
-    if (event.data && event.data.type === "STOP_CH07_AUDIO") stopAudio();
+    if (event.data && event.data.type === "STOP_BACKGROUND_AUDIO_FOR_VIDEO") stopAudio();
   });
 
   function closeOthers() {
@@ -1842,27 +1837,24 @@ if (bonusCodePenLink) {
     if (isOpen) {
       submenu.classList.remove("is-open");
       ch07Link.classList.remove("chapter-open");
-      stopAudio();
       return;
     }
     closeOthers();
     submenu.classList.add("is-open");
     ch07Link.classList.add("chapter-open");
     show("ch07.html?embed=1#top");
-    playAudioOnce();
+    playBackgroundAudio();
   });
 
   submenu.querySelectorAll("a").forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault();
-      stopAudio();
       closeOthers();
       submenu.classList.add("is-open");
       ch07Link.classList.add("chapter-open");
       const targetUrl = link.getAttribute("href");
       show(targetUrl);
-      // 7.1～7.3 僅切換右側 iframe；不得播放第七章旁白。
-      stopAudio();
+      // 7.1～7.3 僅切換右側 iframe；背景音樂保持循環播放。
     });
   });
 })();
@@ -2253,9 +2245,6 @@ if (bonusCodePenLink) {
   function showInRightPanel(url) {
     if (typeof window.stopAllChapterTransitions === "function") {
       window.stopAllChapterTransitions();
-    }
-    if (typeof window.stopCh07Audio === "function") {
-      window.stopCh07Audio();
     }
     dashboardContent.classList.add("is-hidden");
     frameWrap.style.display = "block";

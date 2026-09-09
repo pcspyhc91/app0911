@@ -192,6 +192,9 @@
 
       document.querySelectorAll(".video-card").forEach(function (card) {
         card.addEventListener("click", function () {
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: "STOP_BACKGROUND_AUDIO_FOR_VIDEO" }, window.location.origin);
+          }
           if (card.dataset.link) {
             window.open(card.dataset.link, "_blank", "noopener,noreferrer");
             return;

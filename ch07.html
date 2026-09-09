@@ -125,8 +125,7 @@ function markStale(){if(validatedSnapshot&&JSON.stringify(raw())!==validatedSnap
 document.querySelectorAll('input,select').forEach(el=>el.addEventListener('change',()=>el.type==='radio'&&(el.name==='sizeVaries'||el.name==='androidVaries')?dynamic():markStale())); dynamic();
 function daysSince(dateText){return Math.round((Date.UTC(2026,5,30)-Date.parse(dateText+'T00:00:00Z'))/86400000)}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function stopParentCh07Audio(){if(window.parent!==window)window.parent.postMessage({type:'STOP_CH07_AUDIO'},window.location.origin)}
-$('appForm').addEventListener('submit',async e=>{e.preventDefault();stopParentCh07Audio();clearResult();const submitButton=e.submitter||$('appForm').querySelector('button[type="submit"]'),d=raw(),errors=[],price=Number(d.price),size=Number(d.size),android=Number(d.android);
+$('appForm').addEventListener('submit',async e=>{e.preventDefault();clearResult();const submitButton=e.submitter||$('appForm').querySelector('button[type="submit"]'),d=raw(),errors=[],price=Number(d.price),size=Number(d.size),android=Number(d.android);
  if(d.price===''||!Number.isFinite(price))errors.push('INPUT_INVALID_TYPE｜App Price｜請輸入0.00～399.99。');else if(price<0||price>399.99)errors.push('INPUT_OUT_OF_TRAINING_RANGE｜App Price｜請輸入0.00～399.99。');
  if(d.sizeVaries==='否'&&(d.size===''||!Number.isFinite(size)))errors.push('INPUT_REQUIRED｜App Size in MB｜請輸入5.0～1,998.9 MB。');else if(d.sizeVaries==='否'&&(size<5||size>1998.9))errors.push('INPUT_OUT_OF_TRAINING_RANGE｜App Size in MB｜請輸入5.0～1,998.9 MB。');
  if(!d.updated)errors.push('INPUT_INVALID_FORMAT｜Last Updated｜請使用日期選擇器重新選擇。');else if(d.updated>'2026-06-30')errors.push('INPUT_RESEARCH_DATE_EXCEEDED｜Last Updated｜請選擇2026-06-30或更早日期。');else if(d.updated<'2020-02-05')errors.push('INPUT_OUT_OF_TRAINING_RANGE｜Last Updated｜請選擇2020-02-05～2026-06-30。');
