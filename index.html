@@ -10,7 +10,7 @@
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
-/* Ch01 ~ Ch07 sidebar menu hover colors */
+/* Ch01 ~ Ch07 and bonus sidebar menu hover colors */
 #mySidebar .menu-ch {
   transition: background-color 0.20s ease, color 0.20s ease;
 }
@@ -22,6 +22,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 #mySidebar .menu-ch05:hover { background-color: #28A028 !important; color: #000000 !important; }
 #mySidebar .menu-ch06:hover { background-color: #FDEBD0 !important; color: #000000 !important; }
 #mySidebar .menu-ch07:hover { background-color: #D6DBDF !important; color: #000000 !important; }
+#mySidebar .menu-bonus:hover { background-color: #CDEBFF !important; color: #000000 !important; }
 
 
 /* ===== Chapter embedded navigation ===== */
@@ -59,6 +60,10 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 }
 #mySidebar .menu-ch05.chapter-open {
   background-color: #28A028 !important;
+  color: #000000 !important;
+}
+#mySidebar .menu-bonus.chapter-open {
+  background-color: #CDEBFF !important;
   color: #000000 !important;
 }
 #chapterFrameWrap {
@@ -520,7 +525,7 @@ body.sidebar-resizing iframe {
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="index.html" id="overviewLink" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>&nbsp; Overview</a>
+    <a href="book_catalog_links.html" id="overviewLink" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>&nbsp; Overview</a>
   </div>
   </div>
   <div id="sidebarChapterScroll">
@@ -611,6 +616,16 @@ body.sidebar-resizing iframe {
       <a href="ch07-1.html?embed=1#top"><i class="fa fa-sliders fa-fw"></i>&nbsp; 7.2 ８項簡化輸入模式</a>
       <a href="ch07-2.html?embed=1#top"><i class="fa fa-compress fa-fw"></i>&nbsp; 7.3 ５項精簡輸入模式</a>
     </div>
+    <a href="https://codepen.io/editor/ckiki/pen/01a07ae6-7c96-7d74-9689-e6f36976a351?panel=false&amp;show=preview" id="bonusMainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-bonus" aria-controls="bonusSubmenu" aria-expanded="false">
+      <i class="fa fa-film fa-fw"></i>&nbsp; 加映場
+    </a>
+    <div id="bonusSubmenu" class="chapter-submenu">
+      <a href="https://codepen.io/editor/ckiki/pen/01a07ae6-7c96-7d74-9689-e6f36976a351?panel=false&amp;show=preview"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 1. es2-App Features Analysis</a>
+      <a href="./PDF/es2_App_Features.pdf#view=Fit"><i class="fa fa-file-pdf-o fa-fw"></i>&nbsp; 2. es2-Project Report</a>
+      <a href="./PDF/BlueprintA.pdf#view=Fit"><i class="fa fa-map-o fa-fw"></i>&nbsp; 3. es2-Blueprint A</a>
+      <a href="./PDF/BlueprintB.pdf#view=Fit"><i class="fa fa-map fa-fw"></i>&nbsp; 4. es2-Blueprint B</a>
+      <a href="https://codepen.io/editor/ckiki/pen/01a06b2d-9738-7d75-bf6d-815a74992aa2?panel=false&amp;show=preview"><i class="fa fa-google fa-fw"></i>&nbsp; 5. es3-Google Play Analysis</a>
+    </div>
     </div>
 </div>
 </nav>
@@ -634,9 +649,8 @@ body.sidebar-resizing iframe {
       您的瀏覽器不支援 HTML5 Video（HTML5 影片播放器）。
     </video>
     <a id="ytFullButton" class="yt-full-button" href="https://youtu.be/XDMQmLHyamI" target="_blank" rel="noopener noreferrer" aria-label="前往 YouTube 觀看完整版">看完整版</a>
-    <iframe id="catalogOverlay" src="book_catalog_links.html" title="Google Play App AI Project 動態目錄" allowtransparency="true" aria-hidden="true"></iframe>
+    <iframe id="catalogOverlay" src="book_catalog_links.html" title="Google Play App AI Project 動態目錄" allow="autoplay; fullscreen" allowfullscreen allowtransparency="true" aria-hidden="true"></iframe>
   </div>
-
 
   <!-- 舊 Dashboard 與 amCharts 程式暫時封存停用。
        使用 inert template 可避免內部既有 HTML 註解造成巢狀註解失效。 -->
@@ -918,15 +932,12 @@ body.sidebar-resizing iframe {
     <h5>Recent Users</h5>
     <ul class="w3-ul w3-card-4 w3-white">
       <li class="w3-padding-16">
-        <img src="./w3images/avatar2.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
         <span class="w3-xlarge">Mike</span><br>
       </li>
       <li class="w3-padding-16">
-        <img src="./w3images/avatar5.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
         <span class="w3-xlarge">Jill</span><br>
       </li>
       <li class="w3-padding-16">
-        <img src="./w3images/avatar6.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
         <span class="w3-xlarge">Jane</span><br>
       </li>
     </ul>
@@ -937,7 +948,6 @@ body.sidebar-resizing iframe {
     <h5>Recent Comments</h5>
     <div class="w3-row">
       <div class="w3-col m2 text-center">
-        <img class="w3-circle" src="./w3images/avatar3.png" style="width:96px;height:96px">
       </div>
       <div class="w3-col m10 w3-container">
         <h4>John <span class="w3-opacity w3-medium">Sep 29, 2014, 9:12 PM</span></h4>
@@ -947,7 +957,6 @@ body.sidebar-resizing iframe {
 
     <div class="w3-row">
       <div class="w3-col m2 text-center">
-        <img class="w3-circle" src="./w3images/avatar1.png" style="width:96px;height:96px">
       </div>
       <div class="w3-col m10 w3-container">
         <h4>Bo <span class="w3-opacity w3-medium">Sep 28, 2014, 10:15 PM</span></h4>
@@ -1063,6 +1072,15 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   w3_close();
 } else {
   mySidebar.setAttribute("aria-hidden", "false");
+}
+
+var bonusCodePenLink = document.getElementById("bonusCodePenLink");
+if (bonusCodePenLink) {
+  bonusCodePenLink.addEventListener("click", function () {
+    if (window.matchMedia("(max-width: 992px)").matches) {
+      w3_close();
+    }
+  });
 }
 </script>
 
@@ -1354,6 +1372,13 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   overviewLink.addEventListener("click", function (event) {
     event.preventDefault();
 
+    if (typeof window.stopAllChapterTransitions === "function") {
+      window.stopAllChapterTransitions();
+    }
+    if (typeof window.stopCh07Audio === "function") {
+      window.stopCh07Audio();
+    }
+
     // 收合所有章節子選單
     document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
       menu.classList.remove("is-open");
@@ -1364,25 +1389,24 @@ if (window.matchMedia("(max-width: 992px)").matches) {
       item.classList.remove("chapter-open");
     });
 
-    // 若右側目前顯示章節 iframe，切回 Dashboard 內容
+    // 在右側 iframe 直接顯示動態書本目錄
     const dashboardContent = document.getElementById("dashboardContent");
     const frameWrap = document.getElementById("chapterFrameWrap");
     const frame = document.getElementById("chapterFrame");
 
     if (dashboardContent) {
-      dashboardContent.classList.remove("is-hidden");
+      dashboardContent.classList.add("is-hidden");
     }
 
     if (frameWrap) {
-      frameWrap.style.display = "none";
+      frameWrap.style.display = "block";
     }
 
     if (frame) {
-      frame.src = "about:blank";
+      frame.src = overviewLink.getAttribute("href");
     }
 
-    // 回到 index.html 頂端並恢復 Overview
-    window.history.replaceState(null, "", "index.html");
+    // 保留首頁導覽架構並回到內容頂端
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 })();
@@ -2024,7 +2048,7 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 <script>
 /* ===== First-Visit Transparent Dynamic Catalog Overlay =====
    首次進入 index.html：
-   1. 尚未播放影片：5 秒後顯示透明翻書目錄。
+   1. 尚未播放影片：3 秒後顯示透明翻書目錄。
    2. 有播放影片並播放完畢：影片 ended 後顯示透明翻書目錄。
    3. 有播放影片但中途暫停且尚未播完：持續暫停 3 秒後顯示透明翻書目錄。
    4. 只要翻書目錄正在顯示，使用者按下影片播放：立即關閉目錄並繼續播放。
@@ -2032,7 +2056,7 @@ if (window.matchMedia("(max-width: 992px)").matches) {
 */
 (function () {
   const FIRST_VISIT_KEY = "googlePlayProjectCatalogLaunched";
-  const AUTO_DELAY_MS = 5000;
+  const AUTO_DELAY_MS = 3000;
   const PAUSE_DELAY_MS = 3000;
 
   const catalogChapter = new URLSearchParams(window.location.search).get("catalogChapter");
@@ -2113,7 +2137,7 @@ if (window.matchMedia("(max-width: 992px)").matches) {
     }
   });
 
-  // 首次進入且完全沒播放：第 5 秒顯示透明翻書目錄。
+  // 首次進入且完全沒播放：第 3 秒顯示透明翻書目錄。
   autoTimer = window.setTimeout(function () {
     if (!hasStartedPlaying) {
       showCatalogOverlay();
@@ -2134,7 +2158,7 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   const chapter = Number(params.get("catalogChapter"));
   if (!Number.isInteger(chapter) || chapter < 1 || chapter > 7) return;
 
-  // 標記已經完成首次目錄流程，避免章節顯示中再次被 5 秒計時器導回目錄。
+  // 標記已經完成首次目錄流程，避免章節顯示中再次被 3 秒計時器導回目錄。
   try {
     sessionStorage.setItem("googlePlayProjectCatalogLaunched", "1");
   } catch (error) {}
@@ -2174,6 +2198,84 @@ if (window.matchMedia("(max-width: 992px)").matches) {
   } else {
     window.setTimeout(openCatalogChapter, 0);
   }
+})();
+</script>
+
+<script>
+/* ===== Bonus embedded navigation ===== */
+(function () {
+  const sidebar = document.getElementById("mySidebar");
+  const mainLink = document.getElementById("bonusMainLink");
+  const submenu = document.getElementById("bonusSubmenu");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!sidebar || !mainLink || !submenu || !dashboardContent || !frameWrap || !frame) return;
+
+  function closeOtherMenus() {
+    document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
+      if (menu !== submenu) menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function (item) {
+      if (item !== mainLink) item.classList.remove("chapter-open");
+    });
+  }
+
+  function showInRightPanel(url) {
+    if (typeof window.stopAllChapterTransitions === "function") {
+      window.stopAllChapterTransitions();
+    }
+    if (typeof window.stopCh07Audio === "function") {
+      window.stopCh07Audio();
+    }
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function closeMobileSidebar() {
+    if (window.matchMedia("(max-width: 992px)").matches && typeof window.w3_close === "function") {
+      window.w3_close();
+    }
+  }
+
+  mainLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+    if (isOpen) {
+      submenu.classList.remove("is-open");
+      mainLink.classList.remove("chapter-open");
+      mainLink.setAttribute("aria-expanded", "false");
+    } else {
+      closeOtherMenus();
+      submenu.classList.add("is-open");
+      mainLink.classList.add("chapter-open");
+      mainLink.setAttribute("aria-expanded", "true");
+      showInRightPanel(mainLink.getAttribute("href"));
+    }
+    closeMobileSidebar();
+  });
+
+  submenu.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      closeOtherMenus();
+      submenu.classList.add("is-open");
+      mainLink.classList.add("chapter-open");
+      mainLink.setAttribute("aria-expanded", "true");
+      showInRightPanel(link.getAttribute("href"));
+      closeMobileSidebar();
+    });
+  });
+
+  sidebar.addEventListener("click", function (event) {
+    const clickedLink = event.target.closest("a");
+    if (!clickedLink || clickedLink === mainLink || clickedLink.closest("#bonusSubmenu")) return;
+    submenu.classList.remove("is-open");
+    mainLink.classList.remove("chapter-open");
+    mainLink.setAttribute("aria-expanded", "false");
+  });
 })();
 </script>
 

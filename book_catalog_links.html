@@ -92,6 +92,101 @@
             background: linear-gradient(145deg, #457b9d, #6096ba);
             transform: rotateY(180deg);
             border-radius: 10px 0 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .cover-back-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .demo-preview {
+            position: relative;
+            width: 90%;
+            max-width: 378px;
+            margin: 0;
+        }
+
+        .demo-preview img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 2px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+        }
+
+        .demo-play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 76px;
+            height: 76px;
+            padding: 0;
+            border: 3px solid rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(13, 31, 52, 0.78);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.38);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .demo-play-button::before {
+            content: "";
+            display: block;
+            width: 0;
+            height: 0;
+            margin-left: 29px;
+            border-top: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+            border-left: 22px solid #fff;
+        }
+
+        .demo-play-button:hover,
+        .demo-play-button:focus-visible {
+            background: rgba(13, 31, 52, 0.96);
+            transform: translate(-50%, -50%) scale(1.08);
+            outline: none;
+        }
+
+        .cat-waiting-area {
+            display: flex;
+            flex: 0 0 auto;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: default;
+        }
+
+        .waiting-cat {
+            display: block;
+            width: 112px;
+            height: 112px;
+            object-fit: contain;
+            cursor: default;
+            filter: drop-shadow(0 5px 5px rgba(20, 39, 59, 0.28));
+        }
+
+        .cat-message {
+            min-height: 27px;
+            margin: 0;
+            color: #fff8d7;
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            line-height: 1.4;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(13, 31, 52, 0.7);
         }
 
         .book-pages {
@@ -161,6 +256,9 @@
         .book.open .catalog-list li:nth-child(2) { transition-delay: 0.8s; }
         .book.open .catalog-list li:nth-child(3) { transition-delay: 1s; }
         .book.open .catalog-list li:nth-child(4) { transition-delay: 1.2s; }
+        .book.open .catalog-list li:nth-child(5) { transition-delay: 1.4s; }
+        .book.open .catalog-list li:nth-child(6) { transition-delay: 1.6s; }
+        .book.open .catalog-list li:nth-child(7) { transition-delay: 1.8s; }
 
         @media (max-width: 700px) {
             body {
@@ -197,7 +295,18 @@
                     <h2>Google Play App AI Project</h2>
                     <p>點擊翻開看目錄</p>
                 </div>
-                <div class="cover-back"></div>
+                <div class="cover-back">
+                    <div class="cover-back-content">
+                        <figure class="demo-preview">
+                            <img src="./w3images/demo.png" alt="Google Play App AI Project 展示影片封面">
+                            <button class="demo-play-button" id="demoPlayButton" type="button" aria-label="開新視窗播放專題展示影片"></button>
+                        </figure>
+                        <div class="cat-waiting-area">
+                            <img class="waiting-cat" id="waitingCat" src="./w3images/cat.svg" alt="等待播放的貓咪動畫 1">
+                            <p class="cat-message" id="catMessage" aria-live="polite">別錯過！</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="book-pages">
@@ -218,22 +327,127 @@
 
     <script>
         const book = document.getElementById('myBook');
+        const demoPlayButton = document.getElementById('demoPlayButton');
+        const waitingCat = document.getElementById('waitingCat');
+        const catMessage = document.getElementById('catMessage');
+        const BOOK_OPEN_KEY = 'googlePlayCatalogBookOpen';
+        const CAT_SLIDES = [
+            { src: './w3images/cat.svg', duration: 2400, alt: '等待播放的貓咪動畫 1', message: '別錯過！' },
+            { src: './w3images/cat2.svg', duration: 3000, alt: '等待播放的貓咪動畫 2', message: '別等了！' },
+            { src: './w3images/cat3.svg', duration: 3212, alt: '等待播放的貓咪動畫 3', message: '快按播放！' }
+        ];
+        let catIndex = 0;
+        let catTimer = null;
+
+        /* 預先載入三個 SVG，避免輪播切換時出現空白。 */
+        CAT_SLIDES.forEach((slide) => {
+            const image = new Image();
+            image.src = slide.src;
+        });
+
+        function scheduleNextCat() {
+            window.clearTimeout(catTimer);
+            catTimer = window.setTimeout(showNextCat, CAT_SLIDES[catIndex].duration);
+        }
+
+        function showNextCat() {
+            catIndex = (catIndex + 1) % CAT_SLIDES.length;
+            const nextCat = CAT_SLIDES[catIndex];
+            waitingCat.alt = nextCat.alt;
+            catMessage.textContent = nextCat.message;
+            waitingCat.src = nextCat.src;
+        }
+
+        waitingCat.addEventListener('load', scheduleNextCat);
+        waitingCat.addEventListener('error', () => {
+            window.clearTimeout(catTimer);
+            catTimer = window.setTimeout(showNextCat, 1000);
+        });
+
+        if (waitingCat.complete) {
+            scheduleNextCat();
+        }
+
+        function saveBookOpenState(isOpen) {
+            try {
+                sessionStorage.setItem(BOOK_OPEN_KEY, isOpen ? '1' : '0');
+            } catch (error) {}
+        }
+
+        function keepBookOpen() {
+            book.classList.add('open');
+            saveBookOpenState(true);
+        }
+
+        function restoreBookOpenState() {
+            try {
+                if (sessionStorage.getItem(BOOK_OPEN_KEY) === '1') {
+                    book.classList.add('open');
+                }
+            } catch (error) {}
+        }
 
         function toggleBook() {
             book.classList.toggle('open');
+            saveBookOpenState(book.classList.contains('open'));
         }
 
         book.addEventListener('click', (event) => {
-            if (event.target.closest('.catalog-list a')) return;
+            if (event.target.closest('.catalog-list a, .demo-play-button, .cat-waiting-area')) return;
             toggleBook();
         });
 
         book.addEventListener('keydown', (event) => {
+            if (event.target.closest('.catalog-list a, .demo-play-button, .cat-waiting-area')) return;
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 toggleBook();
             }
         });
+
+        function openDemoVideoWindow() {
+            const width = window.screen.availWidth || window.screen.width;
+            const height = window.screen.availHeight || window.screen.height;
+            const left = window.screen.availLeft || 0;
+            const top = window.screen.availTop || 0;
+            const features = [
+                'popup=yes',
+                'fullscreen=yes',
+                'left=' + left,
+                'top=' + top,
+                'width=' + width,
+                'height=' + height,
+                'resizable=yes',
+                'scrollbars=no'
+            ].join(',');
+
+            const videoWindow = window.open('./Video/demo.mp4', 'googlePlayDemoVideo', features);
+            if (videoWindow) {
+                try {
+                    videoWindow.moveTo(left, top);
+                    videoWindow.resizeTo(width, height);
+                    videoWindow.focus();
+                } catch (error) {}
+            } else {
+                window.open('./Video/demo.mp4', '_blank');
+            }
+        }
+
+        demoPlayButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            keepBookOpen();
+            openDemoVideoWindow();
+        });
+
+        /* 開啟影片新視窗、影片結束或切回原頁後，書頁都維持展開。 */
+        window.addEventListener('focus', restoreBookOpenState);
+        window.addEventListener('pageshow', restoreBookOpenState);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) restoreBookOpenState();
+        });
+
+        restoreBookOpenState();
     </script>
 
 </body>
