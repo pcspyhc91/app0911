@@ -1085,6 +1085,44 @@ if (bonusCodePenLink) {
 </script>
 
 <script>
+/* ===== Chapter 01-06 single-click submenu close guard =====
+   Ch01~Ch06 的轉場攔截器可能在轉場尚未結束時重新展開已開啟的子選單。
+   本處較早以 Capture Phase 判斷「已開啟」狀態，確保再點一次即可收合。
+*/
+(function () {
+  const sidebar = document.getElementById("mySidebar");
+  if (!sidebar) return;
+
+  sidebar.addEventListener("click", function (event) {
+    const link = event.target.closest("a");
+    const match = link && link.id ? link.id.match(/^ch(0[1-6])MainLink$/) : null;
+    if (!match) return;
+
+    const submenu = document.getElementById("ch" + match[1] + "Submenu");
+    if (!submenu || !submenu.classList.contains("is-open")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === "function") {
+      event.stopImmediatePropagation();
+    }
+
+    if (typeof window.stopAllChapterTransitions === "function") {
+      window.stopAllChapterTransitions();
+    }
+
+    submenu.classList.remove("is-open");
+    link.classList.remove("chapter-open");
+    link.setAttribute("aria-expanded", "false");
+
+    if (window.matchMedia("(max-width: 992px)").matches && typeof window.w3_close === "function") {
+      window.w3_close();
+    }
+  }, true);
+})();
+</script>
+
+<script>
 /* ===== Overview Video Playback Governance ===== */
 (function () {
   const video = document.getElementById("overviewVideo");
@@ -2046,26 +2084,20 @@ if (bonusCodePenLink) {
 
 
 <script>
-/* ===== First-Visit Transparent Dynamic Catalog Overlay =====
-   首次進入 index.html：
-   1. 尚未播放影片：3 秒後顯示透明翻書目錄。
+/* ===== Every-Visit Transparent Dynamic Catalog Overlay =====
+   每次進入 index.html：
+   1. 尚未播放影片：1 秒後顯示透明翻書目錄。
    2. 有播放影片並播放完畢：影片 ended 後顯示透明翻書目錄。
-   3. 有播放影片但中途暫停且尚未播完：持續暫停 3 秒後顯示透明翻書目錄。
+   3. 有播放影片但中途暫停且尚未播完：持續暫停 1 秒後顯示透明翻書目錄。
    4. 只要翻書目錄正在顯示，使用者按下影片播放：立即關閉目錄並繼續播放。
-      之後若再次暫停，重新計時 3 秒；若一路播完，結束時再次顯示目錄。
+      之後若再次暫停，重新計時 1 秒；若一路播完，結束時再次顯示目錄。
 */
 (function () {
-  const FIRST_VISIT_KEY = "googlePlayProjectCatalogLaunched";
-  const AUTO_DELAY_MS = 3000;
-  const PAUSE_DELAY_MS = 3000;
+  const AUTO_DELAY_MS = 1000;
+  const PAUSE_DELAY_MS = 1000;
 
   const catalogChapter = new URLSearchParams(window.location.search).get("catalogChapter");
-  if (catalogChapter) {
-    try { sessionStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (error) {}
-    return;
-  }
-
-  if (sessionStorage.getItem(FIRST_VISIT_KEY) === "1") return;
+  if (catalogChapter) return;
 
   const video = document.getElementById("overviewVideo");
   const overlay = document.getElementById("catalogOverlay");
@@ -2096,9 +2128,11 @@ if (bonusCodePenLink) {
   function showCatalogOverlay() {
     clearAutoTimer();
     clearPauseTimer();
-    try { sessionStorage.setItem(FIRST_VISIT_KEY, "1"); } catch (error) {}
     overlay.classList.add("is-visible");
     overlay.setAttribute("aria-hidden", "false");
+    if (overlay.contentWindow) {
+      overlay.contentWindow.postMessage({ type: "google-play-catalog-shown" }, "*");
+    }
   }
 
   function hideCatalogOverlay() {
@@ -2117,7 +2151,7 @@ if (bonusCodePenLink) {
     }
   });
 
-  // 中途暫停且尚未播完：若持續暫停滿 3 秒，再顯示透明翻書目錄。
+  // 中途暫停且尚未播完：若持續暫停滿 1 秒，再顯示透明翻書目錄。
   video.addEventListener("pause", function () {
     if (!hasStartedPlaying || video.ended) return;
 
@@ -2137,7 +2171,7 @@ if (bonusCodePenLink) {
     }
   });
 
-  // 首次進入且完全沒播放：第 3 秒顯示透明翻書目錄。
+  // 每次進入且完全沒播放：第 1 秒顯示透明翻書目錄。
   autoTimer = window.setTimeout(function () {
     if (!hasStartedPlaying) {
       showCatalogOverlay();
@@ -2157,11 +2191,6 @@ if (bonusCodePenLink) {
   const params = new URLSearchParams(window.location.search);
   const chapter = Number(params.get("catalogChapter"));
   if (!Number.isInteger(chapter) || chapter < 1 || chapter > 7) return;
-
-  // 標記已經完成首次目錄流程，避免章節顯示中再次被 3 秒計時器導回目錄。
-  try {
-    sessionStorage.setItem("googlePlayProjectCatalogLaunched", "1");
-  } catch (error) {}
 
   function openCatalogChapter() {
     const link = document.getElementById("ch0" + chapter + "MainLink");
