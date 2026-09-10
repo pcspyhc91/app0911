@@ -155,7 +155,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 }
 .yt-full-button {
   position: absolute;
-  right: 8px;
+  right: 146px;
   bottom: 8px;
   z-index: 5;
   display: inline-flex;
@@ -191,6 +191,86 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   box-shadow: 0 2px 0 #780000,0 5px 10px rgba(0,0,0,.42),inset 0 2px 3px rgba(80,0,0,.35);
   animation-play-state: paused;
 }
+.music-resume-button {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #0b641f;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#55d66f 0%,#20a541 48%,#087523 100%);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0,0,0,.78);
+  box-shadow: 0 8px 0 #075018,0 13px 22px rgba(0,0,0,.48),inset 0 2px 2px rgba(255,255,255,.65);
+  transform: translateY(0) rotateX(0deg);
+  transform-origin: center bottom;
+  animation: ytButtonFloat 1.8s ease-in-out infinite,musicButtonGlow 1.4s ease-in-out infinite alternate;
+  transition: transform .12s ease,box-shadow .12s ease,filter .15s ease;
+}
+.music-resume-button[hidden] { display: none !important; }
+.music-stop-button {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #a84b00;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#ffbd59 0%,#f47b20 48%,#c64c00 100%);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0,0,0,.78);
+  box-shadow: 0 8px 0 #873500,0 13px 22px rgba(0,0,0,.48),inset 0 2px 2px rgba(255,255,255,.65);
+  transform: translateY(0) rotateX(0deg);
+  transform-origin: center bottom;
+  animation: ytButtonFloat 1.8s ease-in-out infinite,musicStopButtonGlow 1.4s ease-in-out infinite alternate;
+  transition: transform .12s ease,box-shadow .12s ease,filter .15s ease;
+}
+.music-stop-button[hidden] { display: none !important; }
+.music-resume-button:hover,
+.music-resume-button:focus,
+.music-stop-button:hover,
+.music-stop-button:focus {
+  filter: brightness(1.12) saturate(1.08);
+  outline: 3px solid rgba(255,255,255,.72);
+  outline-offset: 3px;
+}
+.music-resume-button:active {
+  transform: translateY(7px) rotateX(8deg);
+  box-shadow: 0 2px 0 #075018,0 5px 10px rgba(0,0,0,.42),inset 0 2px 3px rgba(0,70,15,.35);
+  animation-play-state: paused;
+}
+.music-stop-button:active {
+  transform: translateY(7px) rotateX(8deg);
+  box-shadow: 0 2px 0 #873500,0 5px 10px rgba(0,0,0,.42),inset 0 2px 3px rgba(100,35,0,.35);
+  animation-play-state: paused;
+}
+@keyframes musicButtonGlow {
+  from { filter: drop-shadow(0 0 2px rgba(32,165,65,.40)); }
+  to { filter: drop-shadow(0 0 11px rgba(32,210,80,.92)); }
+}
+@keyframes musicStopButtonGlow {
+  from { filter: drop-shadow(0 0 2px rgba(244,123,32,.40)); }
+  to { filter: drop-shadow(0 0 11px rgba(255,145,45,.95)); }
+}
 @keyframes ytButtonFloat {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-7px); }
@@ -200,7 +280,9 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   to { filter: drop-shadow(0 0 11px rgba(255,30,30,.92)); }
 }
 @media (max-width: 600px) {
-  .yt-full-button { right: 6px;bottom: 6px;min-width: 104px;min-height: 38px;font-size: 14px;padding: 7px 12px; }
+  .yt-full-button { right: 126px;bottom: 10px;min-width: 104px;min-height: 38px;font-size: 14px;padding: 7px 12px; }
+  .music-resume-button { right: 10px;bottom: 10px;min-width: 104px;min-height: 38px;font-size: 14px;padding: 7px 12px; }
+  .music-stop-button { right: 10px;bottom: 10px;min-width: 104px;min-height: 38px;font-size: 14px;padding: 7px 12px; }
 }
 /* ===== Ch01 ~ Ch04 transition videos：固定於右側內容區 ===== */
 #ch01Transition,
@@ -629,16 +711,15 @@ body.sidebar-resizing iframe {
       <a href="ch07-1.html?embed=1#top"><i class="fa fa-sliders fa-fw"></i>&nbsp; 7.2 ８項簡化輸入模式</a>
       <a href="ch07-2.html?embed=1#top"><i class="fa fa-compress fa-fw"></i>&nbsp; 7.3 ５項精簡輸入模式</a>
     </div>
-    <a href="https://codepen.io/editor/ckiki/pen/01a07ae6-7c96-7d74-9689-e6f36976a351?panel=false&amp;show=preview" id="bonusMainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-bonus" aria-controls="bonusSubmenu" aria-expanded="false">
+    <a href="https://codepen.io/editor/ckiki/pen/01a0895f-06c8-7cd7-b058-a5a0d4432a99?panel=false&amp;show=preview" id="bonusMainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-bonus" aria-controls="bonusSubmenu" aria-expanded="false">
       <i class="fa fa-film fa-fw"></i>&nbsp; 加映場
     </a>
     <div id="bonusSubmenu" class="chapter-submenu">
-      <a href="https://codepen.io/editor/ckiki/pen/01a07ae6-7c96-7d74-9689-e6f36976a351?panel=false&amp;show=preview"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 1. es2-Success Classification</a>
+      <a href="https://codepen.io/editor/ckiki/pen/01a0895f-06c8-7cd7-b058-a5a0d4432a99?panel=false&amp;show=preview"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 1. App Success Classification</a>
       <a href="./PDF/es2_AppFeatures_Report.pdf#view=Fit"><i class="fa fa-file-pdf-o fa-fw"></i>&nbsp; 2. es2-機器學習專題報告</a>
       <a href="./PDF/es2_AppFeatures_Slide.pdf#view=Fit"><i class="fa fa-file-powerpoint-o fa-fw"></i>&nbsp; 3. es2-機器學習分類簡報</a>
-      <a href="https://codepen.io/editor/ckiki/pen/01a06b2d-9738-7d75-bf6d-815a74992aa2?panel=false&amp;show=preview"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 4. es3-Success Classification</a>
-      <a href="./PDF/es3_AppFeatures_Report.pdf#view=Fit"><i class="fa fa-file-pdf-o fa-fw"></i>&nbsp; 5. es3-特徵減少專題報告</a>
-      <a href="./PDF/es3_AppFeatures_Slide.pdf#view=Fit"><i class="fa fa-file-powerpoint-o fa-fw"></i>&nbsp; 6. es3-特徵減少分類簡報</a>
+      <a href="./PDF/es3_AppFeatures_Report.pdf#view=Fit"><i class="fa fa-file-pdf-o fa-fw"></i>&nbsp; 4. es3-特徵減少專題報告</a>
+      <a href="./PDF/es3_AppFeatures_Slide.pdf#view=Fit"><i class="fa fa-file-powerpoint-o fa-fw"></i>&nbsp; 5. es3-特徵減少分類簡報</a>
     </div>
     <a href="./Game/Game1.html" id="leisureMainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-leisure" aria-controls="leisureSubmenu" aria-expanded="false">
       <i class="fa fa-smile-o fa-fw"></i>&nbsp; 輕鬆小品
@@ -1055,8 +1136,8 @@ body.sidebar-resizing iframe {
     <video id="ch06TransitionVideo" src="./Video/Tr06.mp4" preload="auto" playsinline></video>
   </div>
 
-  <!-- Background Music：30% 音量循環播放；僅在 MP4／外部影片開始播放時停止。 -->
-  <audio id="ch07Audio" src="./Video/Tr08.mp3" preload="auto" loop hidden></audio>
+  <!-- Background Music Playlist：Tr08 → Tr09 → Tr10；30% 音量依序循環。 -->
+  <audio id="backgroundAudio" src="./Video/Tr08.mp3" preload="auto" hidden></audio>
 
   <div id="chapterFrameWrap">
     <iframe id="chapterFrame" name="chapterFrame" src="about:blank" title="Chapter Content"></iframe>
@@ -1064,6 +1145,10 @@ body.sidebar-resizing iframe {
 
   <!-- End page content -->
 </div>
+
+<!-- 全站固定音樂控制層：置於 .w3-main 外，避免被章節 iframe 遮蔽。 -->
+<button id="musicResumeButton" class="music-resume-button" type="button" hidden aria-label="切換並播放下一首背景音樂">音樂繼續</button>
+<button id="musicStopButton" class="music-stop-button" type="button" hidden aria-label="停止播放背景音樂">音樂停止</button>
 
 <script>
 // Get the Sidebar
@@ -1288,9 +1373,6 @@ if (bonusCodePenLink) {
       const chapterNumber = mainMatch[1];
       openChapterMenu(chapterNumber);
       directLoad("ch" + chapterNumber + ".html?embed=1");
-      if (chapterNumber === "07" && typeof window.playCh07AudioOnce === "function") {
-        window.playCh07AudioOnce();
-      }
       return;
     }
 
@@ -1804,39 +1886,7 @@ if (bonusCodePenLink) {
   const dashboardContent = document.getElementById("dashboardContent");
   const frameWrap = document.getElementById("chapterFrameWrap");
   const frame = document.getElementById("chapterFrame");
-  const audio = document.getElementById("ch07Audio");
-  if (!ch07Link || !submenu || !sidebar || !dashboardContent || !frameWrap || !frame || !audio) return;
-
-  function stopAudio() {
-    audio.pause();
-    try { audio.currentTime = 0; } catch (error) {}
-  }
-
-  function playBackgroundAudio() {
-    stopAudio();
-    audio.loop = true;
-    audio.volume = 0.3;
-    const playRequest = audio.play();
-    if (playRequest && typeof playRequest.catch === "function") {
-      playRequest.catch(function (error) {
-        console.warn("Tr08.mp3 無法播放：", error);
-      });
-    }
-  }
-
-  window.stopCh07Audio = stopAudio;
-  window.playCh07AudioOnce = playBackgroundAudio;
-
-  // 只有 MP4 或外部影片準備播放時才停止背景音樂。
-  document.querySelectorAll("video").forEach(function (video) {
-    video.addEventListener("play", stopAudio);
-  });
-
-  // 接收 AppMp4.html 在使用者點擊影片封面時送出的停止要求。
-  window.addEventListener("message", function (event) {
-    if (event.origin !== window.location.origin) return;
-    if (event.data && event.data.type === "STOP_BACKGROUND_AUDIO_FOR_VIDEO") stopAudio();
-  });
+  if (!ch07Link || !submenu || !sidebar || !dashboardContent || !frameWrap || !frame) return;
 
   function closeOthers() {
     document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
@@ -1869,7 +1919,6 @@ if (bonusCodePenLink) {
     submenu.classList.add("is-open");
     ch07Link.classList.add("chapter-open");
     show("ch07.html?embed=1#top");
-    playBackgroundAudio();
   });
 
   submenu.querySelectorAll("a").forEach(function (link) {
@@ -2320,6 +2369,113 @@ if (bonusCodePenLink) {
     mainLink.classList.remove("chapter-open");
     mainLink.setAttribute("aria-expanded", "false");
   });
+})();
+</script>
+
+<script>
+/* ===== Global Background Music Playlist Controller（全站背景音樂輪播控制） ===== */
+(function () {
+  const audio = document.getElementById("backgroundAudio");
+  const resumeButton = document.getElementById("musicResumeButton");
+  const stopButton = document.getElementById("musicStopButton");
+  const leisureMainLink = document.getElementById("leisureMainLink");
+  const leisureSubmenu = document.getElementById("leisureSubmenu");
+  if (!audio || !resumeButton || !stopButton) return;
+  const playlist = ["./Video/Tr08.mp3", "./Video/Tr09.mp3", "./Video/Tr10.mp3"];
+  let currentTrackIndex = 0;
+
+  function showResumeButton() {
+    resumeButton.hidden = false;
+    stopButton.hidden = true;
+  }
+
+  function showStopButton() {
+    resumeButton.hidden = true;
+    stopButton.hidden = false;
+  }
+
+  function stopBackgroundAudio() {
+    audio.pause();
+    try { audio.currentTime = 0; } catch (error) {}
+    showResumeButton();
+  }
+
+  function playCurrentBackgroundTrack() {
+    audio.pause();
+    try { audio.currentTime = 0; } catch (error) {}
+    audio.loop = false;
+    audio.volume = 0.3;
+    const playRequest = audio.play();
+    if (playRequest && typeof playRequest.then === "function") {
+      playRequest.then(showStopButton).catch(function () {
+        showResumeButton();
+      });
+    } else if (!audio.paused) {
+      showStopButton();
+    }
+  }
+
+  function playNextBackgroundTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    audio.src = playlist[currentTrackIndex];
+    audio.load();
+    playCurrentBackgroundTrack();
+  }
+
+  window.stopBackgroundAudio = stopBackgroundAudio;
+  window.startBackgroundAudio = playCurrentBackgroundTrack;
+  window.playNextBackgroundTrack = playNextBackgroundTrack;
+
+  // index.html 內任何 MP4 真正開始播放時，停止並歸零背景音樂。
+  document.querySelectorAll("video").forEach(function (video) {
+    video.addEventListener("play", stopBackgroundAudio);
+  });
+
+  // AppMp4.html 與 book_catalog_links.html 的影片入口會傳送此通知。
+  window.addEventListener("message", function (event) {
+    if (event.origin !== window.location.origin && event.origin !== "null") return;
+    if (event.data && event.data.type === "STOP_BACKGROUND_AUDIO_FOR_VIDEO") {
+      stopBackgroundAudio();
+    }
+  });
+
+  // 接收同一網站其他分頁或視窗送出的停止通知。
+  if ("BroadcastChannel" in window) {
+    try {
+      window.backgroundAudioChannel = new BroadcastChannel("google-play-background-audio");
+      window.backgroundAudioChannel.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "STOP_BACKGROUND_AUDIO_FOR_VIDEO") {
+          stopBackgroundAudio();
+        }
+      });
+    } catch (error) {}
+  }
+
+  window.addEventListener("storage", function (event) {
+    if (event.key === "googlePlayStopBackgroundAudio" && event.newValue) {
+      stopBackgroundAudio();
+    }
+  });
+
+  // 點擊「輕鬆小品」主選單（展開或收合）及其任何子選單時停止。
+  document.getElementById("mySidebar").addEventListener("click", function (event) {
+    const link = event.target.closest("a");
+    if (!link) return;
+    if (link === leisureMainLink || (leisureSubmenu && link.closest("#leisureSubmenu"))) {
+      stopBackgroundAudio();
+    }
+  }, true);
+
+  resumeButton.addEventListener("click", playNextBackgroundTrack);
+  stopButton.addEventListener("click", stopBackgroundAudio);
+  audio.addEventListener("ended", playNextBackgroundTrack);
+  audio.addEventListener("playing", showStopButton);
+  audio.addEventListener("pause", showResumeButton);
+  audio.addEventListener("error", showResumeButton);
+
+  // 進入或重新整理 index.html 時，由 Tr08.mp3 開始嘗試自動播放。
+  audio.src = playlist[currentTrackIndex];
+  playCurrentBackgroundTrack();
 })();
 </script>
 

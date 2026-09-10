@@ -434,13 +434,39 @@
             }
         }
 
+        function notifyBackgroundAudioStop() {
+            const message = { type: 'STOP_BACKGROUND_AUDIO_FOR_VIDEO' };
+            const notifyWindow = (targetWindow) => {
+                if (!targetWindow || targetWindow === window) return;
+                try {
+                    if (typeof targetWindow.stopBackgroundAudio === 'function') {
+                        targetWindow.stopBackgroundAudio();
+                    }
+                } catch (error) {}
+                try { targetWindow.postMessage(message, '*'); } catch (error) {}
+            };
+
+            notifyWindow(window.parent);
+            notifyWindow(window.opener);
+
+            if ('BroadcastChannel' in window) {
+                try {
+                    const channel = new BroadcastChannel('google-play-background-audio');
+                    channel.postMessage(message);
+                    channel.close();
+                } catch (error) {}
+            }
+
+            try {
+                localStorage.setItem('googlePlayStopBackgroundAudio', Date.now() + '-' + Math.random());
+            } catch (error) {}
+        }
+
         demoPlayButton.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
             keepBookOpen();
-            if (window.parent !== window) {
-                window.parent.postMessage({ type: 'STOP_BACKGROUND_AUDIO_FOR_VIDEO' }, window.location.origin);
-            }
+            notifyBackgroundAudioStop();
             openDemoVideoWindow();
         });
 
