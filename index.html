@@ -10,7 +10,7 @@
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
-/* Ch01 ~ Ch07 and bonus sidebar menu hover colors */
+/* Ch01 ~ Ch07、加映場與輕鬆小品側邊選單 Hover Color（滑入色彩） */
 #mySidebar .menu-ch {
   transition: background-color 0.20s ease, color 0.20s ease;
 }
@@ -23,6 +23,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 #mySidebar .menu-ch06:hover { background-color: #FDEBD0 !important; color: #000000 !important; }
 #mySidebar .menu-ch07:hover { background-color: #D6DBDF !important; color: #000000 !important; }
 #mySidebar .menu-bonus:hover { background-color: #CDEBFF !important; color: #000000 !important; }
+#mySidebar .menu-leisure:hover { background-color: #FFD6E7 !important; color: #000000 !important; }
 
 
 /* ===== Chapter embedded navigation ===== */
@@ -79,6 +80,18 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   border: 0;
   display: block;
   background: #f4f7fb;
+}
+#chapterFrameWrap.game-mode {
+  height: calc(100vh - 43px);
+  min-height: calc(100vh - 43px);
+  overflow: hidden;
+  background: #000000;
+}
+#chapterFrameWrap.game-mode #chapterFrame {
+  height: 100% !important;
+  min-height: 100% !important;
+  display: block;
+  background: #000000;
 }
 #dashboardContent.is-hidden { display: none !important; }
 /* ===== Overview：清空原內容並改為 YouTube 影片 ===== */
@@ -626,6 +639,18 @@ body.sidebar-resizing iframe {
       <a href="https://codepen.io/editor/ckiki/pen/01a06b2d-9738-7d75-bf6d-815a74992aa2?panel=false&amp;show=preview"><i class="fa fa-bar-chart fa-fw"></i>&nbsp; 4. es3-Success Classification</a>
       <a href="./PDF/es3_AppFeatures_Report.pdf#view=Fit"><i class="fa fa-file-pdf-o fa-fw"></i>&nbsp; 5. es3-特徵減少專題報告</a>
       <a href="./PDF/es3_AppFeatures_Slide.pdf#view=Fit"><i class="fa fa-file-powerpoint-o fa-fw"></i>&nbsp; 6. es3-特徵減少分類簡報</a>
+    </div>
+    <a href="./Game/Game1.html" id="leisureMainLink" class="w3-bar-item w3-button w3-padding menu-ch menu-leisure" aria-controls="leisureSubmenu" aria-expanded="false">
+      <i class="fa fa-smile-o fa-fw"></i>&nbsp; 輕鬆小品
+    </a>
+    <div id="leisureSubmenu" class="chapter-submenu">
+      <a href="./Game/Game1.html"><i class="fa fa-magic fa-fw"></i>&nbsp; 1. 魔幻空間</a>
+      <a href="./Game/Game2.html"><i class="fa fa-music fa-fw"></i>&nbsp; 2. 音樂教室</a>
+      <a href="./Game/Game3.html"><i class="fa fa-clock-o fa-fw"></i>&nbsp; 3. 咕咕鐘</a>
+      <a href="./Game/Game4.html"><i class="fa fa-gift fa-fw"></i>&nbsp; 4. 抽抽樂</a>
+      <a href="./Game/Game5.html"><i class="fa fa-circle-o fa-fw"></i>&nbsp; 5. 畫雙圓</a>
+      <a href="./Game/Game6.html"><i class="fa fa-futbol-o fa-fw"></i>&nbsp; 6. 撿球比賽</a>
+      <a href="./Game/Game7.html"><i class="fa fa-globe fa-fw"></i>&nbsp; 7. 星球回家</a>
     </div>
     </div>
 </div>
@@ -2295,6 +2320,101 @@ if (bonusCodePenLink) {
     mainLink.classList.remove("chapter-open");
     mainLink.setAttribute("aria-expanded", "false");
   });
+})();
+</script>
+
+<script>
+/* ===== Leisure embedded navigation（輕鬆小品右側嵌入導覽） ===== */
+(function () {
+  const sidebar = document.getElementById("mySidebar");
+  const mainLink = document.getElementById("leisureMainLink");
+  const submenu = document.getElementById("leisureSubmenu");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!sidebar || !mainLink || !submenu || !dashboardContent || !frameWrap || !frame) return;
+
+  function closeOtherMenus() {
+    document.querySelectorAll(".chapter-submenu").forEach(function (menu) {
+      if (menu !== submenu) menu.classList.remove("is-open");
+    });
+    document.querySelectorAll(".menu-ch").forEach(function (item) {
+      if (item !== mainLink) item.classList.remove("chapter-open");
+    });
+  }
+
+  function showInRightPanel(url) {
+    if (typeof window.stopAllChapterTransitions === "function") {
+      window.stopAllChapterTransitions();
+    }
+    dashboardContent.classList.add("is-hidden");
+    frameWrap.style.display = "block";
+    frame.src = url;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function closeMobileSidebar() {
+    if (window.matchMedia("(max-width: 992px)").matches && typeof window.w3_close === "function") {
+      window.w3_close();
+    }
+  }
+
+  mainLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    const isOpen = submenu.classList.contains("is-open");
+    if (isOpen) {
+      submenu.classList.remove("is-open");
+      mainLink.classList.remove("chapter-open");
+      mainLink.setAttribute("aria-expanded", "false");
+    } else {
+      closeOtherMenus();
+      submenu.classList.add("is-open");
+      mainLink.classList.add("chapter-open");
+      mainLink.setAttribute("aria-expanded", "true");
+      showInRightPanel(mainLink.getAttribute("href"));
+    }
+    closeMobileSidebar();
+  });
+
+  submenu.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      closeOtherMenus();
+      submenu.classList.add("is-open");
+      mainLink.classList.add("chapter-open");
+      mainLink.setAttribute("aria-expanded", "true");
+      showInRightPanel(link.getAttribute("href"));
+      closeMobileSidebar();
+    });
+  });
+
+  sidebar.addEventListener("click", function (event) {
+    const clickedLink = event.target.closest("a");
+    if (!clickedLink || clickedLink === mainLink || clickedLink.closest("#leisureSubmenu")) return;
+    submenu.classList.remove("is-open");
+    mainLink.classList.remove("chapter-open");
+    mainLink.setAttribute("aria-expanded", "false");
+  });
+})();
+</script>
+
+<script>
+/* ===== Game iframe responsive sizing（遊戲右側自適應尺寸） ===== */
+(function () {
+  const frameWrap = document.getElementById("chapterFrameWrap");
+  const frame = document.getElementById("chapterFrame");
+  if (!frameWrap || !frame) return;
+
+  function syncGameMode() {
+    const source = frame.getAttribute("src") || "";
+    const isGame = /(?:^|\/)Game\/Game[1-7]\.html(?:[?#]|$)/i.test(source);
+    frameWrap.classList.toggle("game-mode", isGame);
+    if (isGame) frame.style.height = Math.max(320, window.innerHeight - 43) + "px";
+  }
+
+  frame.addEventListener("load", syncGameMode);
+  window.addEventListener("resize", syncGameMode);
+  syncGameMode();
 })();
 </script>
 
